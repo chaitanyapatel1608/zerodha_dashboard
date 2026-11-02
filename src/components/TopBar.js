@@ -1,25 +1,24 @@
 import React from "react";
-
 import Menu from "./Menu";
+import { marketIndices } from "../data/mockData";
 
 const TopBar = () => {
   return (
-    <div className="topbar-container">
+    <header className="topbar-container">
       <div className="indices-container">
-        <div className="nifty">
-          <p className="index">NIFTY 50</p>
-          <p className="index-points">{100.2} </p>
-          <p className="percent"> </p>
-        </div>
-        <div className="sensex">
-          <p className="index">SENSEX</p>
-          <p className="index-points">{100.2}</p>
-          <p className="percent"></p>
-        </div>
+        {marketIndices.map((idx, index) => (
+          <div className="index-item" key={index}>
+            <span className="index-name">{idx.name}</span>
+            <span className="index-value">{idx.value}</span>
+            <span className={`index-change ${idx.isDown ? "down" : "up"}`}>
+              {idx.change} ({idx.percent})
+            </span>
+          </div>
+        ))}
       </div>
 
       <Menu />
-    </div>
+    </header>
   );
 };
 
