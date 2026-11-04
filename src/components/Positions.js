@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
+import GeneralContext from "./GeneralContext";
 import axios from "axios";
 import AccountStatusBanner from "./common/AccountStatusBanner";
 import { positionsData } from "../data/mockData";
 
 const Positions = () => {
+  const { portfolioTrigger } = useContext(GeneralContext);
   const [positions, setPositions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,7 +22,7 @@ const Positions = () => {
         setPositions(positionsData);
         setLoading(false);
       });
-  }, []);
+  }, [portfolioTrigger]);
 
   const filteredPositions = useMemo(() => {
     return positions.filter((p) => {

@@ -7,9 +7,12 @@ import MarketOverviewChart from "./dashboard/MarketOverviewChart";
 import GainersLosersPanel from "./dashboard/GainersLosersPanel";
 import IpoCalendarPanel from "./dashboard/IpoCalendarPanel";
 import { accountBalances as fallbackBalances, holdingsData as fallbackHoldings } from "../data/mockData";
+import { useMarketFeed } from "../context/MarketFeedContext";
+
 
 const Summary = () => {
-  const { currentUser } = useContext(GeneralContext);
+  const { currentUser, portfolioTrigger } = useContext(GeneralContext);
+  const { quotes } = useMarketFeed();
   const [holdings, setHoldings] = useState([]);
   const [funds, setFunds] = useState(fallbackBalances);
 
@@ -40,16 +43,18 @@ const Summary = () => {
       .catch((err) => {
         console.warn("Backend unavailable for summary funds, using fallback:", err.message);
       });
-  }, []);
+  }, [portfolioTrigger, currentUser]);
 
   const totalInvestment = holdings.reduce(
     (acc, h) => acc + (h.avgCost || h.avg || 0) * (h.qty || 0),
     0
   );
-  const currentVal = holdings.reduce(
-    (acc, h) => acc + (h.curVal || (h.price || h.ltp || 0) * (h.qty || 0)),
-    0
-  );
+  const currentVal = holdings.reduce((acc, h) => {
+    const sym = h.instrument || h.name || "";
+    const live = quotes[sym];
+    const livePrice = live ? live.price : (h.curVal ? h.curVal / (h.qty || 1) : (h.price || h.ltp || h.avgCost || 0));
+    return acc + livePrice * (h.qty || 0);
+  }, 0);
   const totalPnl = currentVal - totalInvestment;
   const pnlPercent = totalInvestment > 0 ? ((totalPnl / totalInvestment) * 100).toFixed(2) : "0.00";
   const isPnlPositive = totalPnl >= 0;
@@ -70,31 +75,33 @@ const Summary = () => {
         <hr className="subtle-divider" />
       </div>
 
-      {/* Account Balances Grid */}
+      {/* Account Balances Grid (Wide Equity Block) */}
       <div className="balances-grid">
         {/* Equity Balance */}
-        <div className="balance-card">
+        <div className="balance-card equity-full-width">
           <div className="card-header-row">
             <div className="title-with-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 6v12M16 10H8"></path>
               </svg>
               <span className="card-title">Equity</span>
             </div>
-            <Link to="/funds" className="card-link">
-              View statement &rsaquo;
-            </Link>
+            <div className="equity-card-header-links">
+              <Link to="/funds" className="card-link">
+                View statement &rsaquo;
+              </Link>
+            </div>
           </div>
 
-          <div className="balance-content">
+          <div className="balance-content equity-wide-content">
             <div className="balance-primary">
               <span className="balance-number">
                 {currentUser.isPrivacyMode ? "••••••" : `₹${equityFunds.availableMargin}`}
               </span>
               <span className="balance-label">Margin available</span>
             </div>
-            <div className="balance-secondary">
+            <div className="balance-secondary equity-wide-metrics">
               <div className="secondary-item">
                 <span className="item-label">Margins used</span>
                 <span className="item-val">
@@ -110,35 +117,13 @@ const Summary = () => {
             </div>
           </div>
         </div>
-
-        {/* Commodity Balance */}
-        <div className="balance-card">
-          <div className="card-header-row">
-            <div className="title-with-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-              </svg>
-              <span className="card-title">Commodity</span>
-            </div>
-          </div>
-
-          <div className="commodity-inactive-box">
-            <p>You don't have a commodity trading account yet.</p>
-            <button
-              className="btn-link-action"
-              onClick={() => alert("Redirecting to Zerodha Console commodity activation...")}
-            >
-              Activate MCX now &rsaquo;
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Holdings Overview Summary */}
       <div className="holdings-snapshot-section">
         <div className="card-header-row">
           <div className="title-with-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
             </svg>
             <span className="card-title">Holdings ({holdings.length})</span>

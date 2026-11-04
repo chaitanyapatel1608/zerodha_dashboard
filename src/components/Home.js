@@ -1,7 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import Dashboard from "./Dashboard";
 import TopBar from "./TopBar";
+import MobileBottomNav from "./navigation/MobileBottomNav";
 import GeneralContext, { GeneralContextProvider } from "./GeneralContext";
+import { MarketFeedProvider } from "../context/MarketFeedContext";
 
 const HomeContent = () => {
   const { isAuthenticated } = useContext(GeneralContext);
@@ -81,6 +83,7 @@ const HomeContent = () => {
     <div className="app-shell">
       <TopBar />
       <Dashboard />
+      <MobileBottomNav />
     </div>
   );
 };
@@ -88,7 +91,9 @@ const HomeContent = () => {
 const Home = () => {
   return (
     <GeneralContextProvider>
-      <HomeContent />
+      <MarketFeedProvider>
+        <HomeContent />
+      </MarketFeedProvider>
     </GeneralContextProvider>
   );
 };

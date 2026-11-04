@@ -1,0 +1,218 @@
+.gtt-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  backdrop-filter: blur(2px);
+  animation: fadeInGtt 0.18s ease-out;
+}
+
+.gtt-modal-card {
+  background-color: #ffffff;
+  width: 520px;
+  max-width: 95vw;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  animation: slideUpGtt 0.22s ease-out;
+}
+
+.gtt-modal-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fafbfc;
+}
+
+.gtt-header-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.gtt-header-title h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.gtt-ltp-badge {
+  font-size: 12px;
+  color: #666666;
+}
+
+.gtt-ltp-badge strong {
+  color: #222222;
+}
+
+.gtt-modal-body {
+  padding: 22px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.gtt-type-selector {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed #e0e0e0;
+}
+
+.gtt-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #444444;
+  cursor: pointer;
+}
+
+.gtt-radio-label input[type="radio"] {
+  accent-color: #387ed1;
+  width: 15px;
+  height: 15px;
+}
+
+.gtt-section-card {
+  background-color: #f9fbfd;
+  border: 1px solid #e1eaf3;
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.gtt-section-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2660a4;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gtt-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666666;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.gtt-input-group {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  padding: 6px 10px;
+  transition: border-color 0.15s;
+}
+
+.gtt-input-group:focus-within {
+  border-color: #387ed1;
+  box-shadow: 0 0 0 2px rgba(56, 126, 209, 0.15);
+}
+
+.gtt-input-prefix {
+  font-size: 12px;
+  color: #888888;
+  margin-right: 6px;
+  font-weight: 500;
+}
+
+.gtt-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 13px;
+  color: #222222;
+  font-weight: 500;
+}
+
+.gtt-pct-diff {
+  font-size: 11px;
+  color: #888888;
+  margin-top: 4px;
+}
+
+.gtt-modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid #eeeeee;
+  background-color: #fafbfc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gtt-disclaimer {
+  font-size: 11.5px;
+  color: #888888;
+  max-width: 280px;
+  line-height: 1.4;
+}
+
+.gtt-footer-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-gtt-cancel {
+  background-color: transparent;
+  border: 1px solid #d5d5d5;
+  color: #666666;
+  padding: 8px 16px;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-gtt-cancel:hover {
+  background-color: #f0f0f0;
+  color: #333333;
+}
+
+.btn-gtt-place {
+  background-color: #387ed1;
+  border: none;
+  color: #ffffff;
+  padding: 8px 22px;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-gtt-place:hover {
+  background-color: #2660a4;
+}
+
+.btn-gtt-place:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes fadeInGtt {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpGtt {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

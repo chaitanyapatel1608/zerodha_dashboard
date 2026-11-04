@@ -1,0 +1,749 @@
+/* ==========================================================================
+   SEBI CDSL DEMAT NOMINEE MODAL - PROFESSIONAL BROKER STYLES
+   ========================================================================== */
+
+.nominee-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  backdrop-filter: blur(4px);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.nominee-modal-box {
+  background: #ffffff;
+  width: 680px;
+  max-width: 95vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: nomineeScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid #e2e8f0;
+}
+
+@keyframes nomineeScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Header */
+.nominee-modal-header {
+  background: #ffffff;
+  border-bottom: 1px solid #edf2f7;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nominee-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nominee-sebi-pill {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  border: 1px solid #bae6fd;
+}
+
+.nominee-boid-pill {
+  font-size: 11.5px;
+  color: #64748b;
+  font-family: monospace;
+  background: #f8fafc;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.nominee-modal-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 6px 0 0 0;
+}
+
+.nominee-modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.nominee-modal-close-btn:hover {
+  color: #0f172a;
+  background-color: #f1f5f9;
+}
+
+/* Compliance Notice Banner */
+.nominee-compliance-notice {
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 10px 24px;
+  font-size: 11.5px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.compliance-info-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compliance-shield-icon {
+  color: #387ed1;
+  font-size: 15px;
+}
+
+.allocation-summary-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.allocation-summary-pill.valid {
+  background-color: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.allocation-summary-pill.invalid {
+  background-color: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #fed7aa;
+}
+
+/* Tabs Navigation for Multi-Nominees (Option A) */
+.nominee-tabs-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.nominee-tab-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nominee-tab-btn {
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.nominee-tab-btn:hover {
+  color: #387ed1;
+}
+
+.nominee-tab-btn.active {
+  color: #387ed1;
+  border-bottom-color: #387ed1;
+  font-weight: 600;
+}
+
+.tab-alloc-badge {
+  font-size: 10.5px;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.nominee-tab-btn.active .tab-alloc-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.add-nominee-pill-btn {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #387ed1;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.add-nominee-pill-btn:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.remove-nominee-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.remove-nominee-btn:hover {
+  background-color: #fef2f2;
+}
+
+/* Scrollable Form Body */
+.nominee-scroll-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Section Dividers & Headers */
+.form-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748b;
+  margin: 18px 0 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-section-title:first-child {
+  margin-top: 0;
+}
+
+/* Professional 2-Column Grid */
+.nominee-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+}
+
+.nominee-grid .full-col {
+  grid-column: 1 / -1;
+}
+
+/* Form Groups & Inputs */
+.nominee-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nominee-form-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label-required {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.label-hint {
+  font-size: 10.5px;
+  color: #94a3b8;
+  font-weight: 400;
+  text-transform: none;
+}
+
+.nominee-input-field {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #1e293b;
+  font-family: inherit;
+  background-color: #ffffff;
+  outline: none;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.nominee-input-field:hover {
+  border-color: #94a3b8;
+}
+
+.nominee-input-field:focus {
+  border-color: #387ed1;
+  box-shadow: 0 0 0 3px rgba(56, 126, 209, 0.15);
+}
+
+.nominee-input-field::placeholder {
+  color: #94a3b8;
+  font-size: 12.5px;
+}
+
+select.nominee-input-field {
+  cursor: pointer;
+}
+
+/* Minor Toggle Switch Card (Option B) */
+.minor-toggle-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.minor-toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.minor-toggle-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.minor-toggle-desc {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Switch Toggle Buttons */
+.toggle-switch-pills {
+  display: flex;
+  background: #e2e8f0;
+  border-radius: 20px;
+  padding: 2px;
+}
+
+.toggle-pill-btn {
+  border: none;
+  background: transparent;
+  padding: 4px 14px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #64748b;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toggle-pill-btn.active {
+  background: #ffffff;
+  color: #387ed1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Guardian Details Box (Expands when minor) */
+.guardian-box {
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-top: 14px;
+  animation: fadeInDown 0.2s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.guardian-box-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #854d0e;
+}
+
+/* Address Toggle & Prefill */
+.address-prefill-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #334155;
+  cursor: pointer;
+}
+
+.address-prefill-row input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #387ed1;
+}
+
+/* Allocation Range & Input */
+.allocation-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.allocation-slider {
+  flex: 1;
+  accent-color: #387ed1;
+  cursor: pointer;
+}
+
+.allocation-num-wrap {
+  position: relative;
+  width: 90px;
+}
+
+.allocation-num-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 24px 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  outline: none;
+}
+
+.allocation-num-input:focus {
+  border-color: #387ed1;
+}
+
+.allocation-pct-symbol {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* Declaration Box */
+.nominee-declaration-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-top: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 11.5px;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.nominee-declaration-box input[type="checkbox"] {
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #387ed1;
+}
+
+/* Footer Action Buttons */
+.nominee-modal-footer {
+  background: #ffffff;
+  border-top: 1px solid #edf2f7;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.optout-text-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.optout-text-btn:hover {
+  color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-kite-secondary {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-kite-secondary:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.btn-kite-primary {
+  background: #387ed1;
+  border: 1px solid #387ed1;
+  color: #ffffff;
+  padding: 8px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(56, 126, 209, 0.3);
+}
+
+.btn-kite-primary:hover:not(:disabled) {
+  background: #2b6cb0;
+  border-color: #2b6cb0;
+}
+
+.btn-kite-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   VIEW MODE - OFFICIAL CDSL DEMAT NOMINEE CERTIFICATE DISPLAY
+   ========================================================================== */
+
+.nominee-view-container {
+  padding: 24px;
+}
+
+.cdsl-certificate-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.certificate-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cert-title-group h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.cert-title-group span {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.cert-stamp-badge {
+  background: #059669;
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.certificate-nominees-list {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cert-nominee-row {
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 14px;
+}
+
+.cert-nominee-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cert-nominee-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.nominee-display-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.nominee-display-rel {
+  font-size: 11.5px;
+  color: #64748b;
+  margin-left: 6px;
+}
+
+.nominee-display-alloc {
+  font-size: 12px;
+  font-weight: 700;
+  color: #059669;
+  background: #ecfdf5;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.cert-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 14px;
+  background: #f8fafc;
+  padding: 10px 14px;
+  border-radius: 6px;
+}
+
+.cert-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cert-field-lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.cert-field-val {
+  font-size: 12px;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.cert-guardian-banner {
+  margin-top: 8px;
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  color: #854d0e;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .nominee-modal-box {
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .nominee-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cert-details-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .nominee-tab-btn {
+    padding: 10px 10px;
+    font-size: 12px;
+  }
+}

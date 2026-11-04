@@ -1,9 +1,14 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
+import GeneralContext from "./GeneralContext";
 import axios from "axios";
 import AccountStatusBanner from "./common/AccountStatusBanner";
 import { holdingsData } from "../data/mockData";
+import { useMarketFeed } from "../context/MarketFeedContext";
+
 
 const Holdings = () => {
+  const { portfolioTrigger } = useContext(GeneralContext);
+  const { quotes } = useMarketFeed();
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [holdings, setHoldings] = useState([]);
@@ -21,7 +26,7 @@ const Holdings = () => {
         setHoldings(holdingsData);
         setLoading(false);
       });
-  }, []);
+  }, [portfolioTrigger]);
 
   const filteredHoldings = useMemo(() => {
     return holdings.filter((stock) => {
@@ -34,10 +39,12 @@ const Holdings = () => {
     (acc, stock) => acc + (stock.avgCost || stock.avg || 0) * (stock.qty || 0),
     0
   );
-  const totalCurrentVal = filteredHoldings.reduce(
-    (acc, stock) => acc + (stock.curVal || (stock.price || stock.ltp || 0) * (stock.qty || 0)),
-    0
-  );
+  const totalCurrentVal = filteredHoldings.reduce((acc, stock) => {
+    const sym = stock.instrument || stock.name || "";
+    const live = quotes[sym];
+    const livePrice = live ? live.price : (stock.ltp || stock.price || stock.avgCost || 0);
+    return acc + livePrice * (stock.qty || 0);
+  }, 0);
   const totalPnl = totalCurrentVal - totalInvestment;
   const totalPnlPercent =
     totalInvestment > 0 ? ((totalPnl / totalInvestment) * 100).toFixed(2) : "0.00";
@@ -147,21 +154,28 @@ const Holdings = () => {
                 {filteredHoldings.map((stock, idx) => {
                   const symbol = stock.instrument || stock.name;
                   const avgCost = stock.avgCost || stock.avg || 0;
-                  const ltp = stock.ltp || stock.price || 0;
-                  const curVal = stock.curVal || avgCost * stock.qty;
-                  const pnl = stock.pnl !== undefined ? stock.pnl : curVal - avgCost * stock.qty;
-                  const isProfit = stock.isProfit !== undefined ? stock.isProfit : pnl >= 0;
-                  const netChg = stock.netChg || stock.net || "0.00%";
-                  const dayChg = stock.dayChg || stock.day || "0.00%";
-                  const isDayProfit =
-                    stock.isDayProfit !== undefined ? stock.isDayProfit : !dayChg.startsWith("-");
+                  const live = quotes[symbol];
+                  const ltp = live ? live.price : (stock.ltp || stock.price || avgCost);
+                  const curVal = ltp * (stock.qty || 0);
+                  const pnl = curVal - avgCost * (stock.qty || 0);
+                  const isProfit = pnl >= 0;
+                  const netChg =
+                    avgCost > 0
+                      ? (pnl >= 0 ? "+" : "") + (((ltp - avgCost) / avgCost) * 100).toFixed(2) + "%"
+                      : stock.netChg || "0.00%";
+                  const dayChg = live ? live.percent : (stock.dayChg || "0.00%");
+                  const isDayProfit = !dayChg.startsWith("-");
+
+                  let flashClass = "";
+                  if (live?.tickDirection === "up") flashClass = "tick-flash-up";
+                  else if (live?.tickDirection === "down") flashClass = "tick-flash-down";
 
                   return (
                     <tr key={stock._id || symbol || idx}>
                       <td className="symbol-cell">{symbol}</td>
                       <td>{stock.qty}</td>
                       <td>{avgCost.toFixed(2)}</td>
-                      <td>{ltp.toFixed(2)}</td>
+                      <td className={flashClass}>{ltp.toFixed(2)}</td>
                       <td>
                         {curVal.toLocaleString("en-IN", {
                           minimumFractionDigits: 2,

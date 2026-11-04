@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import GeneralContext from "./GeneralContext";
 import axios from "axios";
 import AccountStatusBanner from "./common/AccountStatusBanner";
 import { accountBalances as fallbackBalances } from "../data/mockData";
 
 const Funds = () => {
+  const { portfolioTrigger, currentUser } = useContext(GeneralContext);
   const [funds, setFunds] = useState(fallbackBalances);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/userFunds")
+      .get("http://localhost:3002/userFunds", { params: { userId: currentUser?.userId } })
       .then((res) => {
         if (res.data && res.data.equity) {
           setFunds(res.data);
@@ -17,7 +19,7 @@ const Funds = () => {
       .catch((err) => {
         console.warn("Backend unavailable for funds, using fallback:", err.message);
       });
-  }, []);
+  }, [portfolioTrigger, currentUser]);
 
   const equity = funds.equity || fallbackBalances.equity;
 
