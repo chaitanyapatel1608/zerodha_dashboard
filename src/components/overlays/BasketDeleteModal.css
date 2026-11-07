@@ -1,0 +1,205 @@
+/* ==========================================================================
+   BASKET DELETE CONFIRMATION MODAL
+   ========================================================================== */
+
+.basket-del-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: execFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.basket-del-container {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.28), 0 0 1px 1px rgba(15, 23, 42, 0.08);
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  animation: execScaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.basket-del-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fffafa;
+}
+
+.basket-del-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.basket-del-icon-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.15);
+}
+
+.basket-del-title {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.basket-del-subtitle {
+  font-size: 11.5px;
+  color: #64748b;
+  display: block;
+  margin-top: 1px;
+}
+
+.basket-del-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: #94a3b8;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.basket-del-close-btn:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+/* Body */
+.basket-del-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #ffffff;
+}
+
+.basket-del-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.basket-del-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.basket-del-badge {
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.basket-del-name {
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.basket-del-stats {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 8px;
+}
+
+.del-stat-item {
+  font-size: 11.5px;
+}
+
+.stat-label {
+  color: #64748b;
+  margin-right: 4px;
+}
+
+.stat-val {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.basket-del-text {
+  margin: 0;
+  font-size: 12.5px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+/* Footer */
+.basket-del-footer {
+  padding: 12px 20px;
+  background: #fafbfc;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-del-cancel {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-del-cancel:hover:not(:disabled) {
+  background: #f8fafc;
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+
+.btn-del-danger {
+  background: #dc2626;
+  border: 1px solid #b91c1c;
+  color: #ffffff;
+  padding: 7px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-del-danger:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.btn-del-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -38,7 +38,7 @@ const MarketMoversModal = ({ isOpen, type = "gainers", onClose }) => {
   const { quotes, registerStocks } = useMarketFeed();
   const navigate = useNavigate();
 
-  const userId = currentUser?.userId || "ZU9344";
+  const userId = currentUser?.userId;
 
   // Sync activeType if type prop changes
   useEffect(() => {

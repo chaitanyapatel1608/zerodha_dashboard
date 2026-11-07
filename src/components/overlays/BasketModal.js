@@ -112,7 +112,7 @@ const BasketModal = ({ basket = null, onClose }) => {
     try {
       const payload = {
         id: basketId,
-        userId: currentUser?.userId || "ZU9344",
+        userId: currentUser?.userId,
         name: basketName.trim(),
         items: items.map((i) => ({
           symbol: i.symbol,
@@ -151,7 +151,7 @@ const BasketModal = ({ basket = null, onClose }) => {
       await handleSaveBasket(false);
 
       const payload = {
-        userId: currentUser?.userId || "ZU9344",
+        userId: currentUser?.userId,
         basketName: basketName.trim() || "Order Basket",
         items: items.map((i) => ({
           symbol: i.symbol,

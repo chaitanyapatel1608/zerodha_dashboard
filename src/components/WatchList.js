@@ -41,7 +41,7 @@ const WatchList = () => {
   const editInputRef = useRef(null);
 
   const searchContainerRef = useRef(null);
-  const userId = currentUser?.userId || "ZU9344";
+  const userId = currentUser?.userId;
 
   // 1. Fetch user's 7 tabs metadata
   const fetchTabs = useCallback(() => {

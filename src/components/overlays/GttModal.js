@@ -69,7 +69,7 @@ const GttModal = ({ isOpen, onClose, initialSymbol = "INFY", initialPrice = null
     }
 
     const payload = {
-      userId: currentUser?.userId || "ZU9344",
+      userId: currentUser?.userId,
       symbol: symbol.toUpperCase(),
       exchange: "NSE",
       type,

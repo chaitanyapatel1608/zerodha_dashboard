@@ -45,7 +45,7 @@ const NomineeModal = ({ isOpen, onClose }) => {
   });
   const [userAddress, setUserAddress] = useState(currentUser?.address || "");
 
-  const activeUserId = currentUser?.userId || localStorage.getItem("zerodha_userId") || "ZU9344";
+  const activeUserId = currentUser?.userId || localStorage.getItem("zerodha_userId");
 
   // Fetch dynamic user nominee records & demat data from database
   useEffect(() => {

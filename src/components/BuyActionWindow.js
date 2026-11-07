@@ -7,7 +7,15 @@ import "./BuyActionWindow.css";
 const API_BASE = "http://localhost:3002";
 
 const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
-  const { closeBuyWindow, currentUser, showToast, refreshPortfolio, openDepthModal } = useContext(GeneralContext);
+  const {
+    closeBuyWindow,
+    currentUser,
+    showToast,
+    refreshPortfolio,
+    openDepthModal,
+    userSegments = {},
+    openSegmentModal,
+  } = useContext(GeneralContext);
   const navigate = useNavigate();
 
   const [orderMode, setOrderMode] = useState(initialMode || "BUY"); // "BUY" or "SELL"
@@ -18,6 +26,41 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
   const [orderType, setOrderType] = useState("CNC"); // "CNC" (Longterm) or "MIS" (Intraday)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [availableMargin, setAvailableMargin] = useState(null);
+
+  // Segment Risk Evaluation
+  const getRequiredSegment = (symbol) => {
+    const upper = (symbol || "").toUpperCase();
+    if (
+      upper.includes(" FUT") ||
+      upper.includes(" CE") ||
+      upper.includes(" PE") ||
+      (upper.includes("NIFTY") && (upper.includes("OPT") || upper.includes("FUT")))
+    ) {
+      return "futuresAndOptions";
+    }
+    if (
+      upper.includes("CRUDEOIL") ||
+      upper.includes("GOLD") ||
+      upper.includes("SILVER") ||
+      upper.includes("NATURALGAS") ||
+      upper.includes("MCX")
+    ) {
+      return "commodity";
+    }
+    if (
+      upper.includes("USDINR") ||
+      upper.includes("EURINR") ||
+      upper.includes("GBPINR") ||
+      upper.includes("JPYINR")
+    ) {
+      return "currency";
+    }
+    return "equity";
+  };
+
+  const targetSegmentKey = getRequiredSegment(uid);
+  const targetSegmentConfig = userSegments?.[targetSegmentKey];
+  const isSegmentDisabled = targetSegmentConfig && targetSegmentConfig.active === false;
 
   // Fetch live available margin for user
   useEffect(() => {
@@ -38,6 +81,15 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
 
   const handleOrderSubmit = async () => {
     if (!uid) return;
+
+    if (isSegmentDisabled) {
+      showToast(
+        "Segment Deactivated",
+        `Order rejected! Trading in "${targetSegmentConfig?.name || targetSegmentKey}" is disabled under your Risk Settings / Kill Switch.`,
+        "error"
+      );
+      return;
+    }
 
     const numQty = Number(stockQuantity);
     const numPrice = Number(stockPrice);
@@ -60,7 +112,7 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
         price: numPrice,
         mode: orderMode,
         product: orderType,
-        userId: currentUser?.userId || "ZU9344",
+        userId: currentUser?.userId,
       });
 
       if (res.data && res.data.success) {
@@ -191,6 +243,13 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
           >
             Longterm <span className="tab-pill">CNC</span>
           </button>
+          <button
+            type="button"
+            className={`tab-btn ${orderType === "NRML" ? "active" : ""}`}
+            onClick={() => setOrderType("NRML")}
+          >
+            Overnight <span className="tab-pill">NRML</span>
+          </button>
         </div>
 
         {/* Quantity and Price Fields */}
@@ -223,6 +282,27 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
           </div>
         </div>
 
+        {/* Segment Disabled Alert */}
+        {isSegmentDisabled && (
+          <div className="buy-window-segment-alert">
+            <span className="alert-shield">🛑</span>
+            <div className="alert-text">
+              <strong>Segment Deactivated ({targetSegmentConfig?.name || targetSegmentKey})</strong>
+              <p>Trading in this segment is disabled under your Kill Switch risk settings.</p>
+            </div>
+            <button
+              type="button"
+              className="btn-manage-seg"
+              onClick={() => {
+                closeBuyWindow();
+                openSegmentModal();
+              }}
+            >
+              Settings
+            </button>
+          </div>
+        )}
+
         {/* Footer with Margin & Action Buttons */}
         <div className="buy-window-footer">
           <div className="margin-indicator">
@@ -241,7 +321,7 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
             <button
               className={`btn-order-submit ${isSellMode ? "btn-sell" : "btn-buy"}`}
               onClick={handleOrderSubmit}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isSegmentDisabled}
             >
               {isSubmitting ? (
                 <>

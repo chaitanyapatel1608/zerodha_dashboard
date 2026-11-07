@@ -1,0 +1,480 @@
+/* ==========================================================================
+   HOLDINGS PAGE STYLING (CTO LEVEL KITE ENTERPRISE SUITE)
+   ========================================================================== */
+
+.holdings-page-container {
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Sortable Table Headers */
+.sortable-th {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  position: relative;
+}
+
+.sortable-th:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+.sort-arrow {
+  margin-left: 4px;
+  font-size: 10px;
+  color: #2563eb;
+}
+
+.sort-arrow.inactive {
+  opacity: 0.3;
+  color: #94a3b8;
+}
+
+/* Hover Action Controls on Stock Row */
+.holdings-table-row {
+  position: relative;
+  transition: background-color 0.15s ease;
+}
+
+.holdings-table-row:hover {
+  background-color: #f8fafc !important;
+}
+
+.symbol-cell-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.symbol-title-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.symbol-text {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.sector-mini-badge {
+  font-size: 9.5px;
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* Row Quick Actions Drawer */
+.row-actions-drawer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.holdings-table-row:hover .row-actions-drawer {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.btn-row-action {
+  border: none;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  line-height: 1.4;
+}
+
+.btn-row-action.buy {
+  background: #387ed1;
+  color: #ffffff;
+}
+
+.btn-row-action.buy:hover {
+  background: #2563eb;
+}
+
+.btn-row-action.sell {
+  background: #ff5722;
+  color: #ffffff;
+}
+
+.btn-row-action.sell:hover {
+  background: #ea580c;
+}
+
+.btn-row-action.depth,
+.btn-row-action.more {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-row-action.depth:hover,
+.btn-row-action.more:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* Row Context Menu */
+.row-more-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.row-more-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);
+  min-width: 175px;
+  z-index: 100;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: dFadeIn 0.15s ease;
+}
+
+@keyframes dFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.row-dropdown-item {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.1s ease;
+}
+
+.row-dropdown-item:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* Export Dropdown Group */
+.export-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-export-trigger {
+  background: transparent;
+  border: none;
+  color: #387ed1;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-export-trigger:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.export-menu-popover {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.22);
+  min-width: 200px;
+  z-index: 200;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.export-menu-header {
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.export-option-btn {
+  background: transparent;
+  border: none;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  transition: background-color 0.12s ease;
+}
+
+.export-option-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.export-icon {
+  font-size: 14px;
+}
+
+/* Mutual Funds Showcase Tab */
+.mf-showcase-container {
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mf-banner-header {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mf-banner-header h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #166534;
+}
+
+.mf-banner-header p {
+  margin: 3px 0 0 0;
+  font-size: 12px;
+  color: #15803d;
+}
+
+.coin-pill-tag {
+  background: #15803d;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.mf-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .mf-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mf-fund-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  transition: all 0.18s ease;
+}
+
+.mf-fund-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+}
+
+.fund-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.fund-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.fund-category {
+  font-size: 10.5px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.fund-commission-badge {
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.fund-stats-strip {
+  display: flex;
+  gap: 16px;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.fund-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.stat-val {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.stat-val.cagr {
+  color: #10b981;
+}
+
+.fund-bottom-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.fund-aum {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.btn-start-sip-demat {
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-start-sip-demat:hover {
+  background: #059669;
+}
+
+/* ==========================================================================
+   HOLDINGS HERO SUMMARY CARD (TOP KPI BANNER)
+   ========================================================================== */
+
+.holdings-hero-summary-card {
+  display: flex;
+  align-items: stretch;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 14px 20px;
+  margin: 12px 0 16px 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.hero-summary-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  border-right: 1px solid #f1f5f9;
+}
+
+.hero-summary-item:first-child {
+  padding-left: 0;
+}
+
+.hero-summary-item.no-border {
+  border-right: none;
+}
+
+.hero-summary-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+}
+
+.hero-summary-val {
+  font-size: 19px;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  line-height: 1.2;
+}
+
+.hero-summary-sub {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 3px;
+}
+
+.hero-pnl-pill {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.hero-pnl-pill.pill-up {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.hero-pnl-pill.pill-down {
+  background: #fef2f2;
+  color: #dc2626;
+}
