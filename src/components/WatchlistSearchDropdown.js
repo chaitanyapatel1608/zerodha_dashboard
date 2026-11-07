@@ -19,7 +19,7 @@ const WatchlistSearchDropdown = ({
   const generalContext = useContext(GeneralContext);
   const { registerStocks, quotes } = useMarketFeed();
 
-  const userId = generalContext.currentUser?.userId || "ZU9344";
+  const userId = generalContext.currentUser?.userId;
 
   // Set of symbols already in current tab
   const currentSymbolSet = new Set((currentStocks || []).map((s) => (s.symbol || "").toUpperCase()));

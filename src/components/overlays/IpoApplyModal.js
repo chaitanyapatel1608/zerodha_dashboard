@@ -92,7 +92,7 @@ const IpoApplyModal = ({ ipo, onClose, onAppliedSuccess }) => {
     setIsSubmitting(true);
     try {
       const payload = {
-        userId: currentUser?.userId || "ZU9344",
+        userId: currentUser?.userId,
         userEmail,
         ipoSymbol: ipo.symbol,
         companyName: ipo.name,

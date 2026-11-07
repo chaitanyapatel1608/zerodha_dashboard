@@ -1,0 +1,426 @@
+/* ==========================================================================
+   BASKET EXECUTE REVIEW MODAL (CTO-LEVEL INSTITUTIONAL EXECUTION)
+   ========================================================================== */
+
+.basket-exec-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: execFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.basket-exec-container {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.28), 0 0 1px 1px rgba(15, 23, 42, 0.08);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  animation: execScaleUp 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.basket-exec-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafbfc;
+}
+
+.basket-exec-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.basket-exec-icon-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #eff6ff;
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.15);
+}
+
+.basket-exec-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.basket-exec-subtitle {
+  font-size: 11.5px;
+  color: #64748b;
+  display: block;
+  margin-top: 1px;
+}
+
+.basket-exec-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #94a3b8;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.basket-exec-close-btn:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+/* Body */
+.basket-exec-body {
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+/* Overview Card */
+.basket-exec-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.basket-exec-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.basket-exec-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.basket-exec-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-legs-count {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.badge-exchange-tag {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.basket-exec-card-meta {
+  font-size: 11.5px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+}
+
+.meta-dot {
+  margin: 0 6px;
+  color: #cbd5e1;
+}
+
+/* Financial Box */
+.basket-exec-financial-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.financial-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fin-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #64748b;
+}
+
+.fin-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.fin-value.primary {
+  color: #2563eb;
+}
+
+.fin-value.text-green {
+  color: #16a34a;
+}
+
+.fin-value.text-red {
+  color: #dc2626;
+}
+
+.fin-hint {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.margin-status-pill {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+
+.margin-status-pill.adequate {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.margin-status-pill.inadequate {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.basket-exec-warning-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.basket-exec-warning-banner strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.basket-exec-warning-banner p {
+  margin: 0;
+  font-size: 11.5px;
+}
+
+/* Table Wrap */
+.basket-exec-table-wrap {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.basket-exec-table-header {
+  padding: 9px 14px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.table-subtitle {
+  font-size: 11px;
+  font-weight: 400;
+  color: #64748b;
+}
+
+.basket-exec-table-scroll {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.basket-exec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.basket-exec-table th {
+  background: #fafbfc;
+  padding: 7px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #64748b;
+  font-size: 11px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.basket-exec-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f8fafc;
+  color: #334155;
+}
+
+.basket-exec-table tr:last-child td {
+  border-bottom: none;
+}
+
+.exec-mode-pill {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+}
+
+.exec-mode-pill.buy {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.exec-mode-pill.sell {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.exec-sym-text {
+  color: #0f172a;
+}
+
+.exec-exch-sub {
+  font-size: 9.5px;
+  color: #94a3b8;
+  margin-left: 4px;
+}
+
+.exec-prod-tag {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 10.5px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.exec-qty-num {
+  font-weight: 600;
+}
+
+/* Notice Card */
+.basket-exec-notice-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 11.5px;
+  color: #166534;
+  line-height: 1.45;
+}
+
+.basket-exec-notice-card svg {
+  color: #16a34a;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Footer */
+.basket-exec-footer {
+  padding: 14px 22px;
+  background: #fafbfc;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-exec-cancel {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-exec-cancel:hover:not(:disabled) {
+  background: #f8fafc;
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+
+.btn-exec-confirm {
+  background: #2563eb;
+  border: 1px solid #1d4ed8;
+  color: #ffffff;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
+}
+
+.btn-exec-confirm:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.btn-exec-confirm:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.exec-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: execSpin 0.7s linear infinite;
+  display: inline-block;
+}

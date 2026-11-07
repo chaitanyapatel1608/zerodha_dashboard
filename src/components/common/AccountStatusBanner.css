@@ -52,3 +52,13 @@
   from { opacity: 0; transform: translateY(-2px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+.account-status-banner.banner-warning {
+  background-color: #fff7ed;
+  border-color: #fed7aa;
+  color: #9a3412;
+}
+
+.account-status-banner.banner-warning .banner-icon {
+  color: #ea580c;
+}

@@ -6,6 +6,7 @@ import NomineeModal from "./overlays/NomineeModal";
 import GttModal from "./overlays/GttModal";
 import MarketDepthModal from "./overlays/MarketDepthModal";
 import MarketMoversModal from "./overlays/MarketMoversModal";
+import SegmentSettingsModal from "./overlays/SegmentSettingsModal";
 
 import KiteToast from "./common/KiteToast";
 import { currentUser as defaultUser, initialBaskets } from "../data/mockData";
@@ -19,6 +20,11 @@ const GeneralContext = createContext({
   isNomineeModalOpen: false,
   openNomineeModal: () => {},
   closeNomineeModal: () => {},
+  isSegmentModalOpen: false,
+  openSegmentModal: () => {},
+  closeSegmentModal: () => {},
+  userSegments: {},
+  fetchUserSegments: () => {},
   isGttModalOpen: false,
   isDepthModalOpen: false,
   openDepthModal: (sym) => {},
@@ -76,6 +82,8 @@ export const GeneralContextProvider = (props) => {
       const paramUserId = urlParams.get("userId");
       const paramName = urlParams.get("name");
       const paramEmail = urlParams.get("email");
+      const paramPan = urlParams.get("pan");
+      const paramDemat = urlParams.get("demat");
 
       if (paramToken && paramUserId) {
         const name = paramName ? decodeURIComponent(paramName) : "Trader";
@@ -83,7 +91,9 @@ export const GeneralContextProvider = (props) => {
           ...defaultUser,
           name,
           userId: paramUserId,
-          email: paramEmail ? decodeURIComponent(paramEmail) : defaultUser.email,
+          email: paramEmail ? decodeURIComponent(paramEmail) : "",
+          pan: paramPan ? decodeURIComponent(paramPan) : "",
+          demat: paramDemat ? decodeURIComponent(paramDemat) : "",
           avatarText: name.slice(0, 2).toUpperCase() || "TR",
         };
       }
@@ -125,6 +135,9 @@ export const GeneralContextProvider = (props) => {
   const [gttData, setGttData] = useState({ symbol: "INFY", price: null });
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isBasketsDropdownOpen, setIsBasketsDropdownOpen] = useState(false);
+  const [isSegmentModalOpen, setIsSegmentModalOpen] = useState(false);
+  const [userSegments, setUserSegments] = useState({});
   const [activeWatchlistGroup, setActiveWatchlistGroup] = useState(1);
   const [baskets, setBaskets] = useState(initialBaskets);
   const [toasts, setToasts] = useState([]);
@@ -134,7 +147,7 @@ export const GeneralContextProvider = (props) => {
 
   const fetchNotifications = useCallback(async (typeFilter = "ALL") => {
     try {
-      const activeUserId = currentUser?.userId || "ZU9344";
+      const activeUserId = currentUser?.userId;
       const params = { userId: activeUserId, limit: 50 };
       if (typeFilter && typeFilter !== "ALL") {
         params.type = typeFilter;
@@ -150,7 +163,7 @@ export const GeneralContextProvider = (props) => {
 
   const fetchUnreadCount = useCallback(async () => {
     try {
-      const activeUserId = currentUser?.userId || "ZU9344";
+      const activeUserId = currentUser?.userId;
       const res = await axios.get("http://localhost:3002/notifications/unreadCount", {
         params: { userId: activeUserId },
       });
@@ -178,7 +191,7 @@ export const GeneralContextProvider = (props) => {
     setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
     setUnreadCount(0);
     try {
-      const activeUserId = currentUser?.userId || "ZU9344";
+      const activeUserId = currentUser?.userId;
       await axios.post("http://localhost:3002/notifications/markAllRead", {
         userId: activeUserId,
       });
@@ -206,7 +219,7 @@ export const GeneralContextProvider = (props) => {
     setNotifications([]);
     setUnreadCount(0);
     try {
-      const activeUserId = currentUser?.userId || "ZU9344";
+      const activeUserId = currentUser?.userId;
       await axios.post("http://localhost:3002/notifications/clearAll", {
         userId: activeUserId,
       });
@@ -230,6 +243,43 @@ export const GeneralContextProvider = (props) => {
   const refreshPortfolio = useCallback(() => {
     setPortfolioTrigger((prev) => prev + 1);
   }, []);
+
+  const fetchUserBaskets = useCallback(async () => {
+    try {
+      const activeUserId = currentUser?.userId;
+      const res = await axios.get("http://localhost:3002/allBaskets", {
+        params: { userId: activeUserId },
+      });
+      if (Array.isArray(res.data)) {
+        setBaskets(res.data);
+      }
+    } catch (e) {
+      console.warn("Error fetching baskets in context:", e.message);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    fetchUserBaskets();
+  }, [fetchUserBaskets, portfolioTrigger]);
+
+  const fetchUserSegments = useCallback(async () => {
+    try {
+      const activeUserId = currentUser?.userId;
+      if (!activeUserId) return;
+      const res = await axios.get("http://localhost:3002/userSegments", {
+        params: { userId: activeUserId },
+      });
+      if (res.data?.success && res.data.segments) {
+        setUserSegments(res.data.segments);
+      }
+    } catch (e) {
+      console.warn("Error fetching user segments in context:", e.message);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    fetchUserSegments();
+  }, [fetchUserSegments, portfolioTrigger]);
 
   const showToast = useCallback((title, message, type = "success") => {
     const id = Date.now() + Math.random().toString();
@@ -257,7 +307,7 @@ export const GeneralContextProvider = (props) => {
       if (paramToken && paramUserId) {
         localStorage.setItem("zerodha_token", paramToken);
         const name = paramName ? decodeURIComponent(paramName) : "Trader";
-        const email = paramEmail ? decodeURIComponent(paramEmail) : defaultUser.email;
+        const email = paramEmail ? decodeURIComponent(paramEmail) : "";
         const paramPan = urlParams.get("pan");
         const paramDemat = urlParams.get("demat");
         const initials = name
@@ -273,13 +323,32 @@ export const GeneralContextProvider = (props) => {
           name,
           userId: paramUserId,
           email,
-          pan: paramPan ? decodeURIComponent(paramPan) : defaultUser.pan,
-          demat: paramDemat ? decodeURIComponent(paramDemat) : defaultUser.demat,
+          pan: paramPan ? decodeURIComponent(paramPan) : "",
+          demat: paramDemat ? decodeURIComponent(paramDemat) : "",
           avatarText: initials,
         };
         localStorage.setItem("zerodha_user", JSON.stringify(syncedUser));
         setCurrentUser(syncedUser);
         setIsAuthenticated(true);
+
+        // Fetch authoritative profile from MongoDB Atlas to populate exact Demat BO ID, email & nominee
+        fetch(`http://localhost:3002/verifyUser?userId=${paramUserId}`, {
+          headers: { Authorization: `Bearer ${paramToken}` },
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data?.user) {
+              const fullProfile = {
+                ...syncedUser,
+                ...data.user,
+                name: data.user.fullName || syncedUser.name,
+              };
+              localStorage.setItem("zerodha_user", JSON.stringify(fullProfile));
+              setCurrentUser(fullProfile);
+            }
+          })
+          .catch(() => {});
+
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
       }
@@ -289,24 +358,24 @@ export const GeneralContextProvider = (props) => {
 
       if (storedToken && storedUser) {
         const parsed = JSON.parse(storedUser);
-        setCurrentUser({ ...defaultUser, ...parsed });
-      // Fetch nominee status if user ID available
-      if (storedToken && storedUser) {
-        try {
-          const parsed = JSON.parse(storedUser);
-          if (parsed && parsed.userId) {
-            fetch(`http://localhost:3002/getNominee?userId=${parsed.userId}`)
-              .then((res) => res.json())
-              .then((data) => {
-                if (data && data.nomineeStatus) {
-                  setCurrentUser((prev) => (prev ? { ...prev, nomineeStatus: data.nomineeStatus, nominee: data.nominee } : prev));
-                }
-              })
-              .catch(() => {});
-          }
-        } catch (e) {}
-      }
+        setCurrentUser(parsed);
         setIsAuthenticated(true);
+
+        // Synchronize with database
+        if (parsed.userId) {
+          fetch(`http://localhost:3002/verifyUser?userId=${parsed.userId}`, {
+            headers: storedToken ? { Authorization: `Bearer ${storedToken}` } : {},
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data?.user) {
+                const refreshed = { ...parsed, ...data.user, name: data.user.fullName || parsed.name };
+                localStorage.setItem("zerodha_user", JSON.stringify(refreshed));
+                setCurrentUser(refreshed);
+              }
+            })
+            .catch(() => {});
+        }
       } else {
         // Not authenticated
         setCurrentUser(null);
@@ -337,6 +406,26 @@ export const GeneralContextProvider = (props) => {
   const closeAllOverlays = () => {
     setIsNotificationsOpen(false);
     setIsProfileOpen(false);
+    setIsBasketsDropdownOpen(false);
+  };
+
+  const openSegmentModal = useCallback(() => {
+    closeAllOverlays();
+    setIsSegmentModalOpen(true);
+  }, []);
+
+  const closeSegmentModal = useCallback(() => {
+    setIsSegmentModalOpen(false);
+  }, []);
+
+  const toggleBasketsDropdown = () => {
+    setIsBasketsDropdownOpen((prev) => !prev);
+    setIsNotificationsOpen(false);
+    setIsProfileOpen(false);
+  };
+
+  const closeBasketsDropdown = () => {
+    setIsBasketsDropdownOpen(false);
   };
 
   const openBasketModal = (basket = null) => {
@@ -427,6 +516,11 @@ export const GeneralContextProvider = (props) => {
         isNomineeModalOpen,
         openNomineeModal,
         closeNomineeModal,
+        isSegmentModalOpen,
+        openSegmentModal,
+        closeSegmentModal,
+        userSegments,
+        fetchUserSegments,
         isGttModalOpen,
         openGttModal,
         closeGttModal,
@@ -440,6 +534,10 @@ export const GeneralContextProvider = (props) => {
         isNotificationsOpen,
         toggleNotifications,
         closeNotifications,
+        isBasketsDropdownOpen,
+        toggleBasketsDropdown,
+        closeBasketsDropdown,
+        fetchUserBaskets,
         isProfileOpen,
         toggleProfile,
         closeProfile,
@@ -469,6 +567,7 @@ export const GeneralContextProvider = (props) => {
       {isMarketMoversOpen && <MarketMoversModal isOpen={isMarketMoversOpen} type={marketMoversType} onClose={closeMarketMovers} />}
       {isBasketModalOpen && <BasketModal basket={activeBasketData} onClose={closeBasketModal} />}
       {isNomineeModalOpen && <NomineeModal isOpen={isNomineeModalOpen} onClose={closeNomineeModal} />}
+      {isSegmentModalOpen && <SegmentSettingsModal isOpen={isSegmentModalOpen} onClose={closeSegmentModal} />}
       {isGttModalOpen && <GttModal isOpen={isGttModalOpen} onClose={closeGttModal} initialSymbol={gttData.symbol} initialPrice={gttData.price} />}
       {isDepthModalOpen && <MarketDepthModal isOpen={isDepthModalOpen} onClose={closeDepthModal} symbol={depthSymbol} />}
       {isBuyWindowOpen && (

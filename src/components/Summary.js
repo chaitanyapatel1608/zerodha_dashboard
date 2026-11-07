@@ -6,7 +6,7 @@ import AccountStatusBanner from "./common/AccountStatusBanner";
 import MarketOverviewChart from "./dashboard/MarketOverviewChart";
 import GainersLosersPanel from "./dashboard/GainersLosersPanel";
 import IpoCalendarPanel from "./dashboard/IpoCalendarPanel";
-import { accountBalances as fallbackBalances, holdingsData as fallbackHoldings } from "../data/mockData";
+import { accountBalances as fallbackBalances } from "../data/mockData";
 import { useMarketFeed } from "../context/MarketFeedContext";
 
 
@@ -19,22 +19,22 @@ const Summary = () => {
   useEffect(() => {
     // 1. Fetch live holdings from MongoDB
     axios
-      .get("http://localhost:3002/allHoldings")
+      .get("http://localhost:3002/allHoldings", { params: { userId: currentUser?.userId } })
       .then((res) => {
-        if (Array.isArray(res.data) && res.data.length > 0) {
+        if (Array.isArray(res.data)) {
           setHoldings(res.data);
         } else {
-          setHoldings(fallbackHoldings);
+          setHoldings([]);
         }
       })
       .catch((err) => {
         console.warn("Backend unavailable for summary holdings, using fallback:", err.message);
-        setHoldings(fallbackHoldings);
+        setHoldings([]);
       });
 
     // 2. Fetch live funds from MongoDB
     axios
-      .get("http://localhost:3002/userFunds")
+      .get("http://localhost:3002/userFunds", { params: { userId: currentUser?.userId } })
       .then((res) => {
         if (res.data && res.data.equity) {
           setFunds(res.data);

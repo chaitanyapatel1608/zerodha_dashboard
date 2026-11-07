@@ -3,10 +3,14 @@ import { NavLink } from "react-router-dom";
 import GeneralContext from "./GeneralContext";
 import NotificationsDropdown from "./overlays/NotificationsDropdown";
 import ProfileDropdown from "./overlays/ProfileDropdown";
+import BasketsDropdown from "./overlays/BasketsDropdown";
 
 const Menu = ({ mobileTitle = "" }) => {
   const {
-    openBasketModal,
+    baskets = [],
+    isBasketsDropdownOpen,
+    toggleBasketsDropdown,
+    closeBasketsDropdown,
     isNotificationsOpen,
     toggleNotifications,
     closeNotifications,
@@ -81,19 +85,33 @@ const Menu = ({ mobileTitle = "" }) => {
       </nav>
 
       <div className="nav-utility-group">
-        {/* Basket Modal Trigger */}
-        <button
-          className="nav-icon-btn basket-btn"
-          title="Baskets (B)"
-          onClick={openBasketModal}
-          aria-label="Open Basket Orders"
-        >
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-          </svg>
-        </button>
+        {/* Basket Dropdown Trigger */}
+        <div className="baskets-wrapper">
+          <button
+            className={`nav-icon-btn basket-btn ${isBasketsDropdownOpen ? "active" : ""}`}
+            title="Order Baskets"
+            onClick={toggleBasketsDropdown}
+            aria-label="Open Baskets"
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            {baskets.length > 0 && (
+              <span
+                className="basket-nav-badge"
+                title={`${baskets.length} active order basket${baskets.length > 1 ? "s" : ""}`}
+              >
+                {baskets.length > 99 ? "99+" : baskets.length}
+              </span>
+            )}
+          </button>
+          <BasketsDropdown
+            isOpen={isBasketsDropdownOpen}
+            onClose={closeBasketsDropdown}
+          />
+        </div>
 
         {/* Notifications Dropdown Trigger */}
         <div className="notifications-wrapper">
@@ -121,8 +139,8 @@ const Menu = ({ mobileTitle = "" }) => {
         {/* User Profile Trigger */}
         <div className="profile-wrapper">
           <div className="profile-trigger" onClick={toggleProfile}>
-            <div className="avatar">{currentUser?.avatarText || "CU"}</div>
-            <span className="username">{currentUser?.userId || "ZU8842"}</span>
+            <div className="avatar">{currentUser?.avatarText || (currentUser?.name ? currentUser.name.slice(0, 2).toUpperCase() : "TR")}</div>
+            <span className="username">{currentUser?.userId || ""}</span>
             <svg className={`chevron ${isProfileOpen ? "rotated" : ""}`} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
