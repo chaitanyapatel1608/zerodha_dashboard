@@ -16,7 +16,7 @@ const AddFundsModal = ({ onClose, onSuccess, currentUser, showToast, refreshPort
   const [errorMsg, setErrorMsg] = useState("");
 
   const fullUpiId = upiUser.includes("@") ? upiUser.trim() : `${upiUser.trim()}${upiSuffix}`;
-  const userEmail = currentUser?.email || "chaitanya.expound@gmail.com";
+  const userEmail = currentUser?.email || "";
 
   const handleInitiate = async (e) => {
     e.preventDefault();

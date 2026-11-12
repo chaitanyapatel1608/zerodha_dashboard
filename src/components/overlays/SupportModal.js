@@ -64,7 +64,7 @@ const SupportModal = ({
   const [copiedId, setCopiedId] = useState(false);
   const [expandedTicketId, setExpandedTicketId] = useState(null);
 
-  const activeUserId = currentUser?.userId || "ZU9344";
+  const activeUserId = currentUser?.userId || "";
 
   // Fetch user tickets from database
   const fetchUserTickets = useCallback(async () => {
@@ -128,7 +128,7 @@ const SupportModal = ({
       const payload = {
         userId: activeUserId,
         userName: currentUser?.name || "Trader",
-        userEmail: currentUser?.email || "chaitanya.expound@gmail.com",
+        userEmail: currentUser?.email || "",
         category: ticketCategory,
         categoryLabel: categoryLabels[ticketCategory] || "General Support",
         subject: ticketSubject.trim(),

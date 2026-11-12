@@ -3,6 +3,8 @@
  * Supports CSV, Excel (.xls), and Printable PDF Statement
  */
 
+import { escapeHtml, renderSafePrintHtml } from "./htmlSanitizer";
+
 export const exportBidsToCSV = (ipos = [], applications = [], currentUser = {}) => {
   const userId = currentUser?.userId || "TRADER";
   const today = new Date().toISOString().split("T")[0];
@@ -63,7 +65,7 @@ export const exportBidsToCSV = (ipos = [], applications = [], currentUser = {}) 
 
 export const exportBidsToExcel = (ipos = [], applications = [], currentUser = {}) => {
   const userId = currentUser?.userId || "TRADER";
-  const userName = currentUser?.fullName || currentUser?.name || "Client";
+  const userName = escapeHtml(currentUser?.fullName || currentUser?.name || "Client");
   const today = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
@@ -91,9 +93,9 @@ export const exportBidsToExcel = (ipos = [], applications = [], currentUser = {}
       return `
         <tr>
           <td>${item.symbol}</td>
-          <td>${item.name}</td>
-          <td>${item.dates}</td>
-          <td>${item.priceRange}</td>
+          <td>${escapeHtml(item.name)}</td>
+          <td>${escapeHtml(item.dates)}</td>
+          <td>${escapeHtml(item.priceRange)}</td>
           <td align="right">${item.minQty}</td>
           <td>${item.minAmount}</td>
           <td><strong>${myStatus}</strong></td>
@@ -168,7 +170,7 @@ export const exportBidsToExcel = (ipos = [], applications = [], currentUser = {}
 
 export const exportBidsToPDF = (ipos = [], applications = [], currentUser = {}) => {
   const userId = currentUser?.userId || "TRADER";
-  const userName = currentUser?.fullName || currentUser?.name || "Client";
+  const userName = escapeHtml(currentUser?.fullName || currentUser?.name || "Client");
   const today = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
@@ -193,12 +195,12 @@ export const exportBidsToPDF = (ipos = [], applications = [], currentUser = {}) 
 
       return `
         <tr style="${isApplied ? "background-color: #f0fdf4;" : ""}">
-          <td class="font-bold">${item.symbol}</td>
-          <td>${item.name}</td>
-          <td>${item.dates}</td>
-          <td>${item.priceRange}</td>
-          <td class="text-right">${item.minAmount} (${item.minQty} sh)</td>
-          <td class="text-center font-bold" style="color: ${statusColor};">${myStatus}</td>
+          <td class="font-bold">${escapeHtml(item.symbol)}</td>
+          <td>${escapeHtml(item.name)}</td>
+          <td>${escapeHtml(item.dates)}</td>
+          <td>${escapeHtml(item.priceRange)}</td>
+          <td class="text-right">${escapeHtml(item.minAmount)} (${escapeHtml(item.minQty)} sh)</td>
+          <td class="text-center font-bold" style="color: ${statusColor};">${escapeHtml(myStatus)}</td>
           <td class="text-right">${app ? `₹${app.totalAmount.toLocaleString("en-IN")}` : "-"}</td>
         </tr>
       `;
@@ -211,7 +213,7 @@ export const exportBidsToPDF = (ipos = [], applications = [], currentUser = {}) 
     return;
   }
 
-  printWindow.document.write(`
+  renderSafePrintHtml(printWindow, `
     <!DOCTYPE html>
     <html>
       <head>
@@ -237,7 +239,7 @@ export const exportBidsToPDF = (ipos = [], applications = [], currentUser = {}) 
         <div class="header">
           <div>
             <h1 class="title">ZERODHA PRIMARY MARKETS & BIDS STATEMENT</h1>
-            <div class="meta">Client: ${userName} (${userId}) | Generated: ${today}</div>
+            <div class="meta">Client: ${userName} (${escapeHtml(userId)}) | Generated: ${escapeHtml(today)}</div>
           </div>
         </div>
         <div class="kpi-strip">
@@ -269,7 +271,7 @@ export const exportBidsToPDF = (ipos = [], applications = [], currentUser = {}) 
       </body>
     </html>
   `);
-  printWindow.document.close();
+
   printWindow.focus();
   setTimeout(() => {
     printWindow.print();

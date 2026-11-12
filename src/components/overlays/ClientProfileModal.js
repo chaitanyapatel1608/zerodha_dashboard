@@ -25,7 +25,7 @@ const ClientProfileModal = ({ isOpen, onClose, currentUser, onOpenNominee, onOpe
                 <span className="profile-modal-badge">{currentUser?.userId || "ZU9344"}</span>
                 <span className="profile-status-pill">✓ SEBI KYC Verified</span>
               </div>
-              <span className="profile-modal-email">{currentUser?.email || "chaitanya.expound@gmail.com"}</span>
+              <span className="profile-modal-email">{currentUser?.email || ""}</span>
             </div>
           </div>
           <button className="profile-modal-close-btn" onClick={onClose}>

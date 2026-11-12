@@ -594,15 +594,15 @@ export const topLosers = [
 
 export const accountBalances = {
   equity: {
-    availableMargin: "1,42,850.45",
-    usedMargin: "38,420.00",
-    availableCash: "1,42,850.45",
-    openingBalance: "1,81,270.45",
+    availableMargin: "0.00",
+    usedMargin: "0.00",
+    availableCash: "0.00",
+    openingBalance: "0.00",
     payin: "0.00",
     payout: "0.00",
-    span: "24,800.00",
+    span: "0.00",
     deliveryMargin: "0.00",
-    exposure: "13,620.00",
+    exposure: "0.00",
     optionsPremium: "0.00",
     collateralLiquid: "0.00",
     collateralEquity: "0.00",

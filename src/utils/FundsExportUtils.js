@@ -2,6 +2,7 @@
  * Funds & Treasury Ledger Statement Exporter
  * Supports CSV, Excel (.xls), and Printable PDF Statement
  */
+import { escapeHtml, renderSafePrintDocument } from "./htmlSanitizer";
 
 export const exportFundsToCSV = (transactions = [], funds = {}, currentUser = {}) => {
   const userId = currentUser?.userId || "TRADER";
@@ -57,13 +58,13 @@ export const exportFundsToExcel = (transactions = [], funds = {}, currentUser = 
       (t) => `
       <tr>
         <td>${new Date(t.createdAt).toLocaleString("en-IN")}</td>
-        <td>${t.referenceId}</td>
-        <td><strong>${t.type}</strong></td>
+        <td>${escapeHtml(t.referenceId)}</td>
+        <td><strong>${escapeHtml(t.type)}</strong></td>
         <td align="right">₹${Number(t.amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
-        <td>${t.paymentMethod || "UPI"}</td>
-        <td>${t.upiId || t.bankAccount || "-"}</td>
-        <td>${t.status}</td>
-        <td>${t.remarks || "-"}</td>
+        <td>${escapeHtml(t.paymentMethod || "UPI")}</td>
+        <td>${escapeHtml(t.upiId || t.bankAccount || "-")}</td>
+        <td>${escapeHtml(t.status)}</td>
+        <td>${escapeHtml(t.remarks || "-")}</td>
       </tr>
     `
     )
@@ -84,7 +85,7 @@ export const exportFundsToExcel = (transactions = [], funds = {}, currentUser = 
     </head>
     <body>
       <div class="header-title">ZERODHA BROKING LTD. &bull; FUNDS STATEMENT & LEDGER</div>
-      <div class="meta-text">Client: ${userName} (${userId}) | Generated: ${today} | Available Margin: ₹${equity.availableMargin || "0.00"}</div>
+      <div class="meta-text">Client: ${escapeHtml(userName)} (${escapeHtml(userId)}) | Generated: ${escapeHtml(today)} | Available Margin: ₹${escapeHtml(equity.availableMargin || "0.00")}</div>
       <table>
         <thead>
           <tr>
@@ -132,13 +133,13 @@ export const exportFundsToPDF = (transactions = [], funds = {}, currentUser = {}
     .map(
       (t) => `
       <tr>
-        <td>${new Date(t.createdAt).toLocaleString("en-IN")}</td>
-        <td style="font-family: monospace;">${t.referenceId}</td>
-        <td><strong>${t.type}</strong></td>
+        <td>${escapeHtml(new Date(t.createdAt).toLocaleString("en-IN"))}</td>
+        <td style="font-family: monospace;">${escapeHtml(t.referenceId)}</td>
+        <td><strong>${escapeHtml(t.type)}</strong></td>
         <td style="text-align: right; font-weight: 600;">₹${Number(t.amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
-        <td>${t.paymentMethod || "UPI"}</td>
-        <td>${t.status === "COMPLETED" ? '<span style="color: #16a34a; font-weight: bold;">Completed</span>' : t.status}</td>
-        <td>${t.remarks || "-"}</td>
+        <td>${escapeHtml(t.paymentMethod || "UPI")}</td>
+        <td>${t.status === "COMPLETED" ? '<span style="color: #16a34a; font-weight: bold;">Completed</span>' : escapeHtml(t.status)}</td>
+        <td>${escapeHtml(t.remarks || "-")}</td>
       </tr>
     `
     )
@@ -147,54 +148,50 @@ export const exportFundsToPDF = (transactions = [], funds = {}, currentUser = {}
   const printWindow = window.open("", "_blank");
   if (!printWindow) return;
 
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Zerodha Funds Statement - ${userId}</title>
-      <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 30px; color: #0f172a; }
-        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #387ed1; padding-bottom: 16px; margin-bottom: 20px; }
-        .brand { font-size: 24px; font-weight: 800; color: #387ed1; letter-spacing: 1px; }
-        .sub { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
-        .kpi-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; }
-        .kpi-label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; }
-        .kpi-val { font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 4px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th { background: #f1f5f9; text-align: left; padding: 8px 10px; font-size: 11px; text-transform: uppercase; color: #475569; border-bottom: 1px solid #cbd5e1; }
-        td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: #334155; }
-        .footer { margin-top: 30px; font-size: 11px; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 14px; }
-      </style>
-    </head>
-    <body>
+  renderSafePrintDocument(printWindow, {
+    title: `Zerodha Funds Statement - ${userId}`,
+    styles: `
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 30px; color: #0f172a; }
+      .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #387ed1; padding-bottom: 16px; margin-bottom: 20px; }
+      .brand { font-size: 24px; font-weight: 800; color: #387ed1; letter-spacing: 1px; }
+      .sub { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+      .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+      .kpi-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; }
+      .kpi-label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+      .kpi-val { font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 4px; }
+      table { width: 100%; border-collapse: collapse; font-size: 12px; }
+      th { background: #f1f5f9; text-align: left; padding: 8px 10px; font-size: 11px; text-transform: uppercase; color: #475569; border-bottom: 1px solid #cbd5e1; }
+      td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+      .footer { margin-top: 30px; font-size: 11px; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 14px; }
+    `,
+    bodyHtml: `
       <div class="header">
         <div>
           <div class="brand">ZERODHA</div>
           <div class="sub">Official Trading Account Statement &bull; Funds Ledger</div>
         </div>
         <div style="text-align: right; font-size: 12px; color: #475569;">
-          <div><strong>Client:</strong> ${userName} (${userId})</div>
-          <div><strong>Statement Date:</strong> ${today}</div>
+          <div><strong>Client:</strong> ${escapeHtml(userName)} (${escapeHtml(userId)})</div>
+          <div><strong>Statement Date:</strong> ${escapeHtml(today)}</div>
         </div>
       </div>
 
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Available Margin</div>
-          <div class="kpi-val" style="color: #2563eb;">₹${equity.availableMargin || "0.00"}</div>
+          <div class="kpi-val" style="color: #2563eb;">₹${escapeHtml(equity.availableMargin || "0.00")}</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Used Margin</div>
-          <div class="kpi-val">₹${equity.usedMargin || "0.00"}</div>
+          <div class="kpi-val">₹${escapeHtml(equity.usedMargin || "0.00")}</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Available Cash</div>
-          <div class="kpi-val">₹${equity.availableCash || "0.00"}</div>
+          <div class="kpi-val">₹${escapeHtml(equity.availableCash || "0.00")}</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Total Collateral</div>
-          <div class="kpi-val" style="color: #16a34a;">₹${equity.totalCollateral || "0.00"}</div>
+          <div class="kpi-val" style="color: #16a34a;">₹${escapeHtml(equity.totalCollateral || "0.00")}</div>
         </div>
       </div>
 
@@ -219,12 +216,6 @@ export const exportFundsToPDF = (transactions = [], funds = {}, currentUser = {}
         Zerodha Broking Limited &bull; Member: NSE / BSE / MCX &bull; SEBI Reg: INZ000031633<br>
         This is a computer-generated account statement and does not require a physical signature.
       </div>
-
-      <script>
-        window.onload = function() { window.print(); }
-      </script>
-    </body>
-    </html>
-  `);
-  printWindow.document.close();
+    `,
+  });
 };

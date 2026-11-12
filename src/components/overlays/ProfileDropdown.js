@@ -86,7 +86,7 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
             <span className="user-full-name">{currentUser.name || "Trader"}</span>
             <span className="user-id-badge">{currentUser.userId || "ZU9344"}</span>
           </div>
-          <span className="user-email">{currentUser.email || "chaitanya.expound@gmail.com"}</span>
+          <span className="user-email">{currentUser.email || ""}</span>
         </div>
       </div>
 

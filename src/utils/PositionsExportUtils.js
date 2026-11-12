@@ -3,6 +3,8 @@
  * Supports CSV, Excel (.xls), and Printable PDF Statement
  */
 
+import { escapeHtml, renderSafePrintHtml } from "./htmlSanitizer";
+
 export const exportPositionsToCSV = (positions, currentUser, quotes = {}) => {
   const userId = currentUser?.userId || "TRADER";
   const today = new Date().toISOString().split("T")[0];
@@ -53,7 +55,7 @@ export const exportPositionsToCSV = (positions, currentUser, quotes = {}) => {
 
 export const exportPositionsToExcel = (positions, currentUser, quotes = {}) => {
   const userId = currentUser?.userId || "TRADER";
-  const userName = currentUser?.name || "Client";
+  const userName = escapeHtml(currentUser?.name || "Client");
   const today = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
@@ -112,7 +114,7 @@ export const exportPositionsToExcel = (positions, currentUser, quotes = {}) => {
     <body style="font-family: Arial, sans-serif;">
       <h2 style="color: #387ed1; margin-bottom: 4px;">ZERODHA BROKING LTD. - DAY POSITIONS STATEMENT</h2>
       <p style="font-size: 13px; color: #555; margin-top: 0;">
-        <strong>Client:</strong> ${userName} (${userId}) | <strong>Date:</strong> ${today}
+        <strong>Client:</strong> ${userName} (${escapeHtml(userId)}) | <strong>Date:</strong> ${escapeHtml(today)}
       </p>
       <table style="border-collapse: collapse; width: 100%; font-size: 13px;">
         <thead>
@@ -156,7 +158,7 @@ export const exportPositionsToExcel = (positions, currentUser, quotes = {}) => {
 
 export const exportPositionsToPDF = (positions, currentUser, quotes = {}) => {
   const userId = currentUser?.userId || "TRADER";
-  const userName = currentUser?.name || "Client";
+  const userName = escapeHtml(currentUser?.name || "Client");
   const today = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
@@ -180,8 +182,8 @@ export const exportPositionsToPDF = (positions, currentUser, quotes = {}) => {
 
       return `
         <tr>
-          <td class="font-bold">${sym}</td>
-          <td><span class="badge">${p.product || "MIS"}</span></td>
+          <td class="font-bold">${escapeHtml(sym)}</td>
+          <td><span class="badge">${escapeHtml(p.product || "MIS")}</span></td>
           <td class="text-right ${qty >= 0 ? "text-green" : "text-amber"}">${qty > 0 ? `+${qty}` : qty}</td>
           <td class="text-right">₹${avg.toFixed(2)}</td>
           <td class="text-right">₹${ltp.toFixed(2)}</td>
@@ -200,7 +202,7 @@ export const exportPositionsToPDF = (positions, currentUser, quotes = {}) => {
     return;
   }
 
-  printWindow.document.write(`
+  renderSafePrintHtml(printWindow, `
     <!DOCTYPE html>
     <html>
       <head>
@@ -224,7 +226,7 @@ export const exportPositionsToPDF = (positions, currentUser, quotes = {}) => {
         <div class="header">
           <div>
             <h1 class="title">ZERODHA DAY POSITIONS STATEMENT</h1>
-            <div class="meta">Client: ${userName} (${userId}) | Date: ${today}</div>
+            <div class="meta">Client: ${userName} (${escapeHtml(userId)}) | Date: ${escapeHtml(today)}</div>
           </div>
         </div>
         <table>
@@ -254,5 +256,5 @@ export const exportPositionsToPDF = (positions, currentUser, quotes = {}) => {
       </body>
     </html>
   `);
-  printWindow.document.close();
+
 };

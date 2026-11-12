@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useCallback } from "react";
-import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
+import { API_BASE, AUTH_PORTAL_URL, readCookie } from "../config/api";
 import axios from "axios";
 import BuyActionWindow from "./BuyActionWindow";
 import BasketModal from "./overlays/BasketModal";
@@ -16,7 +16,7 @@ import InviteFriendsModal from "./overlays/InviteFriendsModal";
 import SupportModal from "./overlays/SupportModal";
 
 import KiteToast from "./common/KiteToast";
-import { currentUser as defaultUser, initialBaskets } from "../data/mockData";
+import { currentUser as defaultUser } from "../data/mockData";
 
 const GeneralContext = createContext({
   openBuyWindow: (uid, mode, defaultPrice) => {},
@@ -66,7 +66,7 @@ const GeneralContext = createContext({
   updateUser: (patch) => {},
   activeWatchlistGroup: 1,
   setActiveWatchlistGroup: (id) => {},
-  baskets: initialBaskets,
+  baskets: [],
   setBaskets: () => {},
   logout: () => {},
   showToast: (title, message, type) => {},
@@ -94,9 +94,7 @@ export const GeneralContextProvider = (props) => {
   // Initial authentication determination
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     try {
-      const urlParams = getLaunchParams();
-      const token = urlParams.get("token") || localStorage.getItem("zerodha_token");
-      return Boolean(token);
+      return Boolean(localStorage.getItem("zerodha_user"));
     } catch (e) {
       return false;
     }
@@ -104,33 +102,8 @@ export const GeneralContextProvider = (props) => {
 
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const urlParams = getLaunchParams();
-      const paramToken = urlParams.get("token");
-      const paramUserId = urlParams.get("userId");
-      const paramName = urlParams.get("name");
-      const paramEmail = urlParams.get("email");
-      const paramPan = urlParams.get("pan");
-      const paramDemat = urlParams.get("demat");
-
-      if (paramToken && paramUserId) {
-        const name = paramName ? decodeURIComponent(paramName) : "Trader";
-        return {
-          ...defaultUser,
-          name,
-          userId: paramUserId,
-          email: paramEmail ? decodeURIComponent(paramEmail) : "",
-          pan: paramPan ? decodeURIComponent(paramPan) : "",
-          demat: paramDemat ? decodeURIComponent(paramDemat) : "",
-          avatarText: name.slice(0, 2).toUpperCase() || "TR",
-        };
-      }
-
       const storedUser = localStorage.getItem("zerodha_user");
-      const storedToken = localStorage.getItem("zerodha_token");
-      if (storedUser && storedToken) {
-        return JSON.parse(storedUser);
-      }
-      return null;
+      return storedUser ? JSON.parse(storedUser) : null;
     } catch (e) {
       return null;
     }
@@ -173,7 +146,7 @@ export const GeneralContextProvider = (props) => {
   const [isSegmentModalOpen, setIsSegmentModalOpen] = useState(false);
   const [userSegments, setUserSegments] = useState({});
   const [activeWatchlistGroup, setActiveWatchlistGroup] = useState(1);
-  const [baskets, setBaskets] = useState(initialBaskets);
+  const [baskets, setBaskets] = useState([]);
   const [toasts, setToasts] = useState([]);
   const [portfolioTrigger, setPortfolioTrigger] = useState(0);
   const [notifications, setNotifications] = useState([]);
@@ -329,92 +302,44 @@ export const GeneralContextProvider = (props) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Sync session on mount / URL changes
+  // Sync authoritative session from HttpOnly cookie via /verifyUser on mount
   useEffect(() => {
     try {
-      const urlParams = getLaunchParams();
-      const paramToken = urlParams.get("token");
-      const paramUserId = urlParams.get("userId");
-      const paramName = urlParams.get("name");
-      const paramEmail = urlParams.get("email");
-
-      if (paramToken && paramUserId) {
-        localStorage.setItem("zerodha_token", paramToken);
-        const name = paramName ? decodeURIComponent(paramName) : "Trader";
-        const email = paramEmail ? decodeURIComponent(paramEmail) : "";
-        const paramPan = urlParams.get("pan");
-        const paramDemat = urlParams.get("demat");
-        const initials = name
-          .split(" ")
-          .filter(Boolean)
-          .map((n) => n[0])
-          .join("")
-          .toUpperCase()
-          .slice(0, 2) || "TR";
-
-        const syncedUser = {
-          ...defaultUser,
-          name,
-          userId: paramUserId,
-          email,
-          pan: paramPan ? decodeURIComponent(paramPan) : "",
-          demat: paramDemat ? decodeURIComponent(paramDemat) : "",
-          avatarText: initials,
-        };
-        localStorage.setItem("zerodha_user", JSON.stringify(syncedUser));
-        setCurrentUser(syncedUser);
-        setIsAuthenticated(true);
-
-        // Fetch authoritative profile from MongoDB Atlas to populate exact Demat BO ID, email & nominee
-        fetch(`${API_BASE}/verifyUser?userId=${paramUserId}`, {
-          headers: { Authorization: `Bearer ${paramToken}` },
-        })
-          .then((r) => r.json())
-          .then((data) => {
-            if (data?.user) {
-              const fullProfile = {
-                ...syncedUser,
-                ...data.user,
-                name: data.user.fullName || syncedUser.name,
-              };
-              localStorage.setItem("zerodha_user", JSON.stringify(fullProfile));
-              setCurrentUser(fullProfile);
-            }
-          })
-          .catch(() => {});
-
+      localStorage.removeItem("zerodha_token");
+      if (window.location.hash && window.location.hash.includes("token=")) {
         window.history.replaceState({}, document.title, window.location.pathname);
-        return;
       }
 
-      const storedToken = localStorage.getItem("zerodha_token");
-      const storedUser = localStorage.getItem("zerodha_user");
-
-      if (storedToken && storedUser) {
-        const parsed = JSON.parse(storedUser);
-        setCurrentUser(parsed);
-        setIsAuthenticated(true);
-
-        // Synchronize with database
-        if (parsed.userId) {
-          fetch(`${API_BASE}/verifyUser?userId=${parsed.userId}`, {
-            headers: storedToken ? { Authorization: `Bearer ${storedToken}` } : {},
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data?.user) {
-                const refreshed = { ...parsed, ...data.user, name: data.user.fullName || parsed.name };
-                localStorage.setItem("zerodha_user", JSON.stringify(refreshed));
-                setCurrentUser(refreshed);
-              }
-            })
-            .catch(() => {});
-        }
-      } else {
-        // Not authenticated
-        setCurrentUser(null);
-        setIsAuthenticated(false);
-      }
+      fetch(`${API_BASE}/verifyUser`, { credentials: "include" })
+        .then(async (res) => {
+          if (!res.ok) {
+            localStorage.removeItem("zerodha_user");
+            setCurrentUser(null);
+            setIsAuthenticated(false);
+            return;
+          }
+          const data = await res.json();
+          if (data?.user) {
+            const fullProfile = {
+              ...defaultUser,
+              ...data.user,
+              name: data.user.fullName || data.user.userId || "Trader",
+            };
+            localStorage.setItem(
+              "zerodha_user",
+              JSON.stringify({
+                userId: fullProfile.userId,
+                fullName: fullProfile.fullName,
+                name: fullProfile.name,
+                avatarText: fullProfile.avatarText,
+                role: fullProfile.role,
+              })
+            );
+            setCurrentUser(fullProfile);
+            setIsAuthenticated(true);
+          }
+        })
+        .catch(() => {});
     } catch (e) {
       console.warn("Could not sync user credentials:", e);
       setCurrentUser(null);
@@ -648,8 +573,14 @@ export const GeneralContextProvider = (props) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentUser?.isPrivacyMode]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
+      const csrf = readCookie("zerodha_csrf");
+      await fetch(`${API_BASE}/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: csrf ? { "X-CSRF-Token": csrf } : {},
+      });
       localStorage.removeItem("zerodha_token");
       localStorage.removeItem("zerodha_user");
     } catch (e) {

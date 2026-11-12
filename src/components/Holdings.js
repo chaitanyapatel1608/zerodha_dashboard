@@ -22,7 +22,7 @@ const CURATED_MUTUAL_FUNDS = [
   {
     code: "NIPPON_NIFTY50",
     name: "Nippon India Nifty 50 Index Fund",
-    plan: "Direct Plan &bull; Growth",
+    plan: "Direct Plan • Growth",
     category: "Large Cap Index",
     cagr1Y: "+28.4%",
     cagr3Y: "+16.2%",
@@ -34,7 +34,7 @@ const CURATED_MUTUAL_FUNDS = [
   {
     code: "PPFAS_FLEXICAP",
     name: "Parag Parikh Flexi Cap Fund",
-    plan: "Direct Plan &bull; Growth",
+    plan: "Direct Plan • Growth",
     category: "Flexi Cap Equity",
     cagr1Y: "+34.2%",
     cagr3Y: "+21.5%",
@@ -46,7 +46,7 @@ const CURATED_MUTUAL_FUNDS = [
   {
     code: "HDFC_SMALLCAP",
     name: "HDFC Small Cap Fund",
-    plan: "Direct Plan &bull; Growth",
+    plan: "Direct Plan • Growth",
     category: "Small Cap Equity",
     cagr1Y: "+41.8%",
     cagr3Y: "+26.8%",
@@ -58,7 +58,7 @@ const CURATED_MUTUAL_FUNDS = [
   {
     code: "MIRAE_LARGEMID",
     name: "Mirae Asset Large & Midcap Fund",
-    plan: "Direct Plan &bull; Growth",
+    plan: "Direct Plan • Growth",
     category: "Large & Mid Cap",
     cagr1Y: "+31.5%",
     cagr3Y: "+19.4%",
@@ -121,9 +121,12 @@ const Holdings = () => {
   // Modals & Popovers
   const [isCdslAuthModalOpen, setIsCdslAuthModalOpen] = useState(false);
   const [holdingForExit, setHoldingForExit] = useState(null);
-  const [isCdslAuthorizedToday, setIsCdslAuthorizedToday] = useState(() => {
-    return sessionStorage.getItem("cdsl_authorized_today") === "true";
-  });
+  const [isCdslAuthorizedToday, setIsCdslAuthorizedToday] = useState(false);
+
+  useEffect(() => {
+    const authUntil = currentUser?.cdslAuthorizedUntil;
+    setIsCdslAuthorizedToday(Boolean(authUntil && new Date() <= new Date(authUntil)));
+  }, [currentUser?.cdslAuthorizedUntil]);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [isEvotingOpen, setIsEvotingOpen] = useState(false);
   const [breakdownHolding, setBreakdownHolding] = useState(null);
@@ -311,7 +314,6 @@ const Holdings = () => {
 
   const handleCdslAuthSuccess = () => {
     setIsCdslAuthorizedToday(true);
-    sessionStorage.setItem("cdsl_authorized_today", "true");
     showToast(
       "CDSL E-DIS Authorized",
       "Demat holdings authorized for exit trading today until 3:30 PM.",
@@ -641,10 +643,7 @@ const Holdings = () => {
                   <div className="fund-top-row">
                     <div>
                       <div className="fund-name">{fund.name}</div>
-                      <div
-                        className="fund-category"
-                        dangerouslySetInnerHTML={{ __html: fund.plan }}
-                      />
+                      <div className="fund-category">{fund.plan}</div>
                     </div>
                     <span className="fund-commission-badge">Direct Growth</span>
                   </div>
