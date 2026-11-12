@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE, AUTH_PORTAL_URL } from "../../config/api";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { ipoData as fallbackIpos } from "../../data/mockData";
@@ -9,7 +10,7 @@ const IpoCalendarPanel = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/allIpos")
+      .get(`${API_BASE}/allIpos`)
       .then((res) => {
         if (Array.isArray(res.data) && res.data.length > 0) {
           setIpos(res.data);

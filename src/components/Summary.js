@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import GeneralContext from "./GeneralContext";
@@ -19,7 +20,7 @@ const Summary = () => {
   useEffect(() => {
     // 1. Fetch live holdings from MongoDB
     axios
-      .get("http://localhost:3002/allHoldings", { params: { userId: currentUser?.userId } })
+      .get(`${API_BASE}/allHoldings`, { params: { userId: currentUser?.userId } })
       .then((res) => {
         if (Array.isArray(res.data)) {
           setHoldings(res.data);
@@ -34,7 +35,7 @@ const Summary = () => {
 
     // 2. Fetch live funds from MongoDB
     axios
-      .get("http://localhost:3002/userFunds", { params: { userId: currentUser?.userId } })
+      .get(`${API_BASE}/userFunds`, { params: { userId: currentUser?.userId } })
       .then((res) => {
         if (res.data && res.data.equity) {
           setFunds(res.data);

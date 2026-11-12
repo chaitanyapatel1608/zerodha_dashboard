@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 import Dashboard from "./Dashboard";
 import TopBar from "./TopBar";
 import MobileBottomNav from "./navigation/MobileBottomNav";
@@ -12,7 +13,7 @@ const HomeContent = () => {
     // If not authenticated, redirect to login portal
     if (!isAuthenticated) {
       const timer = setTimeout(() => {
-        window.location.href = "http://localhost:3000/login";
+        window.location.href = `${AUTH_PORTAL_URL}/login`;
       }, 1500);
       return () => clearTimeout(timer);
     }
@@ -55,7 +56,7 @@ const HomeContent = () => {
             You are logged out. Please log in with your Zerodha Kite account to access the trading terminal.
           </p>
           <a
-            href="http://localhost:3000/login"
+            href={`${AUTH_PORTAL_URL}/login`}
             style={{
               display: "block",
               width: "100%",

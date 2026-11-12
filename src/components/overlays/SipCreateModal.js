@@ -3,7 +3,7 @@ import axios from "axios";
 import GeneralContext from "../GeneralContext";
 import "./SipCreateModal.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../../config/api";
 
 const TIME_PRESETS = [
   { value: "09:30", label: "09:30 AM (Market Open)" },

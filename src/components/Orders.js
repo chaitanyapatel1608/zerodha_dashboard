@@ -11,7 +11,7 @@ import axios from "axios";
 import AccountStatusBanner from "./common/AccountStatusBanner";
 import GeneralContext from "./GeneralContext";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 
 const WEEK_DAY_NAMES = {
   1: "Monday",
@@ -63,7 +63,7 @@ const Orders = () => {
   const [marketCategoryFilter, setMarketCategoryFilter] = useState("ALL");
   const [selectedMarketCodeForModal, setSelectedMarketCodeForModal] = useState(null);
   const [sipToExecute, setSipToExecute] = useState(null);
-  const [userAvailableMargin, setUserAvailableMargin] = useState(124500);
+  const [userAvailableMargin, setUserAvailableMargin] = useState(0);
   const [sipToDelete, setSipToDelete] = useState(null);
   const [isDeletingSip, setIsDeletingSip] = useState(false);
   const [openMenuSipId, setOpenMenuSipId] = useState(null);
@@ -121,7 +121,7 @@ const Orders = () => {
           if (res.data?.equity?.availableMargin !== undefined) {
             const raw = res.data.equity.availableMargin;
             const parsed = typeof raw === "string" ? parseFloat(raw.replace(/,/g, "")) : Number(raw || 0);
-            setUserAvailableMargin(isNaN(parsed) ? 124500 : parsed);
+            setUserAvailableMargin(isNaN(parsed) ? 0 : parsed);
           }
         })
         .catch(() => {});

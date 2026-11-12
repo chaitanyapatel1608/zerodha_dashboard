@@ -1,9 +1,20 @@
 import React, { useRef, useEffect, useContext } from "react";
+import { API_BASE, AUTH_PORTAL_URL } from "../../config/api";
 import GeneralContext from "../GeneralContext";
 import "./ProfileDropdown.css";
 
 const ProfileDropdown = ({ isOpen, onClose }) => {
-  const { currentUser, updateUser, logout } = useContext(GeneralContext);
+  const {
+    currentUser,
+    updateUser,
+    logout,
+    openClientProfile,
+    openConsole,
+    openCoin,
+    openShortcuts,
+    openInvite,
+    openSupport,
+  } = useContext(GeneralContext);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -26,12 +37,21 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
+  const currentTheme = currentUser?.theme || localStorage.getItem("zerodha_theme") || "light";
+  const isDark = currentTheme === "dark";
+
+  const isPrivacy = Boolean(
+    typeof currentUser?.isPrivacyMode !== "undefined"
+      ? currentUser.isPrivacyMode
+      : localStorage.getItem("zerodha_privacy") === "true"
+  );
+
   const togglePrivacy = () => {
-    updateUser({ isPrivacyMode: !currentUser.isPrivacyMode });
+    updateUser({ isPrivacyMode: !isPrivacy });
   };
 
   const toggleTheme = () => {
-    updateUser({ theme: currentUser.theme === "dark" ? "light" : "dark" });
+    updateUser({ theme: isDark ? "light" : "dark" });
   };
 
   const handleLogoutClick = () => {
@@ -45,20 +65,28 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
       } catch (e) {
         console.error(e);
       }
-      window.location.href = "http://localhost:3000/signup";
+      window.location.href = `${AUTH_PORTAL_URL}/signup`;
     }
   };
 
   return (
     <div className="profile-dropdown" ref={dropdownRef}>
-      <div className="profile-user-card">
-        <div className="profile-avatar-large">{currentUser.avatarText || "CU"}</div>
+      <div
+        className="profile-user-card"
+        style={{ cursor: "pointer" }}
+        title="View Client Profile & Demat Details"
+        onClick={() => {
+          onClose();
+          if (openClientProfile) openClientProfile();
+        }}
+      >
+        <div className="profile-avatar-large">{currentUser.avatarText || "T"}</div>
         <div className="profile-user-details">
           <div className="user-name-row">
-            <span className="user-full-name">{currentUser.name}</span>
-            <span className="user-id-badge">{currentUser.userId}</span>
+            <span className="user-full-name">{currentUser.name || "Trader"}</span>
+            <span className="user-id-badge">{currentUser.userId || "ZU9344"}</span>
           </div>
-          <span className="user-email">{currentUser.email}</span>
+          <span className="user-email">{currentUser.email || ""}</span>
         </div>
       </div>
 
@@ -72,7 +100,7 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
         <label className="switch">
           <input
             type="checkbox"
-            checked={currentUser.isPrivacyMode}
+            checked={isPrivacy}
             onChange={togglePrivacy}
           />
           <span className="slider round"></span>
@@ -87,7 +115,7 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
         <label className="switch">
           <input
             type="checkbox"
-            checked={currentUser.theme === "dark"}
+            checked={isDark}
             onChange={toggleTheme}
           />
           <span className="slider round"></span>
@@ -97,27 +125,69 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
       <div className="profile-divider"></div>
 
       <div className="profile-menu-links">
-        <a href="#console" className="profile-link-item" onClick={(e) => e.preventDefault()}>
+        <button
+          type="button"
+          className="profile-link-item"
+          onClick={() => {
+            onClose();
+            if (openConsole) openConsole();
+          }}
+        >
           <span className="link-title">Console</span>
           <span className="link-meta">Reports, P&L, Statements</span>
-        </a>
-        <a href="#coin" className="profile-link-item" onClick={(e) => e.preventDefault()}>
+        </button>
+        <button
+          type="button"
+          className="profile-link-item"
+          onClick={() => {
+            onClose();
+            if (openCoin) openCoin();
+          }}
+        >
           <span className="link-title">Coin</span>
           <span className="link-meta">Direct Mutual Funds</span>
-        </a>
-        <a href="#support" className="profile-link-item" onClick={(e) => e.preventDefault()}>
+        </button>
+        <button
+          type="button"
+          className="profile-link-item"
+          onClick={() => {
+            onClose();
+            if (openSupport) openSupport("SUPPORT");
+          }}
+        >
           <span className="link-title">Support portal</span>
-        </a>
-        <a href="#invite" className="profile-link-item" onClick={(e) => e.preventDefault()}>
+        </button>
+        <button
+          type="button"
+          className="profile-link-item"
+          onClick={() => {
+            onClose();
+            if (openInvite) openInvite();
+          }}
+        >
           <span className="link-title">Invite friends</span>
-        </a>
-        <a href="#shortcuts" className="profile-link-item" onClick={(e) => e.preventDefault()}>
+        </button>
+        <button
+          type="button"
+          className="profile-link-item"
+          onClick={() => {
+            onClose();
+            if (openShortcuts) openShortcuts();
+          }}
+        >
           <span className="link-title">Keyboard shortcuts</span>
           <span className="shortcut-badge">Ctrl + /</span>
-        </a>
-        <a href="#manual" className="profile-link-item" onClick={(e) => e.preventDefault()}>
+        </button>
+        <button
+          type="button"
+          className="profile-link-item"
+          onClick={() => {
+            onClose();
+            if (openSupport) openSupport("MANUAL");
+          }}
+        >
           <span className="link-title">User manual</span>
-        </a>
+        </button>
       </div>
 
       <div className="profile-divider"></div>

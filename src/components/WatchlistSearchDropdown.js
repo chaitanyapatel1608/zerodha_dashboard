@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 import axios from "axios";
 import GeneralContext from "./GeneralContext";
 import { useMarketFeed } from "../context/MarketFeedContext";
@@ -35,7 +36,7 @@ const WatchlistSearchDropdown = ({
 
     const timer = setTimeout(() => {
       axios
-        .get(`http://localhost:3002/masterInstruments?q=${encodeURIComponent(searchTerm.trim())}`, {
+        .get(`${API_BASE}/masterInstruments?q=${encodeURIComponent(searchTerm.trim())}`, {
           cancelToken: cancelTokenSource.token,
         })
         .then((res) => {
@@ -69,7 +70,7 @@ const WatchlistSearchDropdown = ({
 
     setAddingSymbol(stock.symbol);
     try {
-      const res = await axios.post("http://localhost:3002/addWatchlistStock", {
+      const res = await axios.post(`${API_BASE}/addWatchlistStock`, {
         userId,
         tabId: activeTabId,
         stock,

@@ -3,8 +3,12 @@
  * Supports CSV, Excel (.xls), and Printable PDF Statement
  */
 
+import { escapeHtml, renderSafePrintHtml } from "./htmlSanitizer";
+
 export const exportHoldingsToCSV = (holdings, currentUser, quotes = {}) => {
-  const userId = currentUser?.userId || "TRADER";
+  const userId = escapeHtml(currentUser?.userId || "TRADER");
+  const userName = escapeHtml(currentUser?.name || "Client");
+  const demat = escapeHtml(currentUser?.demat || "1208160012345678");
   const today = new Date().toISOString().split("T")[0];
   const filename = `Zerodha_Holdings_Statement_${userId}_${today}.csv`;
 
@@ -54,9 +58,9 @@ export const exportHoldingsToCSV = (holdings, currentUser, quotes = {}) => {
 };
 
 export const exportHoldingsToExcel = (holdings, currentUser, quotes = {}) => {
-  const userId = currentUser?.userId || "TRADER";
-  const userName = currentUser?.name || "Client";
-  const demat = currentUser?.demat || "1208160012345678";
+  const userId = escapeHtml(currentUser?.userId || "TRADER");
+  const userName = escapeHtml(currentUser?.name || "Client");
+  const demat = escapeHtml(currentUser?.demat || "1208160012345678");
   const today = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
@@ -87,7 +91,7 @@ export const exportHoldingsToExcel = (holdings, currentUser, quotes = {}) => {
 
       return `
         <tr>
-          <td style="font-weight: bold; border: 1px solid #ddd; padding: 8px;">${sym}</td>
+          <td style="font-weight: bold; border: 1px solid #ddd; padding: 8px;">${escapeHtml(sym)}</td>
           <td style="text-align: right; border: 1px solid #ddd; padding: 8px;">${qty}</td>
           <td style="text-align: right; border: 1px solid #ddd; padding: 8px;">₹${avgCost.toFixed(2)}</td>
           <td style="text-align: right; border: 1px solid #ddd; padding: 8px;">₹${ltp.toFixed(2)}</td>
@@ -96,7 +100,7 @@ export const exportHoldingsToExcel = (holdings, currentUser, quotes = {}) => {
             ${pnl >= 0 ? "+" : ""}₹${pnl.toFixed(2)}
           </td>
           <td style="text-align: right; border: 1px solid #ddd; padding: 8px; color: ${pnlColor};">${netChg}</td>
-          <td style="text-align: right; border: 1px solid #ddd; padding: 8px;">${dayChg}</td>
+          <td style="text-align: right; border: 1px solid #ddd; padding: 8px;">${escapeHtml(dayChg)}</td>
         </tr>
       `;
     })
@@ -159,9 +163,9 @@ export const exportHoldingsToExcel = (holdings, currentUser, quotes = {}) => {
 };
 
 export const exportHoldingsToPDF = (holdings, currentUser, quotes = {}) => {
-  const userId = currentUser?.userId || "TRADER";
-  const userName = currentUser?.name || "Client";
-  const demat = currentUser?.demat || "1208160012345678";
+  const userId = escapeHtml(currentUser?.userId || "TRADER");
+  const userName = escapeHtml(currentUser?.name || "Client");
+  const demat = escapeHtml(currentUser?.demat || "1208160012345678");
   const today = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "long",
@@ -190,7 +194,7 @@ export const exportHoldingsToPDF = (holdings, currentUser, quotes = {}) => {
 
       return `
         <tr style="background: ${idx % 2 === 0 ? "#ffffff" : "#f8fafc"};">
-          <td style="padding: 9px 12px; font-weight: bold; border-bottom: 1px solid #e2e8f0;">${sym}</td>
+          <td style="padding: 9px 12px; font-weight: bold; border-bottom: 1px solid #e2e8f0;">${escapeHtml(sym)}</td>
           <td style="padding: 9px 12px; text-align: right; border-bottom: 1px solid #e2e8f0;">${qty}</td>
           <td style="padding: 9px 12px; text-align: right; border-bottom: 1px solid #e2e8f0;">₹${avgCost.toFixed(2)}</td>
           <td style="padding: 9px 12px; text-align: right; border-bottom: 1px solid #e2e8f0;">₹${ltp.toFixed(2)}</td>
@@ -203,7 +207,7 @@ export const exportHoldingsToPDF = (holdings, currentUser, quotes = {}) => {
           <td style="padding: 9px 12px; text-align: right; border-bottom: 1px solid #e2e8f0; color: ${pnl >= 0 ? "#059669" : "#dc2626"};">
             ${netChg}
           </td>
-          <td style="padding: 9px 12px; text-align: right; border-bottom: 1px solid #e2e8f0;">${dayChg}</td>
+          <td style="padding: 9px 12px; text-align: right; border-bottom: 1px solid #e2e8f0;">${escapeHtml(dayChg)}</td>
         </tr>
       `;
     })
@@ -218,7 +222,7 @@ export const exportHoldingsToPDF = (holdings, currentUser, quotes = {}) => {
     return;
   }
 
-  printWindow.document.write(`
+  renderSafePrintHtml(printWindow, `
     <!DOCTYPE html>
     <html>
       <head>
@@ -320,5 +324,5 @@ export const exportHoldingsToPDF = (holdings, currentUser, quotes = {}) => {
       </body>
     </html>
   `);
-  printWindow.document.close();
+
 };

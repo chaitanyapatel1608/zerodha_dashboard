@@ -1,0 +1,167 @@
+.pledge-subtabs-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.pledge-subtab-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pledge-subtab-btn:hover {
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.pledge-subtab-btn.active {
+  color: #7e22ce;
+  background: #faf5ff;
+}
+
+.pledge-list-container {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+
+.pledge-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.pledge-table th {
+  background: #f8fafc;
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.pledge-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+.pledge-table tr:last-child td {
+  border-bottom: none;
+}
+
+.haircut-pill {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ea580c;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.btn-select-pledge {
+  background: #faf5ff;
+  border: 1px solid #ddd6fe;
+  color: #7e22ce;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-select-pledge:hover {
+  background: #f3e8ff;
+}
+
+.pledge-action-inline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.input-pledge-inline {
+  width: 48px;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  outline: none;
+}
+
+.btn-confirm-pledge {
+  background: #7e22ce;
+  color: #fff;
+  border: none;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-confirm-pledge:hover:not(:disabled) {
+  background: #6b21a8;
+}
+
+.btn-cancel-inline {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.btn-unpledge {
+  background: #fff;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-unpledge:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.empty-pledge-note {
+  padding: 28px;
+  text-align: center;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.pledge-footer-note {
+  font-size: 11.5px;
+  color: #64748b;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  line-height: 1.45;
+}
+
+.pledge-footer-note span {
+  font-weight: 700;
+  color: #334155;
+}

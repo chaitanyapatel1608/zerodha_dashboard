@@ -23,6 +23,629 @@
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 }
 
+[data-theme="dark"] {
+  --color-brand-blue: #4184f3;
+  --color-green: #4caf50;
+  --color-red: #df514c;
+  --color-text-main: #c9d1d9;
+  --color-text-dark: #f0f6fc;
+  --color-text-muted: #8b949e;
+  --color-text-light: #8b949e;
+  --color-border: #30363d;
+  --color-border-subtle: #21262d;
+  --color-bg-page: #0d1117;
+  --color-bg-card: #161b22;
+  --color-bg-subtle: #1c2128;
+  --color-bg-hover: #262c36;
+}
+
+/* ==========================================================================
+   ZERODHA KITE HIGH-FIDELITY DARK PALETTE OVERRIDES
+   ========================================================================== */
+
+/* 1. Global Viewport & Base Canvas */
+[data-theme="dark"],
+[data-theme="dark"] html,
+[data-theme="dark"] body,
+[data-theme="dark"] #root {
+  background-color: #0d1117 !important;
+  color: #c9d1d9 !important;
+}
+
+/* 2. Primary Navigation Bar & Top Header */
+[data-theme="dark"] .topbar-container {
+  background-color: #161b22 !important;
+  border-bottom: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .menu-container {
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] .indices-container {
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] .index-item .index-name {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .index-item .index-value {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .market-live-pill {
+  background-color: #21262d !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .live-pill-text {
+  color: #4caf50 !important;
+}
+
+[data-theme="dark"] .nav-link {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .nav-link:hover,
+[data-theme="dark"] .nav-link.active {
+  color: #ff5722 !important;
+}
+
+[data-theme="dark"] .nav-icon-btn {
+  color: #c9d1d9 !important;
+  background: #21262d !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .username {
+  color: #c9d1d9 !important;
+}
+
+[data-theme="dark"] .chevron {
+  stroke: #c9d1d9 !important;
+}
+
+[data-theme="dark"] .nav-vertical-divider {
+  background-color: #30363d !important;
+}
+
+[data-theme="dark"] .mobile-page-header-title {
+  color: #f0f6fc !important;
+}
+
+/* 3. App Shell, Viewport Containers & Route Views */
+[data-theme="dark"] .app-shell,
+[data-theme="dark"] .dashboard-container,
+[data-theme="dark"] .content,
+[data-theme="dark"] .dashboard-main-view,
+[data-theme="dark"] .orders-page-container,
+[data-theme="dark"] .holdings-page-container,
+[data-theme="dark"] .positions-page-container,
+[data-theme="dark"] .bids-page-container,
+[data-theme="dark"] .funds-page-container,
+[data-theme="dark"] .candle-chart-container {
+  background-color: #0d1117 !important;
+  color: #c9d1d9 !important;
+}
+
+/* 4. Watchlist Sidebar & Search */
+[data-theme="dark"] .watchlist-container {
+  background-color: #161b22 !important;
+  border-right: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .search-container {
+  border-color: #30363d !important;
+  background-color: #161b22 !important;
+}
+
+[data-theme="dark"] .search-input {
+  background-color: #161b22 !important;
+  color: #f0f6fc !important;
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] .search-dropdown,
+[data-theme="dark"] .watchlist-search-dropdown {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  color: #c9d1d9 !important;
+}
+
+[data-theme="dark"] .watchlist-item {
+  border-bottom: 1px solid #21262d !important;
+}
+
+[data-theme="dark"] .watchlist-item:hover,
+[data-theme="dark"] .watchlist-item.active {
+  background-color: #1c2128 !important;
+}
+
+[data-theme="dark"] .stock-name,
+[data-theme="dark"] .stock-price {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .action-btn {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .watchlist-footer,
+[data-theme="dark"] .watchlist-tabs {
+  background-color: #161b22 !important;
+  border-top: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .watchlist-tab-btn {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .watchlist-tab-btn.active {
+  color: #ff5722 !important;
+  border-color: #ff5722 !important;
+}
+
+/* 5. Summary Dashboard (Greeting, Balances, Holdings Snapshot, Charts) */
+[data-theme="dark"] .greeting-text {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] hr,
+[data-theme="dark"] .subtle-divider {
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] .account-status-banner {
+  background-color: #1c1917 !important;
+  border: 1px solid #44403c !important;
+  color: #e7e5e4 !important;
+}
+
+[data-theme="dark"] .balance-card,
+[data-theme="dark"] .balance-card.equity-full-width,
+[data-theme="dark"] .holdings-snapshot-section,
+[data-theme="dark"] .market-overview-card,
+[data-theme="dark"] .mover-card,
+[data-theme="dark"] .ipo-calendar-panel {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .balance-card.equity-full-width .card-title,
+[data-theme="dark"] .holdings-snapshot-section .card-title,
+[data-theme="dark"] .mover-title-group .card-title,
+[data-theme="dark"] .card-title,
+[data-theme="dark"] .section-title {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .balance-card.equity-full-width .balance-number,
+[data-theme="dark"] .balance-number {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .balance-card.equity-full-width .balance-label,
+[data-theme="dark"] .balance-label {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .balance-card.equity-full-width .item-val,
+[data-theme="dark"] .item-val,
+[data-theme="dark"] .stat-val {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .balance-card.equity-full-width .item-label,
+[data-theme="dark"] .item-label,
+[data-theme="dark"] .stat-label {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .balance-card.equity-full-width .card-link,
+[data-theme="dark"] .card-link,
+[data-theme="dark"] .view-all-link-btn,
+[data-theme="dark"] .subtle-link {
+  color: #4184f3 !important;
+}
+
+[data-theme="dark"] .index-tab {
+  background-color: #21262d !important;
+  color: #8b949e !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .index-tab.active {
+  background-color: #30363d !important;
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .level-val {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .mover-header,
+[data-theme="dark"] .panel-tabs-header {
+  border-bottom: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .category-tag {
+  background-color: #21262d !important;
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .mover-row {
+  border-bottom: 1px solid #21262d !important;
+}
+
+[data-theme="dark"] .mover-row:hover {
+  background-color: #1c2128 !important;
+}
+
+[data-theme="dark"] .symbol-name,
+[data-theme="dark"] .price-val {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .exchange-label {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .tab-btn {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .tab-btn.active {
+  color: #ff5722 !important;
+  border-bottom: 2px solid #ff5722 !important;
+}
+
+/* 6. Holdings Page (Hero Card, Controls, Subtabs, Mutual Funds) */
+[data-theme="dark"] .holdings-hero-summary-card,
+[data-theme="dark"] .holdings-table-container,
+[data-theme="dark"] .curated-mf-section {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .hero-summary-item {
+  border-right: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .hero-summary-label,
+[data-theme="dark"] .hero-summary-sub {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .hero-summary-val {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .page-subtabs-bar {
+  border-bottom: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .subtab-btn {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .subtab-btn.active {
+  color: #ff5722 !important;
+  border-bottom: 2px solid #ff5722 !important;
+}
+
+[data-theme="dark"] .holdings-search-input,
+[data-theme="dark"] .positions-search-input,
+[data-theme="dark"] .bids-search-input {
+  background-color: #161b22 !important;
+  color: #f0f6fc !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .btn-export-trigger,
+[data-theme="dark"] .btn-pos-export,
+[data-theme="dark"] .btn-bids-export {
+  background-color: #21262d !important;
+  color: #c9d1d9 !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .export-menu-popover,
+[data-theme="dark"] .pos-export-dropdown-menu,
+[data-theme="dark"] .bids-export-dropdown-menu {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  color: #c9d1d9 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .export-menu-header {
+  border-bottom: 1px solid #30363d !important;
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .export-option-btn,
+[data-theme="dark"] .pos-export-option {
+  color: #c9d1d9 !important;
+}
+
+[data-theme="dark"] .export-option-btn:hover,
+[data-theme="dark"] .pos-export-option:hover {
+  background-color: #21262d !important;
+}
+
+[data-theme="dark"] .mf-card {
+  background-color: #1c2128 !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .mf-card-title {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .mf-stat-label {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .mf-stat-val {
+  color: #f0f6fc !important;
+}
+
+/* 7. Positions Page (Hero Card, Section Card) */
+[data-theme="dark"] .positions-hero-summary-card,
+[data-theme="dark"] .positions-section-card {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .pos-hero-item {
+  border-right: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .pos-hero-label,
+[data-theme="dark"] .pos-hero-sub {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .pos-hero-val {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .positions-section-header {
+  border-bottom: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .badge-open-count {
+  background-color: #21262d !important;
+  color: #f0f6fc !important;
+}
+
+/* 8. Orders Page (Tables, Empty State, Baskets Library) */
+[data-theme="dark"] .kite-table-container,
+[data-theme="dark"] .empty-orders-view,
+[data-theme="dark"] .baskets-library-section {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .empty-state-title {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .empty-state-subtitle {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .basket-template-card {
+  background-color: #1c2128 !important;
+  border: 1px solid #30363d !important;
+}
+
+/* 9. Bids Page (Hero Card, G-Sec Intro, Auction Offers) */
+[data-theme="dark"] .bids-hero-summary-card,
+[data-theme="dark"] .gsec-intro-card,
+[data-theme="dark"] .auction-offers-section,
+[data-theme="dark"] .bids-table-container {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .bids-hero-item {
+  border-right: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .bids-hero-label,
+[data-theme="dark"] .bids-hero-sub {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .bids-hero-val {
+  color: #f0f6fc !important;
+}
+
+/* 10. Funds Page (Hero Card, Action Bar, Ledger, Panels) */
+[data-theme="dark"] .funds-hero-card,
+[data-theme="dark"] .funds-action-bar,
+[data-theme="dark"] .funds-panel,
+[data-theme="dark"] .funds-card,
+[data-theme="dark"] .funds-ledger-section {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .funds-hero-item {
+  border-right: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .funds-hero-label,
+[data-theme="dark"] .funds-hero-sub,
+[data-theme="dark"] .funds-label,
+[data-theme="dark"] .funds-row .funds-label {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .funds-hero-val,
+[data-theme="dark"] .funds-value,
+[data-theme="dark"] .funds-row .funds-value {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .funds-row {
+  border-bottom: 1px solid #21262d !important;
+}
+
+[data-theme="dark"] .funds-btn-bank,
+[data-theme="dark"] .funds-btn-statement {
+  background-color: #21262d !important;
+  border: 1px solid #30363d !important;
+  color: #c9d1d9 !important;
+}
+
+[data-theme="dark"] .funds-statement-dropdown {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  color: #c9d1d9 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .statement-option {
+  color: #c9d1d9 !important;
+}
+
+[data-theme="dark"] .statement-option:hover {
+  background-color: #21262d !important;
+}
+
+/* 11. Tables Across All Pages (Orders, Holdings, Positions, Bids, Funds) */
+[data-theme="dark"] table th,
+[data-theme="dark"] .kite-data-table th,
+[data-theme="dark"] .compact-table th,
+[data-theme="dark"] .funds-table th {
+  background-color: #161b22 !important;
+  color: #8b949e !important;
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] table td,
+[data-theme="dark"] .kite-data-table td,
+[data-theme="dark"] .compact-table td,
+[data-theme="dark"] .funds-table td {
+  background-color: #161b22 !important;
+  border-color: #21262d !important;
+  color: #c9d1d9 !important;
+}
+
+[data-theme="dark"] table tr:hover td,
+[data-theme="dark"] .kite-data-table tr:hover td,
+[data-theme="dark"] .compact-table tr:hover td,
+[data-theme="dark"] .funds-table tr:hover td {
+  background-color: #1c2128 !important;
+}
+
+/* 12. Dropdowns & Modal Windows */
+[data-theme="dark"] .profile-dropdown,
+[data-theme="dark"] .baskets-dropdown,
+[data-theme="dark"] .notifications-dropdown,
+[data-theme="dark"] .funds-modal-box,
+[data-theme="dark"] .profile-modal-box,
+[data-theme="dark"] .client-profile-modal-box,
+[data-theme="dark"] .console-modal-box,
+[data-theme="dark"] .coin-modal-box,
+[data-theme="dark"] .shortcuts-modal-box,
+[data-theme="dark"] .invite-modal-box,
+[data-theme="dark"] .support-modal-box,
+[data-theme="dark"] .basket-modal-box,
+[data-theme="dark"] .depth-modal-box,
+[data-theme="dark"] .gtt-modal-box,
+[data-theme="dark"] .nominee-modal-box,
+[data-theme="dark"] .segment-modal-box {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  color: #c9d1d9 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .profile-modal-header,
+[data-theme="dark"] .console-modal-header,
+[data-theme="dark"] .coin-modal-header,
+[data-theme="dark"] .shortcuts-modal-header,
+[data-theme="dark"] .invite-modal-header,
+[data-theme="dark"] .support-modal-header,
+[data-theme="dark"] .funds-modal-header,
+[data-theme="dark"] .profile-modal-footer,
+[data-theme="dark"] .console-modal-footer,
+[data-theme="dark"] .coin-modal-footer,
+[data-theme="dark"] .shortcuts-modal-footer,
+[data-theme="dark"] .invite-modal-footer,
+[data-theme="dark"] .support-modal-footer,
+[data-theme="dark"] .funds-modal-footer,
+[data-theme="dark"] .profile-modal-tabs,
+[data-theme="dark"] .console-tabs,
+[data-theme="dark"] .support-tabs {
+  background-color: #12161c !important;
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] .profile-modal-name,
+[data-theme="dark"] .console-title,
+[data-theme="dark"] .coin-title,
+[data-theme="dark"] .shortcuts-title,
+[data-theme="dark"] .invite-title,
+[data-theme="dark"] .support-title,
+[data-theme="dark"] .funds-modal-title,
+[data-theme="dark"] .user-full-name {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .profile-link-item:hover {
+  background-color: #21262d !important;
+}
+
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] input[type="search"],
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background-color: #21262d !important;
+  color: #f0f6fc !important;
+  border: 1px solid #30363d !important;
+}
+
+/* 13. Mobile Bottom Navigation */
+[data-theme="dark"] .mobile-bottom-nav {
+  background-color: #161b22 !important;
+  border-top: 1px solid #30363d !important;
+}
+
+[data-theme="dark"] .bottom-nav-item {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .bottom-nav-item.active {
+  color: #ff5722 !important;
+}
+
+/* 14. Privacy Mode Masking */
+[data-privacy="true"] .privacy-masked,
+[data-privacy="true"] .withdrawable-amount,
+[data-privacy="true"] .funds-hero-val,
+[data-privacy="true"] .funds-value,
+[data-privacy="true"] .balance-val,
+[data-privacy="true"] .balance-number,
+[data-privacy="true"] .pnl-val,
+[data-privacy="true"] .stat-val,
+[data-privacy="true"] .hero-summary-val,
+[data-privacy="true"] .pos-hero-val,
+[data-privacy="true"] .bids-hero-val,
+[data-privacy="true"] .portfolio-val {
+  filter: blur(6px) !important;
+  user-select: none !important;
+  cursor: pointer !important;
+  transition: filter 0.2s ease;
+}
+
 * {
   box-sizing: border-box;
 }

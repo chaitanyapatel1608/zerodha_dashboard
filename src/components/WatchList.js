@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo, useRef, useCallback } from "react";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import GeneralContext from "./GeneralContext";
@@ -46,7 +47,7 @@ const WatchList = () => {
   // 1. Fetch user's 7 tabs metadata
   const fetchTabs = useCallback(() => {
     axios
-      .get(`http://localhost:3002/userWatchlistTabs?userId=${userId}`)
+      .get(`${API_BASE}/userWatchlistTabs?userId=${userId}`)
       .then((res) => {
         if (Array.isArray(res.data) && res.data.length > 0) {
           setTabs(res.data);
@@ -56,7 +57,7 @@ const WatchList = () => {
         console.warn("Failed to load user watchlist tabs, retrying:", err.message);
         setTimeout(() => {
           axios
-            .get(`http://localhost:3002/userWatchlistTabs?userId=${userId}`)
+            .get(`${API_BASE}/userWatchlistTabs?userId=${userId}`)
             .then((res) => {
               if (Array.isArray(res.data) && res.data.length > 0) {
                 setTabs(res.data);
@@ -79,7 +80,7 @@ const WatchList = () => {
     const fetchStocks = (retryCount = 0) => {
       setLoading(true);
       axios
-        .get(`http://localhost:3002/userWatchlist?userId=${userId}&tabId=${activeWatchlistGroup}`)
+        .get(`${API_BASE}/userWatchlist?userId=${userId}&tabId=${activeWatchlistGroup}`)
         .then((res) => {
           if (!isMounted) return;
           const stocks = res.data?.stocks || [];
@@ -171,7 +172,7 @@ const WatchList = () => {
   // Remove stock handler
   const handleRemoveStock = async (symbol) => {
     try {
-      const res = await axios.post("http://localhost:3002/removeWatchlistStock", {
+      const res = await axios.post(`${API_BASE}/removeWatchlistStock`, {
         userId,
         tabId: activeWatchlistGroup,
         symbol,
@@ -212,7 +213,7 @@ const WatchList = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:3002/renameWatchlistTab", {
+      const res = await axios.post(`${API_BASE}/renameWatchlistTab`, {
         userId,
         tabId: editingTabId,
         tabName: cleanName,
