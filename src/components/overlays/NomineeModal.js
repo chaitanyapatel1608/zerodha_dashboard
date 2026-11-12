@@ -4,7 +4,7 @@ import GeneralContext from "../GeneralContext";
 import KiteDatePicker from "../common/KiteDatePicker";
 import "./NomineeModal.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../../config/api";
 
 const createDefaultNominee = (index, allocation = 100) => ({
   id: index + 1,

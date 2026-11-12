@@ -18,7 +18,7 @@ import GeneralContext from "./GeneralContext";
 import { ipoData as fallbackIpos } from "../data/mockData";
 import "./BidsPage.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 
 const BidsPage = () => {
   const [activeTab, setActiveTab] = useState("ipo");

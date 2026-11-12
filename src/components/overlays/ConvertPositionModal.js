@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./ConvertPositionModal.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../../config/api";
 
 const ConvertPositionModal = ({ isOpen, onClose, position, currentUser, availableMargin, onConversionSuccess }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);

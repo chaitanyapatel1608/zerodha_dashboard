@@ -16,7 +16,7 @@ import {
 } from "@mui/icons-material";
 import "./MarketMoversModal.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../../config/api";
 
 const SEGMENT_TABS = [
   { id: "ALL", label: "All 100+ Stocks" },

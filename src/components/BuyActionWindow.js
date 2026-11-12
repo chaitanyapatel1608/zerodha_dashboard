@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import GeneralContext from "./GeneralContext";
 import "./BuyActionWindow.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 
 const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
   const {

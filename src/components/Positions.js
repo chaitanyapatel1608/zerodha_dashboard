@@ -15,7 +15,7 @@ import {
 
 import "./Positions.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 
 const Positions = () => {
   const {

@@ -11,7 +11,7 @@ import axios from "axios";
 import AccountStatusBanner from "./common/AccountStatusBanner";
 import GeneralContext from "./GeneralContext";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 
 const WEEK_DAY_NAMES = {
   1: "Monday",

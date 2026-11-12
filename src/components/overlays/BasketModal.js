@@ -4,7 +4,7 @@ import GeneralContext from "../GeneralContext";
 import { useMarketFeed } from "../../context/MarketFeedContext";
 import "./BasketModal.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../../config/api";
 
 const BasketModal = ({ basket = null, onClose }) => {
   const { showToast, refreshPortfolio, currentUser } = useContext(GeneralContext);

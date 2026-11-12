@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext, useCallback } from "react";
+import { API_BASE, AUTH_PORTAL_URL } from "../config/api";
 import axios from "axios";
 import BuyActionWindow from "./BuyActionWindow";
 import BasketModal from "./overlays/BasketModal";
@@ -7,6 +8,12 @@ import GttModal from "./overlays/GttModal";
 import MarketDepthModal from "./overlays/MarketDepthModal";
 import MarketMoversModal from "./overlays/MarketMoversModal";
 import SegmentSettingsModal from "./overlays/SegmentSettingsModal";
+import ClientProfileModal from "./overlays/ClientProfileModal";
+import ConsoleModal from "./overlays/ConsoleModal";
+import CoinModal from "./overlays/CoinModal";
+import KeyboardShortcutsModal from "./overlays/KeyboardShortcutsModal";
+import InviteFriendsModal from "./overlays/InviteFriendsModal";
+import SupportModal from "./overlays/SupportModal";
 
 import KiteToast from "./common/KiteToast";
 import { currentUser as defaultUser, initialBaskets } from "../data/mockData";
@@ -41,6 +48,18 @@ const GeneralContext = createContext({
   isProfileOpen: false,
   toggleProfile: () => {},
   closeProfile: () => {},
+  openClientProfile: () => {},
+  closeClientProfile: () => {},
+  openConsole: () => {},
+  closeConsole: () => {},
+  openCoin: () => {},
+  closeCoin: () => {},
+  openShortcuts: () => {},
+  closeShortcuts: () => {},
+  openInvite: () => {},
+  closeInvite: () => {},
+  openSupport: (tab) => {},
+  closeSupport: () => {},
   closeAllOverlays: () => {},
   currentUser: null,
   isAuthenticated: false,
@@ -63,11 +82,19 @@ const GeneralContext = createContext({
   clearAllNotifications: () => {},
 });
 
+function getLaunchParams() {
+  const hash = window.location.hash ? window.location.hash.replace(/^#/, "") : "";
+  if (hash && hash.includes("token=")) {
+    return new URLSearchParams(hash);
+  }
+  return new URLSearchParams(window.location.search);
+}
+
 export const GeneralContextProvider = (props) => {
   // Initial authentication determination
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     try {
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = getLaunchParams();
       const token = urlParams.get("token") || localStorage.getItem("zerodha_token");
       return Boolean(token);
     } catch (e) {
@@ -77,7 +104,7 @@ export const GeneralContextProvider = (props) => {
 
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = getLaunchParams();
       const paramToken = urlParams.get("token");
       const paramUserId = urlParams.get("userId");
       const paramName = urlParams.get("name");
@@ -135,6 +162,13 @@ export const GeneralContextProvider = (props) => {
   const [gttData, setGttData] = useState({ symbol: "INFY", price: null });
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isClientProfileOpen, setIsClientProfileOpen] = useState(false);
+  const [isConsoleOpen, setIsConsoleOpen] = useState(false);
+  const [isCoinOpen, setIsCoinOpen] = useState(false);
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [supportInitialTab, setSupportInitialTab] = useState("SUPPORT");
   const [isBasketsDropdownOpen, setIsBasketsDropdownOpen] = useState(false);
   const [isSegmentModalOpen, setIsSegmentModalOpen] = useState(false);
   const [userSegments, setUserSegments] = useState({});
@@ -152,7 +186,7 @@ export const GeneralContextProvider = (props) => {
       if (typeFilter && typeFilter !== "ALL") {
         params.type = typeFilter;
       }
-      const res = await axios.get("http://localhost:3002/notifications", { params });
+      const res = await axios.get(`${API_BASE}/notifications`, { params });
       if (Array.isArray(res.data)) {
         setNotifications(res.data);
       }
@@ -164,7 +198,7 @@ export const GeneralContextProvider = (props) => {
   const fetchUnreadCount = useCallback(async () => {
     try {
       const activeUserId = currentUser?.userId;
-      const res = await axios.get("http://localhost:3002/notifications/unreadCount", {
+      const res = await axios.get(`${API_BASE}/notifications/unreadCount`, {
         params: { userId: activeUserId },
       });
       if (res.data && typeof res.data.unreadCount === "number") {
@@ -181,7 +215,7 @@ export const GeneralContextProvider = (props) => {
     );
     setUnreadCount((prev) => Math.max(0, prev - 1));
     try {
-      await axios.patch(`http://localhost:3002/notifications/${id}/read`);
+      await axios.patch(`${API_BASE}/notifications/${id}/read`);
     } catch (e) {
       console.error("Error marking notification as read:", e.message);
     }
@@ -192,7 +226,7 @@ export const GeneralContextProvider = (props) => {
     setUnreadCount(0);
     try {
       const activeUserId = currentUser?.userId;
-      await axios.post("http://localhost:3002/notifications/markAllRead", {
+      await axios.post(`${API_BASE}/notifications/markAllRead`, {
         userId: activeUserId,
       });
     } catch (e) {
@@ -209,7 +243,7 @@ export const GeneralContextProvider = (props) => {
       return prev.filter((n) => n._id !== id);
     });
     try {
-      await axios.delete(`http://localhost:3002/notifications/${id}`);
+      await axios.delete(`${API_BASE}/notifications/${id}`);
     } catch (e) {
       console.error("Error deleting notification:", e.message);
     }
@@ -220,7 +254,7 @@ export const GeneralContextProvider = (props) => {
     setUnreadCount(0);
     try {
       const activeUserId = currentUser?.userId;
-      await axios.post("http://localhost:3002/notifications/clearAll", {
+      await axios.post(`${API_BASE}/notifications/clearAll`, {
         userId: activeUserId,
       });
     } catch (e) {
@@ -247,7 +281,7 @@ export const GeneralContextProvider = (props) => {
   const fetchUserBaskets = useCallback(async () => {
     try {
       const activeUserId = currentUser?.userId;
-      const res = await axios.get("http://localhost:3002/allBaskets", {
+      const res = await axios.get(`${API_BASE}/allBaskets`, {
         params: { userId: activeUserId },
       });
       if (Array.isArray(res.data)) {
@@ -266,7 +300,7 @@ export const GeneralContextProvider = (props) => {
     try {
       const activeUserId = currentUser?.userId;
       if (!activeUserId) return;
-      const res = await axios.get("http://localhost:3002/userSegments", {
+      const res = await axios.get(`${API_BASE}/userSegments`, {
         params: { userId: activeUserId },
       });
       if (res.data?.success && res.data.segments) {
@@ -298,7 +332,7 @@ export const GeneralContextProvider = (props) => {
   // Sync session on mount / URL changes
   useEffect(() => {
     try {
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = getLaunchParams();
       const paramToken = urlParams.get("token");
       const paramUserId = urlParams.get("userId");
       const paramName = urlParams.get("name");
@@ -332,7 +366,7 @@ export const GeneralContextProvider = (props) => {
         setIsAuthenticated(true);
 
         // Fetch authoritative profile from MongoDB Atlas to populate exact Demat BO ID, email & nominee
-        fetch(`http://localhost:3002/verifyUser?userId=${paramUserId}`, {
+        fetch(`${API_BASE}/verifyUser?userId=${paramUserId}`, {
           headers: { Authorization: `Bearer ${paramToken}` },
         })
           .then((r) => r.json())
@@ -363,7 +397,7 @@ export const GeneralContextProvider = (props) => {
 
         // Synchronize with database
         if (parsed.userId) {
-          fetch(`http://localhost:3002/verifyUser?userId=${parsed.userId}`, {
+          fetch(`${API_BASE}/verifyUser?userId=${parsed.userId}`, {
             headers: storedToken ? { Authorization: `Bearer ${storedToken}` } : {},
           })
             .then((res) => res.json())
@@ -407,7 +441,50 @@ export const GeneralContextProvider = (props) => {
     setIsNotificationsOpen(false);
     setIsProfileOpen(false);
     setIsBasketsDropdownOpen(false);
+    setIsClientProfileOpen(false);
+    setIsConsoleOpen(false);
+    setIsCoinOpen(false);
+    setIsShortcutsOpen(false);
+    setIsInviteOpen(false);
+    setIsSupportOpen(false);
   };
+
+  const openClientProfile = useCallback(() => {
+    closeAllOverlays();
+    setIsClientProfileOpen(true);
+  }, []);
+  const closeClientProfile = useCallback(() => setIsClientProfileOpen(false), []);
+
+  const openConsole = useCallback(() => {
+    closeAllOverlays();
+    setIsConsoleOpen(true);
+  }, []);
+  const closeConsole = useCallback(() => setIsConsoleOpen(false), []);
+
+  const openCoin = useCallback(() => {
+    closeAllOverlays();
+    setIsCoinOpen(true);
+  }, []);
+  const closeCoin = useCallback(() => setIsCoinOpen(false), []);
+
+  const openShortcuts = useCallback(() => {
+    closeAllOverlays();
+    setIsShortcutsOpen(true);
+  }, []);
+  const closeShortcuts = useCallback(() => setIsShortcutsOpen(false), []);
+
+  const openInvite = useCallback(() => {
+    closeAllOverlays();
+    setIsInviteOpen(true);
+  }, []);
+  const closeInvite = useCallback(() => setIsInviteOpen(false), []);
+
+  const openSupport = useCallback((tab = "SUPPORT") => {
+    closeAllOverlays();
+    setSupportInitialTab(tab);
+    setIsSupportOpen(true);
+  }, []);
+  const closeSupport = useCallback(() => setIsSupportOpen(false), []);
 
   const openSegmentModal = useCallback(() => {
     closeAllOverlays();
@@ -489,8 +566,87 @@ export const GeneralContextProvider = (props) => {
   };
 
   const updateUser = (patch) => {
-    setCurrentUser((prev) => (prev ? { ...prev, ...patch } : patch));
+    setCurrentUser((prev) => {
+      const base = prev || defaultUser;
+      const updated = { ...base, ...patch };
+      try {
+        localStorage.setItem("zerodha_user", JSON.stringify(updated));
+        if (patch.theme) {
+          localStorage.setItem("zerodha_theme", patch.theme);
+          document.documentElement.setAttribute("data-theme", patch.theme);
+          document.body.setAttribute("data-theme", patch.theme);
+        }
+        if (typeof patch.isPrivacyMode !== "undefined") {
+          localStorage.setItem("zerodha_privacy", patch.isPrivacyMode ? "true" : "false");
+          document.documentElement.setAttribute("data-privacy", patch.isPrivacyMode ? "true" : "false");
+          document.body.setAttribute("data-privacy", patch.isPrivacyMode ? "true" : "false");
+        }
+      } catch (e) {}
+      return updated;
+    });
   };
+
+  // Synchronize Theme
+  useEffect(() => {
+    const savedTheme = currentUser?.theme || localStorage.getItem("zerodha_theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    document.body.setAttribute("data-theme", savedTheme);
+  }, [currentUser?.theme]);
+
+  // Synchronize Privacy Mode
+  useEffect(() => {
+    const isPrivacy = Boolean(
+      typeof currentUser?.isPrivacyMode !== "undefined"
+        ? currentUser.isPrivacyMode
+        : localStorage.getItem("zerodha_privacy") === "true"
+    );
+    document.documentElement.setAttribute("data-privacy", isPrivacy ? "true" : "false");
+    document.body.setAttribute("data-privacy", isPrivacy ? "true" : "false");
+  }, [currentUser?.isPrivacyMode]);
+
+  // Global Keyboard Shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "/") {
+        e.preventDefault();
+        setIsShortcutsOpen((prev) => !prev);
+        return;
+      }
+
+      if (e.shiftKey && (e.key === "P" || e.key === "p")) {
+        e.preventDefault();
+        setCurrentUser((prev) => {
+          const nextPrivacy = !prev?.isPrivacyMode;
+          const updated = prev ? { ...prev, isPrivacyMode: nextPrivacy } : { isPrivacyMode: nextPrivacy };
+          try {
+            localStorage.setItem("zerodha_user", JSON.stringify(updated));
+            localStorage.setItem("zerodha_privacy", nextPrivacy ? "true" : "false");
+          } catch (err) {}
+          return updated;
+        });
+        return;
+      }
+
+      if (e.key === "Escape") {
+        closeAllOverlays();
+        return;
+      }
+
+      const activeTag = document.activeElement?.tagName?.toLowerCase();
+      if (activeTag === "input" || activeTag === "textarea" || activeTag === "select") return;
+
+      if (e.key === "b" || e.key === "B") {
+        handleOpenBuyWindow("INFY", "BUY", 1845.50);
+      } else if (e.key === "s" || e.key === "S") {
+        handleOpenBuyWindow("INFY", "SELL", 1845.50);
+      } else if (e.key === "d" || e.key === "D") {
+        openDepthModal("INFY");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentUser?.isPrivacyMode]);
 
   const handleLogout = () => {
     try {
@@ -502,7 +658,7 @@ export const GeneralContextProvider = (props) => {
     setIsAuthenticated(false);
     setCurrentUser(null);
     closeAllOverlays();
-    window.location.href = "http://localhost:3000/login";
+    window.location.href = `${AUTH_PORTAL_URL}/login`;
   };
 
   return (
@@ -541,6 +697,18 @@ export const GeneralContextProvider = (props) => {
         isProfileOpen,
         toggleProfile,
         closeProfile,
+        openClientProfile,
+        closeClientProfile,
+        openConsole,
+        closeConsole,
+        openCoin,
+        closeCoin,
+        openShortcuts,
+        closeShortcuts,
+        openInvite,
+        closeInvite,
+        openSupport,
+        closeSupport,
         closeAllOverlays,
         currentUser: currentUser || defaultUser,
         isAuthenticated,
@@ -575,6 +743,53 @@ export const GeneralContextProvider = (props) => {
           uid={orderWindowData.uid}
           initialMode={orderWindowData.mode}
           initialPrice={orderWindowData.defaultPrice}
+        />
+      )}
+      {isClientProfileOpen && (
+        <ClientProfileModal
+          isOpen={isClientProfileOpen}
+          onClose={closeClientProfile}
+          currentUser={currentUser || defaultUser}
+          onOpenNominee={openNomineeModal}
+          onOpenSegment={openSegmentModal}
+        />
+      )}
+      {isConsoleOpen && (
+        <ConsoleModal
+          isOpen={isConsoleOpen}
+          onClose={closeConsole}
+          showToast={showToast}
+        />
+      )}
+      {isCoinOpen && (
+        <CoinModal
+          isOpen={isCoinOpen}
+          onClose={closeCoin}
+          showToast={showToast}
+        />
+      )}
+      {isShortcutsOpen && (
+        <KeyboardShortcutsModal
+          isOpen={isShortcutsOpen}
+          onClose={closeShortcuts}
+        />
+      )}
+      {isInviteOpen && (
+        <InviteFriendsModal
+          isOpen={isInviteOpen}
+          onClose={closeInvite}
+          currentUser={currentUser || defaultUser}
+          showToast={showToast}
+        />
+      )}
+      {isSupportOpen && (
+        <SupportModal
+          isOpen={isSupportOpen}
+          onClose={closeSupport}
+          initialTab={supportInitialTab}
+          showToast={showToast}
+          currentUser={currentUser || defaultUser}
+          fetchNotifications={fetchNotifications}
         />
       )}
       <KiteToast toasts={toasts} onDismiss={dismissToast} />

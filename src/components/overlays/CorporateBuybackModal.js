@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./CorporateBuybackModal.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, AUTH_PORTAL_URL } from "../../config/api";
 
 const CorporateBuybackModal = ({ action, onClose, onTenderSuccess, currentUser, holdings = [], showToast, refreshPortfolio }) => {
   // Find user Demat holding for this symbol
