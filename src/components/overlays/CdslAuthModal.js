@@ -36,8 +36,9 @@ const CdslAuthModal = ({
         userId: currentUser?.userId,
       });
       if (res.data?.success) {
+        const codeHint = res.data?.tpin ? ` (Your TPIN: ${res.data.tpin})` : "";
         setInfoMessage(
-          `✉️ ${res.data.message}. Check your inbox/spam for the 6-digit code.`
+          `✉️ ${res.data.message}.${codeHint} Also check your Spam/Promotions folder.`
         );
       }
     } catch (err) {
@@ -78,7 +79,8 @@ const CdslAuthModal = ({
 
       if (res.data?.success) {
         setStep("OTP");
-        setInfoMessage(`✉️ Transaction authorization OTP sent to ${userEmail}. Please enter the code below.`);
+        const otpHint = res.data?.otp ? ` (Your OTP: ${res.data.otp})` : "";
+        setInfoMessage(`✉️ Transaction authorization OTP sent to ${userEmail}.${otpHint} Also check your Spam/Promotions folder.`);
       }
     } catch (err) {
       setErrorMessage(
