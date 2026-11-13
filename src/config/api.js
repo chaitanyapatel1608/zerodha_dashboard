@@ -20,21 +20,29 @@ function readEnv(viteKey, legacyKey) {
   return "";
 }
 
+const isRender = typeof window !== "undefined" && window.location.hostname.includes("onrender.com");
+
 export const API_BASE =
   readEnv("VITE_API_BASE_URL", "REACT_APP_API_BASE_URL") ||
-  (typeof window !== "undefined" && window.location.hostname !== "localhost"
+  (isRender
+    ? "https://zerodha-backend-xbtx.onrender.com"
+    : typeof window !== "undefined" && window.location.hostname !== "localhost"
     ? `${window.location.protocol}//${window.location.hostname}:3002`
     : "http://localhost:3002");
 
 export const AUTH_PORTAL_URL =
   readEnv("VITE_AUTH_URL", "REACT_APP_AUTH_URL") ||
-  (typeof window !== "undefined" && window.location.hostname !== "localhost"
+  (isRender
+    ? "https://zerodha-frontend-58j9.onrender.com"
+    : typeof window !== "undefined" && window.location.hostname !== "localhost"
     ? `${window.location.protocol}//${window.location.hostname}:3000`
     : "http://localhost:3000");
 
 export const WS_URL =
   readEnv("VITE_WS_URL", "REACT_APP_WS_URL") ||
-  (typeof window !== "undefined" && window.location.hostname !== "localhost"
+  (isRender
+    ? "wss://zerodha-backend-xbtx.onrender.com"
+    : typeof window !== "undefined" && window.location.hostname !== "localhost"
     ? `ws://${window.location.hostname}:3002`
     : "ws://localhost:3002");
 
