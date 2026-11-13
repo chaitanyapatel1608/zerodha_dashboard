@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useCallback } from "react";
-import { API_BASE, AUTH_PORTAL_URL, readCookie } from "../config/api";
+import { API_BASE, AUTH_PORTAL_URL, readCookie, getCsrfToken, setCsrfToken } from "../config/api";
 import axios from "axios";
 import BuyActionWindow from "./BuyActionWindow";
 import BasketModal from "./overlays/BasketModal";
@@ -319,6 +319,9 @@ export const GeneralContextProvider = (props) => {
             return;
           }
           const data = await res.json();
+          if (data?.csrfToken) {
+            setCsrfToken(data.csrfToken);
+          }
           if (data?.user) {
             const fullProfile = {
               ...defaultUser,
@@ -575,7 +578,7 @@ export const GeneralContextProvider = (props) => {
 
   const handleLogout = async () => {
     try {
-      const csrf = readCookie("zerodha_csrf");
+      const csrf = getCsrfToken();
       await fetch(`${API_BASE}/logout`, {
         method: "POST",
         credentials: "include",
@@ -583,6 +586,10 @@ export const GeneralContextProvider = (props) => {
       });
       localStorage.removeItem("zerodha_token");
       localStorage.removeItem("zerodha_user");
+      localStorage.removeItem("zerodha_csrf");
+      try {
+        sessionStorage.removeItem("zerodha_csrf");
+      } catch (e) {}
     } catch (e) {
       console.error("Error clearing session:", e);
     }

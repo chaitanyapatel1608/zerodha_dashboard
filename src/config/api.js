@@ -52,15 +52,61 @@ export function readCookie(name) {
   return match ? decodeURIComponent(match[1]) : "";
 }
 
+let inMemoryCsrf = "";
+
+export function setCsrfToken(token) {
+  if (token) {
+    inMemoryCsrf = token;
+    try {
+      if (typeof sessionStorage !== "undefined") sessionStorage.setItem("zerodha_csrf", token);
+    } catch (e) {}
+    try {
+      if (typeof localStorage !== "undefined") localStorage.setItem("zerodha_csrf", token);
+    } catch (e) {}
+  }
+}
+
+export function getCsrfToken() {
+  const cookieVal = readCookie("zerodha_csrf");
+  if (cookieVal) return cookieVal;
+  if (inMemoryCsrf) return inMemoryCsrf;
+  try {
+    if (typeof sessionStorage !== "undefined") {
+      const s = sessionStorage.getItem("zerodha_csrf");
+      if (s) return s;
+    }
+  } catch (e) {}
+  try {
+    if (typeof localStorage !== "undefined") {
+      const l = localStorage.getItem("zerodha_csrf");
+      if (l) return l;
+    }
+  } catch (e) {}
+  return "";
+}
+
 axios.defaults.withCredentials = true;
 
-// Automatically attach CSRF token from cookie on state-changing requests
-axios.interceptors.request.use((config) => {
+// Automatically attach CSRF token from cookie or storage on state-changing requests
+axios.interceptors.request.use(async (config) => {
   try {
     const method = String(config.method || "get").toUpperCase();
     if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-      const csrf = readCookie("zerodha_csrf");
+      let csrf = getCsrfToken();
+      if (!csrf && !config.skipCsrfFetch && typeof window !== "undefined") {
+        try {
+          const res = await axios.get(`${API_BASE}/csrf-token`, {
+            withCredentials: true,
+            skipCsrfFetch: true,
+          });
+          if (res?.data?.csrfToken) {
+            csrf = res.data.csrfToken;
+            setCsrfToken(csrf);
+          }
+        } catch (_) {}
+      }
       if (csrf) {
+        config.headers = config.headers || {};
         config.headers["X-CSRF-Token"] = csrf;
       }
     }
