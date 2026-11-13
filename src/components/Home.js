@@ -7,17 +7,46 @@ import GeneralContext, { GeneralContextProvider } from "./GeneralContext";
 import { MarketFeedProvider } from "../context/MarketFeedContext";
 
 const HomeContent = () => {
-  const { isAuthenticated } = useContext(GeneralContext);
+  const { isAuthenticated, isAuthChecking } = useContext(GeneralContext);
 
   useEffect(() => {
-    // If not authenticated, redirect to login portal
-    if (!isAuthenticated) {
+    // Only redirect to login portal if session verification has concluded and user is unauthenticated
+    if (!isAuthChecking && !isAuthenticated) {
       const timer = setTimeout(() => {
         window.location.href = `${AUTH_PORTAL_URL}/login`;
-      }, 1500);
+      }, 2500);
       return () => clearTimeout(timer);
     }
-  }, [isAuthenticated]);
+  }, [isAuthChecking, isAuthenticated]);
+
+  if (isAuthChecking) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#f7f9fa",
+          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <img
+            src="/logo.png"
+            alt="Zerodha Kite Logo"
+            style={{ width: "52px", height: "auto", marginBottom: "16px" }}
+          />
+          <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#444", marginBottom: "8px" }}>
+            Launching Kite Trading Terminal...
+          </h3>
+          <p style={{ fontSize: "13px", color: "#888", margin: 0 }}>
+            Verifying secure session with broker
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (

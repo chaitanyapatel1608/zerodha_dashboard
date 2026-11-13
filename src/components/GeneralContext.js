@@ -63,6 +63,7 @@ const GeneralContext = createContext({
   closeAllOverlays: () => {},
   currentUser: null,
   isAuthenticated: false,
+  isAuthChecking: true,
   updateUser: (patch) => {},
   activeWatchlistGroup: 1,
   setActiveWatchlistGroup: (id) => {},
@@ -99,6 +100,8 @@ export const GeneralContextProvider = (props) => {
       return false;
     }
   });
+
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
 
   const [currentUser, setCurrentUser] = useState(() => {
     try {
@@ -342,11 +345,15 @@ export const GeneralContextProvider = (props) => {
             setIsAuthenticated(true);
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          setIsAuthChecking(false);
+        });
     } catch (e) {
       console.warn("Could not sync user credentials:", e);
       setCurrentUser(null);
       setIsAuthenticated(false);
+      setIsAuthChecking(false);
     }
   }, []);
 
@@ -650,6 +657,7 @@ export const GeneralContextProvider = (props) => {
         closeAllOverlays,
         currentUser: currentUser || defaultUser,
         isAuthenticated,
+        isAuthChecking,
         updateUser,
         activeWatchlistGroup,
         setActiveWatchlistGroup,
