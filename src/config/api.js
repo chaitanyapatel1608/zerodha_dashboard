@@ -87,9 +87,17 @@ export function getCsrfToken() {
 
 axios.defaults.withCredentials = true;
 
-// Automatically attach CSRF token from cookie or storage on state-changing requests
+// Automatically attach CSRF token and Bearer token if present
 axios.interceptors.request.use(async (config) => {
   try {
+    const storedToken = typeof localStorage !== "undefined" ? localStorage.getItem("zerodha_token") : "";
+    if (storedToken) {
+      config.headers = config.headers || {};
+      if (!config.headers["Authorization"]) {
+        config.headers["Authorization"] = `Bearer ${storedToken}`;
+      }
+    }
+
     const method = String(config.method || "get").toUpperCase();
     if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
       let csrf = getCsrfToken();

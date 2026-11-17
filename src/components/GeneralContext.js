@@ -305,17 +305,30 @@ export const GeneralContextProvider = (props) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Sync authoritative session from HttpOnly cookie via /verifyUser on mount
+  // Sync authoritative session from HttpOnly cookie or Bearer token via /verifyUser on mount
   useEffect(() => {
     try {
-      localStorage.removeItem("zerodha_token");
-      if (window.location.hash && window.location.hash.includes("token=")) {
-        window.history.replaceState({}, document.title, window.location.pathname);
+      let activeToken = "";
+      if (typeof window !== "undefined" && window.location.hash && window.location.hash.includes("token=")) {
+        const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+        activeToken = hashParams.get("token") || "";
+        if (activeToken) {
+          localStorage.setItem("zerodha_token", activeToken);
+        }
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+      } else if (typeof localStorage !== "undefined") {
+        activeToken = localStorage.getItem("zerodha_token") || "";
       }
 
-      fetch(`${API_BASE}/verifyUser`, { credentials: "include" })
+      const headers = {};
+      if (activeToken) {
+        headers["Authorization"] = `Bearer ${activeToken}`;
+      }
+
+      fetch(`${API_BASE}/verifyUser`, { credentials: "include", headers })
         .then(async (res) => {
           if (!res.ok) {
+            localStorage.removeItem("zerodha_token");
             localStorage.removeItem("zerodha_user");
             setCurrentUser(null);
             setIsAuthenticated(false);
