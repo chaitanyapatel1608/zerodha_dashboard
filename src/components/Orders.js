@@ -748,27 +748,20 @@ const Orders = () => {
             <div className="p-4 text-center text-muted">Loading GTT triggers...</div>
           ) : gtts.length > 0 ? (
             <div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "16px",
-                }}
-              >
-                <span style={{ fontSize: "12.5px", color: "#666" }}>
+              <div className="gtt-top-header-bar">
+                <span className="gtt-desc-text">
                   Active Good-Till-Triggered (GTT) orders are valid for 1 year or until triggered.
                 </span>
                 <button
-                  className="btn-kite-primary"
+                  className="btn-kite-primary btn-new-gtt"
                   onClick={() => openGttModal("INFY")}
-                  style={{ fontSize: "12px", padding: "6px 14px" }}
                 >
                   + New GTT
                 </button>
               </div>
 
-              <div className="kite-table-container">
+              {/* Desktop GTT Table (Visible on screens > 768px) */}
+              <div className="kite-table-container gtt-desktop-table">
                 <table className="kite-data-table">
                   <thead>
                     <tr>
@@ -815,7 +808,7 @@ const Orders = () => {
                             <span
                               style={{
                                 backgroundColor:
-                                  g.transactionType === "BUY" ? "#e3f2fd" : "#fbe9e7",
+                                    g.transactionType === "BUY" ? "#e3f2fd" : "#fbe9e7",
                                 color: g.transactionType === "BUY" ? "#1976d2" : "#d84315",
                                 padding: "2px 6px",
                                 borderRadius: "2px",
@@ -885,6 +878,71 @@ const Orders = () => {
                     })}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile GTT Card List (Visible ONLY on mobile <= 768px; Zero horizontal scrolling) */}
+              <div className="gtt-mobile-card-list">
+                {gtts.map((g) => {
+                  const createdDate = g.createdAt
+                    ? new Date(g.createdAt).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "Today";
+                  const isBuy = g.transactionType === "BUY";
+                  const limitPrice = Number(g.orderPrice || g.targetPrice || g.stoplossPrice || 0).toFixed(2);
+                  const triggerText = g.type === "SINGLE"
+                    ? `Price reaches ₹${Number(g.triggerPrice || 0).toFixed(2)}`
+                    : `SL: ₹${Number(g.stoplossTrigger || 0).toFixed(2)} | Tgt: ₹${Number(g.targetTrigger || 0).toFixed(2)}`;
+
+                  return (
+                    <div key={g._id} className={`mobile-gtt-card ${isBuy ? "is-buy" : "is-sell"}`}>
+                      {/* Top Header: Badge + Symbol + Type + Status */}
+                      <div className="mobile-gtt-header">
+                        <div className="mobile-gtt-title-left">
+                          <span className={`mobile-order-type-badge ${isBuy ? "buy" : "sell"}`}>
+                            {g.transactionType || "BUY"}
+                          </span>
+                          <span className="mobile-gtt-symbol">{g.symbol}</span>
+                          <span className="mobile-gtt-type-tag">{g.type || "SINGLE"}</span>
+                        </div>
+
+                        <span className={`mobile-order-status-pill ${g.status === "ACTIVE" ? "complete" : g.status === "TRIGGERED" ? "pending" : "rejected"}`}>
+                          <span className="status-dot"></span>
+                          {g.status}
+                        </span>
+                      </div>
+
+                      {/* Trigger condition row */}
+                      <div className="mobile-gtt-trigger-row">
+                        <span className="gtt-trigger-label">Trigger:</span>
+                        <span className="gtt-trigger-val">{triggerText}</span>
+                      </div>
+
+                      {/* Bottom Footer: Qty, Limit Price, Created Date & Action */}
+                      <div className="mobile-gtt-footer">
+                        <div className="mobile-gtt-metrics">
+                          <span>Qty: <strong>{g.qty}</strong></span>
+                          <span className="mobile-order-separator">•</span>
+                          <span>Limit: <strong>₹{limitPrice}</strong></span>
+                          <span className="mobile-order-separator">•</span>
+                          <span className="gtt-date-text">{createdDate}</span>
+                        </div>
+
+                        {g.status === "ACTIVE" && (
+                          <button
+                            type="button"
+                            className="mobile-btn-cancel-order"
+                            onClick={() => handleCancelGtt(g._id, g.symbol)}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ) : (
