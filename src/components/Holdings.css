@@ -505,8 +505,8 @@
   .holdings-hero-summary-card {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 10px !important;
-    padding: 12px 14px !important;
+    gap: 12px 20px !important;
+    padding: 14px 16px !important;
     margin: 8px 0 14px 0 !important;
     background: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
@@ -524,11 +524,17 @@
   .hero-summary-item:nth-child(1),
   .hero-summary-item:nth-child(2) {
     border-bottom: 1px solid #f1f5f9 !important;
-    padding-bottom: 8px !important;
+    padding-bottom: 10px !important;
+  }
+
+  .hero-summary-item:nth-child(2),
+  .hero-summary-item:nth-child(4) {
+    align-items: flex-end !important;
+    text-align: right !important;
   }
 
   .hero-summary-label {
-    font-size: 10px !important;
+    font-size: 10.5px !important;
     text-transform: uppercase !important;
     font-weight: 700 !important;
     color: #64748b !important;
@@ -536,23 +542,32 @@
   }
 
   .hero-summary-val {
-    font-size: 14.5px !important;
+    font-size: 15.5px !important;
     font-weight: 700 !important;
     display: flex !important;
     align-items: center !important;
-    gap: 5px !important;
+    gap: 6px !important;
     flex-wrap: wrap !important;
+    line-height: 1.3 !important;
+  }
+
+  .hero-summary-item:nth-child(2) .hero-summary-val,
+  .hero-summary-item:nth-child(4) .hero-summary-val {
+    justify-content: flex-end !important;
   }
 
   .hero-summary-sub {
-    font-size: 10px !important;
+    font-size: 10.5px !important;
     color: #94a3b8 !important;
+    margin-top: 1px !important;
   }
 
   .hero-pnl-pill {
-    font-size: 10px !important;
-    padding: 1px 5px !important;
-    border-radius: 3px !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    padding: 1.5px 6px !important;
+    border-radius: 4px !important;
+    line-height: 1.3 !important;
   }
 
   /* 2. Subtabs & Toolbar Polish */

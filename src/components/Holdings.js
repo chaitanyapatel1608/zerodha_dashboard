@@ -373,7 +373,7 @@ const Holdings = () => {
         <div className="hero-summary-item">
           <span className="hero-summary-label">Total P&L</span>
           <span className={`hero-summary-val ${isOverallProfit ? "text-up" : "text-down"}`}>
-            {isOverallProfit ? "+" : ""}₹{totalPnl.toLocaleString("en-IN", {
+            {isOverallProfit ? "+" : "-"}₹{Math.abs(totalPnl).toLocaleString("en-IN", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -387,7 +387,7 @@ const Holdings = () => {
         <div className="hero-summary-item no-border">
           <span className="hero-summary-label">Day's P&L</span>
           <span className={`hero-summary-val ${totalDayPnl >= 0 ? "text-up" : "text-down"}`}>
-            {totalDayPnl >= 0 ? "+" : ""}₹{totalDayPnl.toLocaleString("en-IN", {
+            {totalDayPnl >= 0 ? "+" : "-"}₹{Math.abs(totalDayPnl).toLocaleString("en-IN", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
