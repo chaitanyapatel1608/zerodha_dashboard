@@ -315,3 +315,70 @@
   color: #1d4ed8;
   text-decoration: underline;
 }
+
+/* Backdrop */
+.dropdown-mobile-backdrop {
+  display: none;
+}
+
+/* ==========================================================================
+   MOBILE BASKETS DROPDOWN
+   Enforced ONLY on mobile viewports (max-width: 768px). Desktop is 100% untouched.
+   ========================================================================== */
+@media (max-width: 768px) {
+  .dropdown-mobile-backdrop {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(15, 23, 42, 0.45) !important;
+    backdrop-filter: blur(2px) !important;
+    z-index: 9998 !important;
+  }
+
+  .baskets-dropdown {
+    position: fixed !important;
+    top: 54px !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: calc(100vw - 20px) !important;
+    max-height: calc(100vh - 120px) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22) !important;
+    z-index: 10000 !important;
+  }
+
+  .baskets-dropdown-header {
+    padding: 14px 16px !important;
+  }
+
+  .baskets-dropdown-summary {
+    padding: 8px 16px !important;
+    font-size: 12px !important;
+  }
+
+  .baskets-dropdown-list {
+    max-height: 52vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .basket-item {
+    padding: 12px 16px !important;
+  }
+
+  .btn-item-quick-execute {
+    padding: 4px 12px !important;
+    font-size: 11px !important;
+    min-height: 28px !important;
+  }
+
+  .baskets-dropdown-footer {
+    padding: 12px 16px !important;
+  }
+
+  .btn-footer-view-all {
+    font-size: 12.5px !important;
+    padding: 4px 0 !important;
+  }
+}

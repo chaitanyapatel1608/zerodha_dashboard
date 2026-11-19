@@ -216,3 +216,75 @@ input:checked + .slider:before {
   color: #d32f2f;
   border-color: #d32f2f;
 }
+
+/* Backdrop */
+.dropdown-mobile-backdrop {
+  display: none;
+}
+
+/* ==========================================================================
+   MOBILE PROFILE DROPDOWN
+   Enforced ONLY on mobile viewports (max-width: 768px). Desktop is 100% untouched.
+   ========================================================================== */
+@media (max-width: 768px) {
+  .dropdown-mobile-backdrop {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(15, 23, 42, 0.45) !important;
+    backdrop-filter: blur(2px) !important;
+    z-index: 9998 !important;
+  }
+
+  .profile-dropdown {
+    position: fixed !important;
+    top: 54px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100vh - 120px) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22) !important;
+    z-index: 10000 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .profile-user-card {
+    padding: 16px 18px !important;
+  }
+
+  .user-full-name {
+    font-size: 15px !important;
+  }
+
+  .profile-toggle-row {
+    padding: 12px 18px !important;
+    min-height: 48px !important;
+  }
+
+  .toggle-label span {
+    font-size: 13.5px !important;
+  }
+
+  .profile-link-item {
+    padding: 12px 18px !important;
+  }
+
+  .link-title {
+    font-size: 13.5px !important;
+  }
+
+  .profile-footer {
+    padding: 14px 18px !important;
+  }
+
+  .logout-btn {
+    padding: 11px !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    min-height: 42px !important;
+  }
+}

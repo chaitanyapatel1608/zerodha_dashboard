@@ -29,9 +29,11 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [isOpen, onClose]);
 
@@ -70,7 +72,9 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="profile-dropdown" ref={dropdownRef}>
+    <>
+      <div className="dropdown-mobile-backdrop" onClick={onClose} />
+      <div className="profile-dropdown" ref={dropdownRef}>
       <div
         className="profile-user-card"
         style={{ cursor: "pointer" }}
@@ -206,6 +210,7 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
         </button>
       </div>
     </div>
+  </>
   );
 };
 

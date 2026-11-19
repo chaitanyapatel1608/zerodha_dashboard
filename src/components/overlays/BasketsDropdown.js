@@ -33,9 +33,11 @@ const BasketsDropdown = ({ isOpen, onClose }) => {
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [isOpen, onClose]);
 
@@ -69,7 +71,9 @@ const BasketsDropdown = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="baskets-dropdown" ref={dropdownRef}>
+    <>
+      <div className="dropdown-mobile-backdrop" onClick={onClose} />
+      <div className="baskets-dropdown" ref={dropdownRef}>
       {/* Header */}
       <div className="baskets-dropdown-header">
         <div className="dropdown-title-row">
@@ -183,6 +187,7 @@ const BasketsDropdown = ({ isOpen, onClose }) => {
         </button>
       </div>
     </div>
+  </>
   );
 };
 

@@ -56,9 +56,11 @@ const NotificationsDropdown = ({ isOpen, onClose }) => {
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [isOpen, onClose]);
 
@@ -143,7 +145,9 @@ const NotificationsDropdown = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="notifications-dropdown" ref={dropdownRef}>
+    <>
+      <div className="dropdown-mobile-backdrop" onClick={onClose} />
+      <div className="notifications-dropdown" ref={dropdownRef}>
       {/* Dropdown Header */}
       <div className="notifications-header">
         <div className="title-group">
@@ -267,6 +271,7 @@ const NotificationsDropdown = ({ isOpen, onClose }) => {
         </div>
       )}
     </div>
+  </>
   );
 };
 
