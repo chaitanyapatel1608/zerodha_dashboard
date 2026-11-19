@@ -629,6 +629,74 @@ const Holdings = () => {
                   </tbody>
                 </table>
               </div>
+
+              {/* Mobile MF Active SIP Cards (Visible ONLY on mobile <= 768px; Zero horizontal scrolling) */}
+              <div className="holdings-mf-mobile-card-list">
+                {userSips.map((sip) => {
+                  const nextDate = sip.nextTriggerAt
+                    ? new Date(sip.nextTriggerAt).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "Next Cycle";
+                  const invested = Number(sip.totalCapitalInvested || 0);
+
+                  return (
+                    <div key={sip._id} className="mobile-mf-sip-card">
+                      {/* Top Header: Name + Symbol + Type + Status */}
+                      <div className="mobile-mf-sip-header">
+                        <div className="mobile-mf-sip-title-group">
+                          <span className="mobile-mf-sip-name">{sip.name}</span>
+                          {sip.symbol && (
+                            <span className="mobile-mf-symbol-tag">{sip.symbol}</span>
+                          )}
+                          <span className="mobile-mf-type-tag">
+                            {sip.sipType || "STOCK"} SIP
+                          </span>
+                        </div>
+
+                        <span className="mobile-mf-status-pill">
+                          <span className="status-dot"></span>
+                          {sip.status || "ACTIVE"}
+                        </span>
+                      </div>
+
+                      {/* 3-Col Metrics Strip */}
+                      <div className="mobile-mf-metrics-grid">
+                        <div className="mobile-mf-metric-col">
+                          <span className="mf-metric-label">Invested</span>
+                          <strong className="mf-metric-val">
+                            ₹{invested.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </strong>
+                        </div>
+
+                        <div className="mobile-mf-metric-col">
+                          <span className="mf-metric-label">Frequency</span>
+                          <span className="mf-metric-val freq">{sip.frequency || "Monthly"}</span>
+                        </div>
+
+                        <div className="mobile-mf-metric-col">
+                          <span className="mf-metric-label">Next Due</span>
+                          <span className="mf-metric-val next-date">{nextDate}</span>
+                        </div>
+                      </div>
+
+                      {/* Footer Action */}
+                      <div className="mobile-mf-card-footer">
+                        <span className="mobile-mf-depository-hint">CDSL Demat Mandate</span>
+                        <button
+                          type="button"
+                          className="btn-manage-mf-sip"
+                          onClick={() => navigate("/orders", { state: { defaultSubTab: "sip" } })}
+                        >
+                          Manage in Orders ↗
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
 
