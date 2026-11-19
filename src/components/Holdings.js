@@ -132,6 +132,7 @@ const Holdings = () => {
   const [breakdownHolding, setBreakdownHolding] = useState(null);
   const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
   const [openRowMenuSymbol, setOpenRowMenuSymbol] = useState(null);
+  const [expandedMobileSymbol, setExpandedMobileSymbol] = useState(null);
 
   const exportDropdownRef = useRef(null);
 
@@ -562,7 +563,8 @@ const Holdings = () => {
                 </button>
               </div>
 
-              <div className="kite-table-container">
+              {/* Desktop MF Active SIPs Table (Visible on screens > 768px) */}
+              <div className="kite-table-container holdings-mf-desktop-table">
                 <table className="kite-data-table">
                   <thead>
                     <tr>
@@ -685,7 +687,8 @@ const Holdings = () => {
       ) : (
         /* Equities Holdings Table */
         <>
-          <div className="kite-table-container">
+          {/* Desktop Holdings Table (Visible on screens > 768px) */}
+          <div className="kite-table-container holdings-desktop-table">
             <table className="kite-data-table">
               <thead>
                 <tr>
@@ -886,6 +889,136 @@ const Holdings = () => {
                 }))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Holdings Card List (Visible ONLY on mobile <= 768px; Zero horizontal scrolling) */}
+          <div className="holdings-mobile-card-list">
+            {processedHoldings.length === 0 ? (
+              <div className="empty-state-view">
+                <div className="empty-state-illustration">
+                  <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                </div>
+                <h4 className="empty-state-title">No Demat holdings found</h4>
+                <p className="empty-state-subtitle">
+                  You don't have any stocks in your Demat account ({currentUser?.demat || "CDSL"}) yet.
+                </p>
+              </div>
+            ) : (
+              processedHoldings.map((stock, idx) => {
+                const symbol = stock.instrument || stock.name;
+                const avgCost = Number(stock.avgCost || stock.avg || 0);
+                const qty = Number(stock.qty || 0);
+                const live = quotes[symbol];
+                const ltp = live ? live.price : Number(stock.ltp || stock.price || avgCost);
+                const curVal = ltp * qty;
+                const pnl = curVal - avgCost * qty;
+                const isProfit = pnl >= 0;
+                const netChg =
+                  avgCost > 0
+                    ? (pnl >= 0 ? "+" : "") + (((ltp - avgCost) / avgCost) * 100).toFixed(2) + "%"
+                    : stock.netChg || "0.00%";
+                const dayChg = live ? live.percent : (stock.dayChg || "0.00%");
+                const isDayProfit = !dayChg.startsWith("-");
+                const isExpanded = expandedMobileSymbol === symbol;
+
+                let flashClass = "";
+                if (live?.tickDirection === "up") flashClass = "tick-flash-up";
+                else if (live?.tickDirection === "down") flashClass = "tick-flash-down";
+
+                return (
+                  <div
+                    key={stock._id || symbol || idx}
+                    className={`mobile-holding-card ${isExpanded ? "expanded" : ""}`}
+                    onClick={() => setExpandedMobileSymbol((prev) => (prev === symbol ? null : symbol))}
+                  >
+                    {/* Card Main Body */}
+                    <div className="mobile-holding-main">
+                      {/* Top Row: Symbol + Qty/Avg on Left; Live P&L + Net % on Right */}
+                      <div className="mobile-holding-row-top">
+                        <div className="mobile-holding-left">
+                          <span className="mobile-holding-symbol">{symbol}</span>
+                          <span className="mobile-holding-qty-avg">
+                            {qty} Qty. <span className="dot-sep">•</span> Avg. ₹{avgCost.toFixed(2)}
+                          </span>
+                        </div>
+
+                        <div className="mobile-holding-right">
+                          <span className={`mobile-holding-pnl-val ${isProfit ? "text-up" : "text-down"}`}>
+                            {isProfit ? "+" : ""}₹{pnl.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </span>
+                          <span className={`mobile-holding-pnl-pill ${isProfit ? "pill-up" : "pill-down"}`}>
+                            {netChg}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Bottom Row: Current Value on Left; LTP + Day's Change on Right */}
+                      <div className="mobile-holding-row-bottom">
+                        <div className="mobile-holding-curval">
+                          <span className="curval-label">Cur. val:</span>
+                          <strong className="curval-num">
+                            ₹{curVal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </strong>
+                        </div>
+
+                        <div className="mobile-holding-ltp-box">
+                          <span className="ltp-label">LTP:</span>
+                          <span className={`ltp-val ${flashClass}`}>₹{ltp.toFixed(2)}</span>
+                          <span className={`day-chg-text ${isDayProfit ? "text-up" : "text-down"}`}>
+                            ({dayChg})
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Interactive Tap-to-Reveal Actions Tray */}
+                    {isExpanded && (
+                      <div className="mobile-holding-actions-tray" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          className="mobile-btn-action add"
+                          onClick={(e) => handleQuickAdd(e, symbol, ltp)}
+                        >
+                          + Add
+                        </button>
+                        <button
+                          type="button"
+                          className="mobile-btn-action exit"
+                          onClick={(e) => handleQuickExit(e, stock, ltp)}
+                        >
+                          Exit
+                        </button>
+                        <button
+                          type="button"
+                          className="mobile-btn-action util"
+                          onClick={() => openDepthModal(symbol)}
+                        >
+                          Depth
+                        </button>
+                        <button
+                          type="button"
+                          className="mobile-btn-action util"
+                          onClick={() => openGttModal(symbol, ltp)}
+                        >
+                          GTT
+                        </button>
+                        <button
+                          type="button"
+                          className="mobile-btn-action util"
+                          onClick={() => setBreakdownHolding(stock)}
+                        >
+                          Breakdown
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
         </>
       )}

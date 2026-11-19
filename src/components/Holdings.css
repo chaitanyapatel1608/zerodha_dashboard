@@ -479,50 +479,339 @@
   color: #dc2626;
 }
 
+/* Desktop defaults */
+.holdings-mobile-card-list {
+  display: none;
+}
+
+.holdings-desktop-table {
+  display: block;
+}
+
+.holdings-mf-desktop-table {
+  display: block;
+}
+
 /* ==========================================================================
    MOBILE HOLDINGS STYLING - KITE MOBILE SPEC
    Enforced ONLY on mobile viewports (max-width: 768px). Desktop is 100% untouched.
    ========================================================================== */
 @media (max-width: 768px) {
   .holdings-page-container {
-    padding: 4px 0 20px 0 !important;
+    padding: 4px 0 24px 0 !important;
   }
 
+  /* 1. Hero KPI 2x2 Grid Polish */
   .holdings-hero-summary-card {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
+    gap: 10px !important;
     padding: 12px 14px !important;
     margin: 8px 0 14px 0 !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
   }
 
   .hero-summary-item {
     border-right: none !important;
     padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
   }
 
   .hero-summary-item:nth-child(1),
   .hero-summary-item:nth-child(2) {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f1f5f9 !important;
     padding-bottom: 8px !important;
   }
 
-  .hero-summary-val {
-    font-size: 16px !important;
+  .hero-summary-label {
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    font-weight: 700 !important;
+    color: #64748b !important;
+    letter-spacing: 0.4px !important;
   }
 
+  .hero-summary-val {
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .hero-summary-sub {
+    font-size: 10px !important;
+    color: #94a3b8 !important;
+  }
+
+  .hero-pnl-pill {
+    font-size: 10px !important;
+    padding: 1px 5px !important;
+    border-radius: 3px !important;
+  }
+
+  /* 2. Subtabs & Toolbar Polish */
   .holdings-top-bar {
+    display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .page-subtabs-bar {
+    display: flex !important;
+    width: 100% !important;
+    background: #f1f5f9 !important;
+    padding: 3px !important;
+    border-radius: 8px !important;
+    gap: 4px !important;
+    box-sizing: border-box !important;
+  }
+
+  .subtab-btn {
+    flex: 1 !important;
+    text-align: center !important;
+    padding: 6px 6px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    white-space: nowrap !important;
+    color: #64748b !important;
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .subtab-btn.active {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
   }
 
   .holdings-actions-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
     width: 100% !important;
-    justify-content: space-between !important;
   }
 
-  .holdings-actions-right input {
+  .holdings-search-input {
     flex: 1 !important;
+    min-width: 0 !important;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 4px !important;
+  }
+
+  .btn-export-trigger {
+    padding: 6px 10px !important;
+    font-size: 11.5px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* 3. Hide Desktop Table & Show Mobile Cards */
+  .holdings-desktop-table,
+  .holdings-mf-desktop-table {
+    display: none !important;
+  }
+
+  .holdings-mobile-card-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: 24px !important;
+  }
+
+  .mobile-holding-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-holding-card:active {
+    background-color: #f8fafc;
+  }
+
+  .mobile-holding-card.expanded {
+    border-color: #387ed1;
+    box-shadow: 0 2px 6px rgba(56, 126, 209, 0.12);
+  }
+
+  .mobile-holding-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .mobile-holding-left {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .mobile-holding-symbol {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.2px;
+  }
+
+  .mobile-holding-qty-avg {
+    font-size: 11.5px;
+    color: #64748b;
+  }
+
+  .mobile-holding-qty-avg .dot-sep {
+    color: #cbd5e1;
+    margin: 0 2px;
+  }
+
+  .mobile-holding-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+  }
+
+  .mobile-holding-pnl-val {
+    font-size: 14.5px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mobile-holding-pnl-pill {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  .mobile-holding-pnl-pill.pill-up {
+    background: #ecfdf5;
+    color: #16a34a;
+  }
+
+  .mobile-holding-pnl-pill.pill-down {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  .mobile-holding-row-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 6px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 11.5px;
+  }
+
+  .mobile-holding-curval {
+    color: #64748b;
+  }
+
+  .curval-label {
+    margin-right: 4px;
+  }
+
+  .curval-num {
+    color: #1e293b;
+    font-weight: 600;
+  }
+
+  .mobile-holding-ltp-box {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .ltp-label {
+    color: #94a3b8;
+    font-size: 10.5px;
+  }
+
+  .ltp-val {
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .day-chg-text {
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  /* Actions Tray revealed on card tap */
+  .mobile-holding-actions-tray {
+    display: flex;
+    gap: 6px;
+    padding-top: 8px;
+    margin-top: 2px;
+    border-top: 1px dashed #e2e8f0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .mobile-holding-actions-tray::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-btn-action {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+
+  .mobile-btn-action.add {
+    background: #387ed1;
+    color: #ffffff;
+    border-color: #387ed1;
+  }
+
+  .mobile-btn-action.add:active {
+    background: #2b6cb0;
+  }
+
+  .mobile-btn-action.exit {
+    background: #ff5722;
+    color: #ffffff;
+    border-color: #ff5722;
+  }
+
+  .mobile-btn-action.exit:active {
+    background: #e64a19;
+  }
+
+  .mobile-btn-action.util {
+    background: #f1f5f9;
+    color: #475569;
+    border-color: #cbd5e1;
+  }
+
+  .mobile-btn-action.util:active {
+    background: #e2e8f0;
   }
 }
