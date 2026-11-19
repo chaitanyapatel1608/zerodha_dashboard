@@ -448,6 +448,16 @@
   margin-top: 3px;
 }
 
+/* Default Desktop visibility */
+.positions-open-mobile-card-list,
+.positions-closed-mobile-card-list {
+  display: none;
+}
+
+.positions-desktop-table {
+  display: block;
+}
+
 /* ==========================================================================
    MOBILE POSITIONS STYLING - KITE MOBILE SPEC
    Enforced ONLY on mobile viewports (max-width: 768px). Desktop is 100% untouched.
@@ -457,12 +467,16 @@
     padding: 12px 14px 40px 14px !important;
   }
 
+  /* Symmetric 2x2 Hero KPI Grid */
   .positions-hero-summary-card {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
-    padding: 12px 14px !important;
-    margin: 8px 0 14px 0 !important;
+    gap: 12px 16px !important;
+    padding: 14px 16px !important;
+    margin: 8px 0 16px 0 !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
   }
 
   .pos-hero-item {
@@ -470,14 +484,25 @@
     padding: 0 !important;
   }
 
+  .pos-hero-item:nth-child(odd) {
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+
+  .pos-hero-item:nth-child(even) {
+    align-items: flex-end !important;
+    text-align: right !important;
+  }
+
   .pos-hero-item:nth-child(1),
   .pos-hero-item:nth-child(2) {
-    border-bottom: 1px solid #f1f5f9;
-    padding-bottom: 8px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding-bottom: 10px !important;
   }
 
   .pos-hero-val {
     font-size: 16px !important;
+    font-weight: 700 !important;
   }
 
   .positions-top-bar {
@@ -489,9 +514,205 @@
   .positions-actions-right {
     width: 100% !important;
     justify-content: space-between !important;
+    flex-wrap: wrap !important;
   }
 
   .positions-search-input {
     width: 100% !important;
+  }
+
+  /* Subtabs Bar as Touch Pills */
+  .positions-subtabs-bar {
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .pos-subtab-btn {
+    white-space: nowrap !important;
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    border-radius: 20px !important;
+  }
+
+  /* Hide Desktop Table on Mobile */
+  .positions-desktop-table {
+    display: none !important;
+  }
+
+  /* Display Mobile Touch Cards */
+  .positions-open-mobile-card-list,
+  .positions-closed-mobile-card-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+
+  /* Card Item */
+  .pos-mobile-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 14px 14px 12px 14px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .pos-mobile-card.pos-closed-card {
+    background: #fafbfc !important;
+    border-color: #eaecf0 !important;
+  }
+
+  .pos-mobile-card-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+  }
+
+  .pos-mobile-title-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .pos-mobile-symbol {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+  }
+
+  .pos-mobile-pnl-group {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+  }
+
+  .pos-mobile-pnl-val {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+
+  .pos-mobile-chg {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    margin-top: 2px !important;
+  }
+
+  .pos-closed-time {
+    font-size: 11px !important;
+    color: #94a3b8 !important;
+    margin-top: 2px !important;
+  }
+
+  .pos-closed-status-badge {
+    background: #f1f5f9 !important;
+    color: #64748b !important;
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    text-transform: uppercase !important;
+  }
+
+  .pos-mobile-stats-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 8px !important;
+    background: #f8fafc !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    align-items: center !important;
+  }
+
+  .pos-mobile-stat {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .pos-mobile-stat.pos-mobile-stat-right {
+    align-items: flex-end !important;
+    text-align: right !important;
+  }
+
+  .pos-mobile-stat-label {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    color: #64748b !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  .pos-mobile-stat-val {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+  }
+
+  /* 1-Tap Action Tray */
+  .pos-mobile-actions-tray {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+    margin-top: 2px !important;
+  }
+
+  .btn-pos-touch {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 7px 4px !important;
+    min-height: 34px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    color: #334155 !important;
+  }
+
+  .btn-pos-touch:active {
+    transform: scale(0.97) !important;
+  }
+
+  .btn-pos-touch-add {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+    border-color: #bfdbfe !important;
+  }
+
+  .btn-pos-touch-exit {
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    border-color: #fecaca !important;
+  }
+
+  .btn-pos-touch-convert {
+    background: #f8fafc !important;
+    color: #475569 !important;
+  }
+
+  .btn-pos-touch-depth {
+    background: #f8fafc !important;
+    color: #475569 !important;
+  }
+
+  .btn-pos-touch-trade {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+    border-color: #bfdbfe !important;
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    min-height: 28px !important;
   }
 }

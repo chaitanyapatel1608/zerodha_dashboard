@@ -269,7 +269,7 @@ const Positions = () => {
         <div className="pos-hero-item">
           <span className="pos-hero-label">Total Day P&L</span>
           <span className={`pos-hero-val ${totalDayPnl >= 0 ? "text-up" : "text-down"}`}>
-            {totalDayPnl >= 0 ? "+" : ""}₹{totalDayPnl.toLocaleString("en-IN", {
+            {totalDayPnl >= 0 ? "+" : "-"}₹{Math.abs(totalDayPnl).toLocaleString("en-IN", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -280,7 +280,7 @@ const Positions = () => {
         <div className="pos-hero-item">
           <span className="pos-hero-label">Realized Day P&L</span>
           <span className={`pos-hero-val ${totalRealizedPnl >= 0 ? "text-up" : "text-down"}`}>
-            {totalRealizedPnl >= 0 ? "+" : ""}₹{totalRealizedPnl.toLocaleString("en-IN", {
+            {totalRealizedPnl >= 0 ? "+" : "-"}₹{Math.abs(totalRealizedPnl).toLocaleString("en-IN", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -291,7 +291,7 @@ const Positions = () => {
         <div className="pos-hero-item">
           <span className="pos-hero-label">Unrealized MTM P&L</span>
           <span className={`pos-hero-val ${totalUnrealizedPnl >= 0 ? "text-up" : "text-down"}`}>
-            {totalUnrealizedPnl >= 0 ? "+" : ""}₹{totalUnrealizedPnl.toLocaleString("en-IN", {
+            {totalUnrealizedPnl >= 0 ? "+" : "-"}₹{Math.abs(totalUnrealizedPnl).toLocaleString("en-IN", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -462,7 +462,7 @@ const Positions = () => {
               <span style={{ fontSize: "12px", color: "#64748b" }}>
                 Unrealized MTM P&L:{" "}
                 <strong style={{ color: totalUnrealizedPnl >= 0 ? "#10b981" : "#ef4444" }}>
-                  {totalUnrealizedPnl >= 0 ? "+" : ""}₹{totalUnrealizedPnl.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {totalUnrealizedPnl >= 0 ? "+" : "-"}₹{Math.abs(totalUnrealizedPnl).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </strong>
               </span>
             </div>
@@ -485,166 +485,261 @@ const Positions = () => {
                 </button>
               </div>
             ) : (
-              <div className="kite-table-container">
-                <table className="kite-data-table">
-                  <thead>
-                    <tr>
-                      <th>Product</th>
-                      <th className="sortable-th" onClick={() => handleSort("instrument")}>
-                        Instrument
-                        <span className={`sort-arrow ${sortField === "instrument" ? "active" : "inactive"}`}>
-                          {sortField === "instrument" && sortDirection === "asc" ? "▲" : "▼"}
-                        </span>
-                      </th>
-                      <th>Qty.</th>
-                      <th>Avg.</th>
-                      <th>LTP</th>
-                      <th className="sortable-th" onClick={() => handleSort("pnl")}>
-                        P&L
-                        <span className={`sort-arrow ${sortField === "pnl" ? "active" : "inactive"}`}>
-                          {sortField === "pnl" && sortDirection === "asc" ? "▲" : "▼"}
-                        </span>
-                      </th>
-                      <th>Chg.</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sortedOpenPositions.map((pos, idx) => {
-                      const symbol = pos.instrument || pos.name;
-                      const avg = Number(pos.avg || pos.price || 0);
-                      const qty = Number(pos.qty || 0);
-                      const live = quotes[symbol];
-                      const ltp = live ? live.price : Number(pos.ltp || pos.price || avg);
-                      const pnl = qty > 0 ? (ltp - avg) * qty : (avg - ltp) * Math.abs(qty);
-                      const isProfit = pnl >= 0;
-                      const chg = live ? live.percent : (pos.chg || pos.net || "0.00%");
-
-                      let flashClass = "";
-                      if (live?.tickDirection === "up") flashClass = "pos-tick-up";
-                      else if (live?.tickDirection === "down") flashClass = "pos-tick-down";
-
-                      return (
-                        <tr key={pos._id || symbol || idx} className="positions-table-row">
-                          {/* Product Pill */}
-                          <td>
-                            <span className="product-tag">{pos.product || "MIS"}</span>
-                          </td>
-
-                          {/* Instrument with Hover Drawer */}
-                          <td className="symbol-cell">
-                            <div className="pos-symbol-wrapper">
-                              <span className="pos-symbol-name">{symbol}</span>
-
-                              {/* Hover Action Drawer */}
-                              <div className="positions-hover-actions">
-                                <button
-                                  type="button"
-                                  className="btn-pos-action btn-pos-add"
-                                  onClick={() => openBuyWindow(symbol, qty >= 0 ? "BUY" : "SELL", ltp)}
-                                  title="Add to position"
-                                >
-                                  Add
-                                </button>
-                                <button
-                                  type="button"
-                                  className="btn-pos-action btn-pos-exit"
-                                  disabled={isSquaringOffId === pos._id}
-                                  onClick={() => handleSingleSquareOff(pos)}
-                                  title="Square off position at market price"
-                                >
-                                  {isSquaringOffId === pos._id ? "Exiting..." : "Exit"}
-                                </button>
-                                <button
-                                  type="button"
-                                  className="btn-pos-action btn-pos-convert"
-                                  onClick={() => setPositionToConvert(pos)}
-                                  title="Convert MIS to CNC or vice-versa"
-                                >
-                                  Convert
-                                </button>
-                                <button
-                                  type="button"
-                                  className="btn-pos-action btn-pos-depth"
-                                  onClick={() => openDepthModal(symbol)}
-                                  title="Market Depth"
-                                >
-                                  Depth
-                                </button>
-
-                                {/* More Menu */}
-                                <div className="pos-more-menu-container" style={{ position: "relative" }}>
-                                  <button
-                                    type="button"
-                                    className="btn-pos-action btn-pos-more"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setOpenRowMenuSymbol((prev) => (prev === symbol ? null : symbol));
-                                    }}
-                                  >
-                                    •••
-                                  </button>
-
-                                  {openRowMenuSymbol === symbol && (
-                                    <div className="pos-more-dropdown">
-                                      <button
-                                        type="button"
-                                        className="pos-dropdown-item"
-                                        onClick={() => {
-                                          openGttModal(symbol, ltp);
-                                          setOpenRowMenuSymbol(null);
-                                        }}
-                                      >
-                                        🎯 Set GTT / Stoploss
-                                      </button>
-                                      <button
-                                        type="button"
-                                        className="pos-dropdown-item"
-                                        onClick={() => {
-                                          showToast("Alert", `Opening price alert for ${symbol}`, "info");
-                                          setOpenRowMenuSymbol(null);
-                                        }}
-                                      >
-                                        🔔 Create Price Alert
-                                      </button>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-
-                          {/* Net Qty */}
-                          <td className={qty >= 0 ? "text-up" : "text-down"} style={{ fontWeight: 600 }}>
-                            {qty > 0 ? `+${qty}` : qty}
-                          </td>
-
-                          {/* Avg Execution Price */}
-                          <td>{avg.toFixed(2)}</td>
-
-                          {/* LTP with live flash */}
-                          <td className={flashClass} style={{ fontWeight: 600 }}>
-                            {ltp.toFixed(2)}
-                          </td>
-
-                          {/* Live Unrealized P&L */}
-                          <td className={isProfit ? "text-up" : "text-down"} style={{ fontWeight: 700 }}>
-                            {isProfit ? "+" : ""}
-                            {pnl.toLocaleString("en-IN", {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })}
-                          </td>
-
-                          {/* Day % Change */}
-                          <td className={chg.startsWith("-") ? "text-down" : "text-up"}>
-                            {chg}
-                          </td>
+              <>
+                {/* Desktop Data Table (> 768px) */}
+                <div className="positions-desktop-table">
+                  <div className="kite-table-container">
+                    <table className="kite-data-table">
+                      <thead>
+                        <tr>
+                          <th>Product</th>
+                          <th className="sortable-th" onClick={() => handleSort("instrument")}>
+                            Instrument
+                            <span className={`sort-arrow ${sortField === "instrument" ? "active" : "inactive"}`}>
+                              {sortField === "instrument" && sortDirection === "asc" ? "▲" : "▼"}
+                            </span>
+                          </th>
+                          <th>Qty.</th>
+                          <th>Avg.</th>
+                          <th>LTP</th>
+                          <th className="sortable-th" onClick={() => handleSort("pnl")}>
+                            P&L
+                            <span className={`sort-arrow ${sortField === "pnl" ? "active" : "inactive"}`}>
+                              {sortField === "pnl" && sortDirection === "asc" ? "▲" : "▼"}
+                            </span>
+                          </th>
+                          <th>Chg.</th>
                         </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                      </thead>
+                      <tbody>
+                        {sortedOpenPositions.map((pos, idx) => {
+                          const symbol = pos.instrument || pos.name;
+                          const avg = Number(pos.avg || pos.price || 0);
+                          const qty = Number(pos.qty || 0);
+                          const live = quotes[symbol];
+                          const ltp = live ? live.price : Number(pos.ltp || pos.price || avg);
+                          const pnl = qty > 0 ? (ltp - avg) * qty : (avg - ltp) * Math.abs(qty);
+                          const isProfit = pnl >= 0;
+                          const chg = live ? live.percent : (pos.chg || pos.net || "0.00%");
+
+                          let flashClass = "";
+                          if (live?.tickDirection === "up") flashClass = "pos-tick-up";
+                          else if (live?.tickDirection === "down") flashClass = "pos-tick-down";
+
+                          return (
+                            <tr key={pos._id || symbol || idx} className="positions-table-row">
+                              {/* Product Pill */}
+                              <td>
+                                <span className="product-tag">{pos.product || "MIS"}</span>
+                              </td>
+
+                              {/* Instrument with Hover Drawer */}
+                              <td className="symbol-cell">
+                                <div className="pos-symbol-wrapper">
+                                  <span className="pos-symbol-name">{symbol}</span>
+
+                                  {/* Hover Action Drawer */}
+                                  <div className="positions-hover-actions">
+                                    <button
+                                      type="button"
+                                      className="btn-pos-action btn-pos-add"
+                                      onClick={() => openBuyWindow(symbol, qty >= 0 ? "BUY" : "SELL", ltp)}
+                                      title="Add to position"
+                                    >
+                                      Add
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="btn-pos-action btn-pos-exit"
+                                      disabled={isSquaringOffId === pos._id}
+                                      onClick={() => handleSingleSquareOff(pos)}
+                                      title="Square off position at market price"
+                                    >
+                                      {isSquaringOffId === pos._id ? "Exiting..." : "Exit"}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="btn-pos-action btn-pos-convert"
+                                      onClick={() => setPositionToConvert(pos)}
+                                      title="Convert MIS to CNC or vice-versa"
+                                    >
+                                      Convert
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="btn-pos-action btn-pos-depth"
+                                      onClick={() => openDepthModal(symbol)}
+                                      title="Market Depth"
+                                    >
+                                      Depth
+                                    </button>
+
+                                    {/* More Menu */}
+                                    <div className="pos-more-menu-container" style={{ position: "relative" }}>
+                                      <button
+                                        type="button"
+                                        className="btn-pos-action btn-pos-more"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setOpenRowMenuSymbol((prev) => (prev === symbol ? null : symbol));
+                                        }}
+                                      >
+                                        •••
+                                      </button>
+
+                                      {openRowMenuSymbol === symbol && (
+                                        <div className="pos-more-dropdown">
+                                          <button
+                                            type="button"
+                                            className="pos-dropdown-item"
+                                            onClick={() => {
+                                              openGttModal(symbol, ltp);
+                                              setOpenRowMenuSymbol(null);
+                                            }}
+                                          >
+                                            🎯 Set GTT / Stoploss
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="pos-dropdown-item"
+                                            onClick={() => {
+                                              showToast("Alert", `Opening price alert for ${symbol}`, "info");
+                                              setOpenRowMenuSymbol(null);
+                                            }}
+                                          >
+                                            🔔 Create Price Alert
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+
+                              {/* Net Qty */}
+                              <td className={qty >= 0 ? "text-up" : "text-down"} style={{ fontWeight: 600 }}>
+                                {qty > 0 ? `+${qty}` : qty}
+                              </td>
+
+                              {/* Avg Execution Price */}
+                              <td>{avg.toFixed(2)}</td>
+
+                              {/* LTP with live flash */}
+                              <td className={flashClass} style={{ fontWeight: 600 }}>
+                                {ltp.toFixed(2)}
+                              </td>
+
+                              {/* Live Unrealized P&L */}
+                              <td className={isProfit ? "text-up" : "text-down"} style={{ fontWeight: 700 }}>
+                                {isProfit ? "+" : "-"}₹{Math.abs(pnl).toLocaleString("en-IN", {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 2,
+                                })}
+                              </td>
+
+                              {/* Day % Change */}
+                              <td className={chg.startsWith("-") ? "text-down" : "text-up"}>
+                                {chg}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Mobile Touch-Friendly Card List (<= 768px) */}
+                <div className="positions-open-mobile-card-list">
+                  {sortedOpenPositions.map((pos, idx) => {
+                    const symbol = pos.instrument || pos.name;
+                    const avg = Number(pos.avg || pos.price || 0);
+                    const qty = Number(pos.qty || 0);
+                    const live = quotes[symbol];
+                    const ltp = live ? live.price : Number(pos.ltp || pos.price || avg);
+                    const pnl = qty > 0 ? (ltp - avg) * qty : (avg - ltp) * Math.abs(qty);
+                    const isProfit = pnl >= 0;
+                    const chg = live ? live.percent : (pos.chg || pos.net || "0.00%");
+
+                    let flashClass = "";
+                    if (live?.tickDirection === "up") flashClass = "pos-tick-up";
+                    else if (live?.tickDirection === "down") flashClass = "pos-tick-down";
+
+                    return (
+                      <div key={pos._id || symbol || idx} className="pos-mobile-card">
+                        <div className="pos-mobile-card-header">
+                          <div className="pos-mobile-title-group">
+                            <span className="product-tag">{pos.product || "MIS"}</span>
+                            <span className="pos-mobile-symbol">{symbol}</span>
+                          </div>
+                          <div className="pos-mobile-pnl-group">
+                            <span className={`pos-mobile-pnl-val ${isProfit ? "text-up" : "text-down"}`}>
+                              {isProfit ? "+" : "-"}₹{Math.abs(pnl).toLocaleString("en-IN", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}
+                            </span>
+                            <span className={`pos-mobile-chg ${chg.startsWith("-") ? "text-down" : "text-up"}`}>
+                              {chg}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="pos-mobile-stats-grid">
+                          <div className="pos-mobile-stat">
+                            <span className="pos-mobile-stat-label">Net Qty</span>
+                            <span className={`pos-mobile-stat-val ${qty >= 0 ? "text-up" : "text-down"}`}>
+                              {qty > 0 ? `+${qty}` : qty}
+                            </span>
+                          </div>
+                          <div className="pos-mobile-stat">
+                            <span className="pos-mobile-stat-label">Avg. Price</span>
+                            <span className="pos-mobile-stat-val">₹{avg.toFixed(2)}</span>
+                          </div>
+                          <div className="pos-mobile-stat pos-mobile-stat-right">
+                            <span className="pos-mobile-stat-label">Live LTP</span>
+                            <span className={`pos-mobile-stat-val ${flashClass}`}>
+                              ₹{ltp.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="pos-mobile-actions-tray">
+                          <button
+                            type="button"
+                            className="btn-pos-touch btn-pos-touch-add"
+                            onClick={() => openBuyWindow(symbol, qty >= 0 ? "BUY" : "SELL", ltp)}
+                          >
+                            + Add
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-pos-touch btn-pos-touch-exit"
+                            disabled={isSquaringOffId === pos._id}
+                            onClick={() => handleSingleSquareOff(pos)}
+                          >
+                            {isSquaringOffId === pos._id ? "Exiting..." : "⚡ Exit"}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-pos-touch btn-pos-touch-convert"
+                            onClick={() => setPositionToConvert(pos)}
+                          >
+                            Convert
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-pos-touch btn-pos-touch-depth"
+                            onClick={() => openDepthModal(symbol)}
+                          >
+                            Depth
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
             )}
           </div>
 
@@ -659,75 +754,136 @@ const Positions = () => {
                 <span style={{ fontSize: "12px", color: "#64748b" }}>
                   Day Realized P&L:{" "}
                   <strong style={{ color: totalRealizedPnl >= 0 ? "#10b981" : "#ef4444" }}>
-                    {totalRealizedPnl >= 0 ? "+" : ""}₹{totalRealizedPnl.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {totalRealizedPnl >= 0 ? "+" : "-"}₹{Math.abs(totalRealizedPnl).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </strong>
                 </span>
               </div>
 
-              <div className="kite-table-container">
-                <table className="kite-data-table">
-                  <thead>
-                    <tr>
-                      <th>Product</th>
-                      <th>Instrument</th>
-                      <th>Net Qty</th>
-                      <th>Avg Entry</th>
-                      <th>Exit Price</th>
-                      <th>Realized P&L</th>
-                      <th>Closed Time</th>
-                      <th style={{ textAlign: "right" }}>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {closedPositions.map((pos, idx) => {
-                      const sym = pos.instrument || pos.name;
-                      const live = quotes[sym];
-                      const currentLtp = live ? live.price : (pos.ltp || pos.price || pos.avg || 0);
-                      const realPnl = Number(pos.realizedPnl || pos.pnl || 0);
-                      const isProfit = realPnl >= 0;
-                      const closedTime = pos.closedAt
-                        ? new Date(pos.closedAt).toLocaleTimeString("en-IN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                          })
-                        : "Today";
+              {/* Desktop Closed Positions Table (> 768px) */}
+              <div className="positions-desktop-table">
+                <div className="kite-table-container">
+                  <table className="kite-data-table">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Instrument</th>
+                        <th>Net Qty</th>
+                        <th>Avg Entry</th>
+                        <th>Exit Price</th>
+                        <th>Realized P&L</th>
+                        <th>Closed Time</th>
+                        <th style={{ textAlign: "right" }}>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {closedPositions.map((pos, idx) => {
+                        const sym = pos.instrument || pos.name;
+                        const live = quotes[sym];
+                        const currentLtp = live ? live.price : (pos.ltp || pos.price || pos.avg || 0);
+                        const realPnl = Number(pos.realizedPnl || pos.pnl || 0);
+                        const isProfit = realPnl >= 0;
+                        const closedTime = pos.closedAt
+                          ? new Date(pos.closedAt).toLocaleTimeString("en-IN", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                            })
+                          : "Today";
 
-                      return (
-                        <tr key={pos._id || idx} style={{ color: "#64748b" }}>
-                          <td>
-                            <span className="product-tag" style={{ background: "#f1f5f9", color: "#64748b" }}>
-                              {pos.product || "MIS"}
-                            </span>
-                          </td>
-                          <td style={{ fontWeight: 600, color: "#334155" }}>{sym}</td>
-                          <td>0 (Squared Off)</td>
-                          <td>{pos.avg ? pos.avg.toFixed(2) : "-"}</td>
-                          <td>{pos.ltp ? pos.ltp.toFixed(2) : "-"}</td>
-                          <td style={{ fontWeight: 700, color: isProfit ? "#10b981" : "#ef4444" }}>
-                            {isProfit ? "+" : ""}
-                            {realPnl.toLocaleString("en-IN", {
+                        return (
+                          <tr key={pos._id || idx} style={{ color: "#64748b" }}>
+                            <td>
+                              <span className="product-tag" style={{ background: "#f1f5f9", color: "#64748b" }}>
+                                {pos.product || "MIS"}
+                              </span>
+                            </td>
+                            <td style={{ fontWeight: 600, color: "#334155" }}>{sym}</td>
+                            <td>0 (Squared Off)</td>
+                            <td>{pos.avg ? pos.avg.toFixed(2) : "-"}</td>
+                            <td>{pos.ltp ? pos.ltp.toFixed(2) : "-"}</td>
+                            <td style={{ fontWeight: 700, color: isProfit ? "#10b981" : "#ef4444" }}>
+                              {isProfit ? "+" : "-"}₹{Math.abs(realPnl).toLocaleString("en-IN", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}
+                            </td>
+                            <td style={{ fontSize: "12px" }}>{closedTime}</td>
+                            <td style={{ textAlign: "right" }}>
+                              <button
+                                type="button"
+                                className="btn-pos-action add-pos"
+                                style={{ padding: "3px 10px", fontSize: "11px", fontWeight: 600, borderRadius: "3px" }}
+                                onClick={() => openBuyWindow(sym, "BUY", currentLtp)}
+                                title={`Place new intraday order for ${sym}`}
+                              >
+                                + Trade
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Mobile Touch-Friendly Closed Position Cards (<= 768px) */}
+              <div className="positions-closed-mobile-card-list">
+                {closedPositions.map((pos, idx) => {
+                  const sym = pos.instrument || pos.name;
+                  const live = quotes[sym];
+                  const currentLtp = live ? live.price : (pos.ltp || pos.price || pos.avg || 0);
+                  const realPnl = Number(pos.realizedPnl || pos.pnl || 0);
+                  const isProfit = realPnl >= 0;
+                  const closedTime = pos.closedAt
+                    ? new Date(pos.closedAt).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      })
+                    : "Today";
+
+                  return (
+                    <div key={pos._id || idx} className="pos-mobile-card pos-closed-card">
+                      <div className="pos-mobile-card-header">
+                        <div className="pos-mobile-title-group">
+                          <span className="product-tag closed-tag">{pos.product || "MIS"}</span>
+                          <span className="pos-mobile-symbol">{sym}</span>
+                          <span className="pos-closed-status-badge">Squared Off</span>
+                        </div>
+                        <div className="pos-mobile-pnl-group">
+                          <span className={`pos-mobile-pnl-val ${isProfit ? "text-up" : "text-down"}`}>
+                            {isProfit ? "+" : "-"}₹{Math.abs(realPnl).toLocaleString("en-IN", {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
                             })}
-                          </td>
-                          <td style={{ fontSize: "12px" }}>{closedTime}</td>
-                          <td style={{ textAlign: "right" }}>
-                            <button
-                              type="button"
-                              className="btn-pos-action add-pos"
-                              style={{ padding: "3px 10px", fontSize: "11px", fontWeight: 600, borderRadius: "3px" }}
-                              onClick={() => openBuyWindow(sym, "BUY", currentLtp)}
-                              title={`Place new intraday order for ${sym}`}
-                            >
-                              + Trade
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                          </span>
+                          <span className="pos-closed-time">{closedTime}</span>
+                        </div>
+                      </div>
+
+                      <div className="pos-mobile-stats-grid">
+                        <div className="pos-mobile-stat">
+                          <span className="pos-mobile-stat-label">Entry Avg</span>
+                          <span className="pos-mobile-stat-val">{pos.avg ? `₹${pos.avg.toFixed(2)}` : "-"}</span>
+                        </div>
+                        <div className="pos-mobile-stat">
+                          <span className="pos-mobile-stat-label">Exit Price</span>
+                          <span className="pos-mobile-stat-val">{pos.ltp ? `₹${pos.ltp.toFixed(2)}` : "-"}</span>
+                        </div>
+                        <div className="pos-mobile-stat pos-mobile-stat-right">
+                          <button
+                            type="button"
+                            className="btn-pos-touch btn-pos-touch-trade"
+                            onClick={() => openBuyWindow(sym, "BUY", currentLtp)}
+                          >
+                            + Trade
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
