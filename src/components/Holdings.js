@@ -506,16 +506,15 @@ const Holdings = () => {
         <div className="mf-showcase-container">
           {/* Top Coin Summary Strip */}
           <div className="mf-banner-header">
-            <div>
+            <div className="mf-banner-text">
               <h4>Zerodha Coin &bull; Demat Direct Mutual Funds & Active SIPs</h4>
               <p>Invest in zero-commission, Demat direct mutual funds with automated recurring schedules synced with CDSL Demat depository.</p>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div className="mf-banner-actions">
               <span className="coin-pill-tag">0% Commission</span>
               <button
                 type="button"
-                className="btn-kite-secondary"
-                style={{ fontSize: "12px", padding: "6px 14px", background: "#ffffff", borderColor: "#86efac", color: "#166534", fontWeight: 600 }}
+                className="btn-kite-secondary btn-manage-coin-orders"
                 onClick={() => navigate("/orders", { state: { defaultSubTab: "sip" } })}
               >
                 Manage SIP Orders in Orders Tab ↗
@@ -524,39 +523,38 @@ const Holdings = () => {
           </div>
 
           {/* KPI Metrics Strip */}
-          <div className="mf-kpi-bar" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
-            <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "14px 16px" }}>
-              <div style={{ fontSize: "11px", textTransform: "uppercase", color: "#64748b", fontWeight: 600, letterSpacing: "0.5px" }}>Active Demat SIPs</div>
-              <div style={{ fontSize: "20px", fontWeight: 700, color: "#0f172a", marginTop: "4px" }}>{userSips.length} Mandates</div>
-              <div style={{ fontSize: "12px", color: "#10b981", marginTop: "2px" }}>● Live in Execution Engine</div>
+          <div className="mf-kpi-bar">
+            <div className="mf-kpi-item">
+              <div className="mf-kpi-label">Active Demat SIPs</div>
+              <div className="mf-kpi-val">{userSips.length} Mandates</div>
+              <div className="mf-kpi-sub green">● Live in Execution Engine</div>
             </div>
-            <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "14px 16px" }}>
-              <div style={{ fontSize: "11px", textTransform: "uppercase", color: "#64748b", fontWeight: 600, letterSpacing: "0.5px" }}>Total Capital Invested</div>
-              <div style={{ fontSize: "20px", fontWeight: 700, color: "#0f172a", marginTop: "4px" }}>
+            <div className="mf-kpi-item">
+              <div className="mf-kpi-label">Total Capital Invested</div>
+              <div className="mf-kpi-val">
                 ₹{totalSipInvested.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
-              <div style={{ fontSize: "12px", color: "#64748b", marginTop: "2px" }}>Across {userSips.length} active schedules</div>
+              <div className="mf-kpi-sub">Across {userSips.length} active schedules</div>
             </div>
-            <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "14px 16px" }}>
-              <div style={{ fontSize: "11px", textTransform: "uppercase", color: "#64748b", fontWeight: 600, letterSpacing: "0.5px" }}>Demat Depository</div>
-              <div style={{ fontSize: "15px", fontWeight: 600, color: "#0f172a", marginTop: "8px" }}>
+            <div className="mf-kpi-item span-full">
+              <div className="mf-kpi-label">Demat Depository</div>
+              <div className="mf-kpi-val demat">
                 CDSL ({currentUser?.demat || "1208160012345678"})
               </div>
-              <div style={{ fontSize: "12px", color: "#2563eb", marginTop: "2px" }}>Holding verified in Demat</div>
+              <div className="mf-kpi-sub blue">Holding verified in Demat</div>
             </div>
           </div>
 
           {/* SECTION 1: Active Demat SIP Portfolios */}
           {userSips.length > 0 && (
-            <div className="active-sips-holdings-card" style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "16px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-                <div style={{ fontSize: "15px", fontWeight: 700, color: "#1e293b" }}>
+            <div className="active-sips-holdings-card">
+              <div className="active-sips-header-row">
+                <div className="active-sips-title">
                   My Active Demat SIP Portfolios ({userSips.length})
                 </div>
                 <button
                   type="button"
-                  className="btn-kite-secondary"
-                  style={{ fontSize: "12px", padding: "4px 10px" }}
+                  className="btn-kite-secondary btn-view-engine"
                   onClick={() => navigate("/orders", { state: { defaultSubTab: "sip" } })}
                 >
                   View in SIP Engine ↗
@@ -701,10 +699,10 @@ const Holdings = () => {
           )}
 
           {/* SECTION 2: Explore Direct Mutual Funds */}
-          <div>
-            <div style={{ fontSize: "15px", fontWeight: 700, color: "#1e293b", marginBottom: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span>Explore 0% Commission Direct Mutual Funds & ETFs via Coin</span>
-              <span style={{ fontSize: "12px", color: "#64748b", fontWeight: "normal" }}>Direct Growth Plans</span>
+          <div className="mf-explore-section">
+            <div className="mf-section-header">
+              <span className="mf-section-title">Explore 0% Commission Direct Mutual Funds & ETFs via Coin</span>
+              <span className="mf-section-sub">Direct Growth Plans</span>
             </div>
 
             <div className="mf-cards-grid">

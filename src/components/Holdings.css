@@ -288,6 +288,119 @@
   border-radius: 20px;
 }
 
+.mf-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-manage-coin-orders {
+  font-size: 12px;
+  padding: 6px 14px;
+  background: #ffffff;
+  border: 1px solid #86efac;
+  color: #166534;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.btn-manage-coin-orders:hover {
+  background: #f0fdf4;
+}
+
+.mf-kpi-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.mf-kpi-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.mf-kpi-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.mf-kpi-val {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 4px;
+}
+
+.mf-kpi-val.demat {
+  font-size: 15px;
+  margin-top: 8px;
+}
+
+.mf-kpi-sub {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.mf-kpi-sub.green {
+  color: #10b981;
+}
+
+.mf-kpi-sub.blue {
+  color: #2563eb;
+}
+
+.active-sips-holdings-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.active-sips-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.active-sips-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.btn-view-engine {
+  font-size: 12px;
+  padding: 4px 10px;
+}
+
+.mf-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.mf-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.mf-section-sub {
+  font-size: 12px;
+  color: #64748b;
+}
+
 .mf-cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -838,32 +951,125 @@
   .mf-banner-header {
     flex-direction: column !important;
     align-items: stretch !important;
-    gap: 12px !important;
+    gap: 10px !important;
     padding: 14px !important;
+    background: #f0fdf4 !important;
+    border: 1px solid #bbf7d0 !important;
+    border-radius: 8px !important;
   }
 
-  .mf-banner-header div:last-child {
+  .mf-banner-actions {
     display: flex !important;
+    flex-direction: row !important;
     justify-content: space-between !important;
     align-items: center !important;
     width: 100% !important;
     gap: 8px !important;
+    padding-top: 6px !important;
+    border-top: 1px solid #dcfce7 !important;
   }
 
-  .mf-banner-header .btn-kite-secondary {
+  .btn-manage-coin-orders {
     font-size: 11.5px !important;
-    padding: 6px 12px !important;
+    padding: 5px 12px !important;
     white-space: nowrap !important;
+    flex-shrink: 0 !important;
   }
 
   .mf-kpi-bar {
-    grid-template-columns: 1fr !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: 10px !important;
+  }
+
+  .mf-kpi-item {
+    padding: 12px 14px !important;
+    border-radius: 8px !important;
+  }
+
+  .mf-kpi-item.span-full {
+    grid-column: span 2 !important;
+  }
+
+  .mf-kpi-val {
+    font-size: 16.5px !important;
+  }
+
+  .mf-kpi-val.demat {
+    font-size: 13.5px !important;
+    margin-top: 4px !important;
   }
 
   .active-sips-holdings-card {
     padding: 12px 14px !important;
     border-radius: 8px !important;
+  }
+
+  .active-sips-header-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 12px !important;
+    gap: 8px !important;
+  }
+
+  .active-sips-title {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+  }
+
+  .btn-view-engine {
+    font-size: 11.5px !important;
+    padding: 4px 8px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mf-section-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .mf-section-title {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+  }
+
+  .mf-section-sub {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+  }
+
+  .fund-stats-strip {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 4px !important;
+    padding: 8px 6px !important;
+    text-align: center !important;
+  }
+
+  .fund-stat-item {
+    align-items: center !important;
+  }
+
+  .stat-label {
+    font-size: 8.5px !important;
+    white-space: nowrap !important;
+  }
+
+  .stat-val {
+    font-size: 11.5px !important;
+    white-space: nowrap !important;
+  }
+
+  .btn-start-sip-demat {
+    font-size: 11.5px !important;
+    padding: 6px 12px !important;
+    white-space: nowrap !important;
   }
 
   .holdings-mf-mobile-card-list {
