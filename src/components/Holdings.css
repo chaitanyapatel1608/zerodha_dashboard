@@ -478,3 +478,51 @@
   background: #fef2f2;
   color: #dc2626;
 }
+
+/* ==========================================================================
+   MOBILE HOLDINGS STYLING - KITE MOBILE SPEC
+   Enforced ONLY on mobile viewports (max-width: 768px). Desktop is 100% untouched.
+   ========================================================================== */
+@media (max-width: 768px) {
+  .holdings-page-container {
+    padding: 4px 0 20px 0 !important;
+  }
+
+  .holdings-hero-summary-card {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    padding: 12px 14px !important;
+    margin: 8px 0 14px 0 !important;
+  }
+
+  .hero-summary-item {
+    border-right: none !important;
+    padding: 0 !important;
+  }
+
+  .hero-summary-item:nth-child(1),
+  .hero-summary-item:nth-child(2) {
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 8px !important;
+  }
+
+  .hero-summary-val {
+    font-size: 16px !important;
+  }
+
+  .holdings-top-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .holdings-actions-right {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .holdings-actions-right input {
+    flex: 1 !important;
+  }
+}

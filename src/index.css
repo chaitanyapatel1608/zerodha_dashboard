@@ -1775,17 +1775,31 @@ body,
 }
 
 @media (max-width: 768px) {
+  .balance-card.equity-full-width {
+    padding: 16px 18px !important;
+  }
   .balance-card.equity-full-width .balance-number {
     font-size: 28px;
   }
+  .balance-content.equity-wide-content {
+    gap: 16px !important;
+  }
   .equity-wide-metrics .secondary-item .item-val {
-    font-size: 17px;
+    font-size: 16px;
   }
   .balance-secondary.equity-wide-metrics {
-    gap: 28px;
+    gap: 24px;
+  }
+  .holdings-snapshot-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .snapshot-stat .stat-label {
+    font-size: 11px !important;
   }
   .snapshot-stat .stat-val {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
@@ -3662,9 +3676,54 @@ body,
   display: none;
 }
 
+.mobile-view-segmented-bar {
+  display: none;
+}
+
 @media (max-width: 768px) {
   :root {
     --header-height: 48px;
+  }
+
+  /* Mobile Segmented Switcher (Watchlist <-> Dashboard) */
+  .mobile-view-segmented-bar {
+    display: flex !important;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 9px;
+    margin: 8px 12px 6px 12px;
+    gap: 4px;
+    border: 1px solid #e2e8f0;
+    flex-shrink: 0;
+  }
+
+  .mobile-view-pill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-view-pill.active {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .mobile-view-pill:active {
+    transform: scale(0.98);
   }
 
   body, html, #root {

@@ -5,6 +5,7 @@ import axios from "axios";
 import GeneralContext from "./GeneralContext";
 import { useMarketFeed } from "../context/MarketFeedContext";
 import WatchlistSearchDropdown from "./WatchlistSearchDropdown";
+import MobileStockActionSheet from "./overlays/MobileStockActionSheet";
 import { Tooltip, Grow } from "@mui/material";
 import {
   BarChartOutlined,
@@ -39,6 +40,17 @@ const WatchList = () => {
   // Editing tab name state
   const [editingTabId, setEditingTabId] = useState(null);
   const [editingTabName, setEditingTabName] = useState("");
+  const [sheetStock, setSheetStock] = useState(null);
+  const navigate = useNavigate();
+  const generalContext = useContext(GeneralContext);
+
+  const handleStockSelect = (stock) => {
+    if (typeof window !== "undefined" && window.innerWidth <= 768) {
+      setSheetStock(stock);
+    } else {
+      generalContext.openBuyWindow(stock.symbol, "BUY", stock.price);
+    }
+  };
   const editInputRef = useRef(null);
 
   const searchContainerRef = useRef(null);
@@ -292,6 +304,7 @@ const WatchList = () => {
                 stock={stock}
                 key={stock.symbol}
                 onRemove={handleRemoveStock}
+                onSelect={handleStockSelect}
               />
             ))}
 
@@ -367,13 +380,35 @@ const WatchList = () => {
           </ul>
         </div>
       </div>
+
+      {/* Mobile Stock Action Bottom Sheet (Kite Mobile Drawer) */}
+      <MobileStockActionSheet
+        stock={sheetStock}
+        isOpen={Boolean(sheetStock)}
+        onClose={() => setSheetStock(null)}
+        onBuy={() => {
+          if (sheetStock) generalContext.openBuyWindow(sheetStock.symbol, "BUY", sheetStock.price);
+        }}
+        onSell={() => {
+          if (sheetStock) generalContext.openBuyWindow(sheetStock.symbol, "SELL", sheetStock.price);
+        }}
+        onChart={() => {
+          if (sheetStock) navigate(`/chart?symbol=${sheetStock.symbol}`);
+        }}
+        onDepth={() => {
+          if (sheetStock) generalContext.openDepthModal(sheetStock.symbol);
+        }}
+        onRemove={() => {
+          if (sheetStock) handleRemoveStock(sheetStock.symbol);
+        }}
+      />
     </aside>
   );
 };
 
 export default WatchList;
 
-const WatchListItem = ({ stock, onRemove }) => {
+const WatchListItem = ({ stock, onRemove, onSelect }) => {
   const [isHovered, setIsHovered] = useState(false);
   const generalContext = useContext(GeneralContext);
 
@@ -382,7 +417,11 @@ const WatchListItem = ({ stock, onRemove }) => {
   else if (stock.tickDirection === "down") flashClass = "tick-flash-down";
 
   const handleRowClick = () => {
-    generalContext.openBuyWindow(stock.symbol, "BUY", stock.price);
+    if (onSelect) {
+      onSelect(stock);
+    } else {
+      generalContext.openBuyWindow(stock.symbol, "BUY", stock.price);
+    }
   };
 
   return (

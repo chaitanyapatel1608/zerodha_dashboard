@@ -8,7 +8,7 @@ const MobileBottomNav = () => {
   const { currentUser } = useContext(GeneralContext);
   const currentPath = location.pathname;
 
-  const isWatchlistActive = currentPath === "/" || currentPath === "/watchlist";
+  const isWatchlistActive = currentPath === "/" || currentPath === "/watchlist" || currentPath === "/dashboard";
   const isOrdersActive = currentPath === "/orders";
   const isPortfolioActive = currentPath === "/holdings" || currentPath === "/positions";
   const isBidsActive = currentPath === "/bids" || currentPath === "/apps";
