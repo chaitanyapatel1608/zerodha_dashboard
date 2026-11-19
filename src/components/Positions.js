@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useContext, useCallback, useRef } from "react";
 import axios from "axios";
+import { NavLink } from "react-router-dom";
 import GeneralContext from "./GeneralContext";
 import { useMarketFeed } from "../context/MarketFeedContext";
 import AccountStatusBanner from "./common/AccountStatusBanner";
@@ -257,6 +258,19 @@ const Positions = () => {
 
   return (
     <div className="positions-page-container">
+      {/* Mobile Portfolio Primary Switcher: Holdings | Positions */}
+      <div className="portfolio-mobile-nav-tabs">
+        <NavLink to="/holdings" className="portfolio-tab-item">
+          <span>Holdings</span>
+        </NavLink>
+        <NavLink to="/positions" className="portfolio-tab-item active">
+          <span>Positions</span>
+          {openPositions.length > 0 && (
+            <span className="portfolio-tab-badge">{openPositions.length}</span>
+          )}
+        </NavLink>
+      </div>
+
       {/* Risk Management / Intraday Square-off Banner */}
       <AccountStatusBanner
         message="Account status: Intraday square-off begins at 15:20 for equity MIS and 15:25 for F&O."

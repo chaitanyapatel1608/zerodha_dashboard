@@ -449,6 +449,10 @@
 }
 
 /* Default Desktop visibility */
+.portfolio-mobile-nav-tabs {
+  display: none;
+}
+
 .positions-open-mobile-card-list,
 .positions-closed-mobile-card-list {
   display: none;
@@ -464,7 +468,63 @@
    ========================================================================== */
 @media (max-width: 768px) {
   .positions-page-container {
-    padding: 12px 14px 40px 14px !important;
+    padding: 0 14px 40px 14px !important;
+  }
+
+  /* 0. Mobile Portfolio Primary Switcher: Holdings | Positions */
+  .portfolio-mobile-nav-tabs {
+    display: flex !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    padding: 0 16px !important;
+    margin: 0 -14px 8px -14px !important;
+    gap: 16px !important;
+  }
+
+  .portfolio-tab-item {
+    flex: 1 !important;
+    text-align: center !important;
+    padding: 11px 0 !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    text-decoration: none !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .portfolio-tab-item.active {
+    color: #ff5722 !important;
+    font-weight: 700 !important;
+  }
+
+  .portfolio-tab-item.active::after {
+    content: "" !important;
+    position: absolute !important;
+    bottom: -1px !important;
+    left: 10% !important;
+    right: 10% !important;
+    height: 2.5px !important;
+    background: #ff5722 !important;
+    border-radius: 2px 2px 0 0 !important;
+  }
+
+  .portfolio-tab-badge {
+    background: #f1f5f9 !important;
+    color: #64748b !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    padding: 1px 7px !important;
+    border-radius: 10px !important;
+  }
+
+  .portfolio-tab-item.active .portfolio-tab-badge {
+    background: #fff3e0 !important;
+    color: #ff5722 !important;
   }
 
   /* Symmetric 2x2 Hero KPI Grid */

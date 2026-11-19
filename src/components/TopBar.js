@@ -14,9 +14,8 @@ const TopBar = () => {
       case "/orders":
         return "Orders";
       case "/holdings":
-        return "Holdings";
       case "/positions":
-        return "Positions";
+        return "Portfolio";
       case "/bids":
       case "/apps":
         return "Bids";

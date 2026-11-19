@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useContext, useCallback, useRef } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import GeneralContext from "./GeneralContext";
 import { useMarketFeed } from "../context/MarketFeedContext";
 import AccountStatusBanner from "./common/AccountStatusBanner";
@@ -339,6 +339,17 @@ const Holdings = () => {
 
   return (
     <div className="holdings-page-container">
+      {/* Mobile Portfolio Primary Switcher: Holdings | Positions */}
+      <div className="portfolio-mobile-nav-tabs">
+        <NavLink to="/holdings" className="portfolio-tab-item active">
+          <span>Holdings</span>
+          <span className="portfolio-tab-badge">{processedHoldings.length}</span>
+        </NavLink>
+        <NavLink to="/positions" className="portfolio-tab-item">
+          <span>Positions</span>
+        </NavLink>
+      </div>
+
       {/* Depository Status Banner */}
       <AccountStatusBanner
         message="Account status: Holdings statement synced with CDSL Demat depository as of market close."
