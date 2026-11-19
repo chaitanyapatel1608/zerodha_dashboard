@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
 import BuyActionWindow from "../components/BuyActionWindow";
 import GeneralContext from "../components/GeneralContext";
+import NotFound from "../components/NotFound";
 
 describe("Dashboard BuyActionWindow & Order Interaction Suite", () => {
   afterEach(() => {
@@ -82,5 +83,19 @@ describe("Dashboard BuyActionWindow & Order Interaction Suite", () => {
     });
     expect(refreshPortfolio).toHaveBeenCalled();
     expect(closeBuyWindow).toHaveBeenCalled();
+  });
+
+  it("renders Route Not Found view with dynamic path indicator and quick navigation links", () => {
+    render(
+      <MemoryRouter initialEntries={["/saaaaa"]}>
+        <NotFound />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText(/404 • Route Not Found/i)).toBeInTheDocument();
+    expect(screen.getByText(/This page does not exist/i)).toBeInTheDocument();
+    expect(screen.getByText("/saaaaa")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Go to Dashboard/i })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: /Holdings/i })).toHaveAttribute("href", "/holdings");
   });
 });

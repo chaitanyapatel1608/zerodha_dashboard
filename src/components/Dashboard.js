@@ -9,6 +9,7 @@ const Positions = lazy(() => import("./Positions"));
 const BidsPage = lazy(() => import("./BidsPage"));
 const Funds = lazy(() => import("./Funds"));
 const CandleChart = lazy(() => import("./charts/CandleChart"));
+const NotFound = lazy(() => import("./NotFound"));
 
 const Dashboard = () => {
   const location = useLocation();
@@ -33,7 +34,7 @@ const Dashboard = () => {
             <Route path="/bids" element={<BidsPage />} />
             <Route path="/apps" element={<BidsPage />} />
             <Route path="/funds" element={<Funds />} />
-            <Route path="*" element={<Summary />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>
