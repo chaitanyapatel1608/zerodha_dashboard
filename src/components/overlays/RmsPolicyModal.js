@@ -92,10 +92,10 @@ const RmsPolicyModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="rms-modal-footer">
-          <span className="rms-footer-disclaimer">Zerodha Broking Limited &bull; Member: NSE/BSE/MCX &bull; SEBI Reg No: INZ000031633</span>
-          <button className="btn-kite-primary" onClick={onClose}>
+          <button className="rms-btn-understand" onClick={onClose}>
             I Understand the RMS Policy
           </button>
+          <span className="rms-footer-disclaimer">Zerodha Broking Limited &bull; Member: NSE/BSE/MCX &bull; SEBI Reg No: INZ000031633</span>
         </div>
       </div>
     </div>
