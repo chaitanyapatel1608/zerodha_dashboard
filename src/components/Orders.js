@@ -570,74 +570,154 @@ const Orders = () => {
           (loading ? (
             <div className="p-4 text-center text-muted">Loading orders...</div>
           ) : orders.length > 0 ? (
-            <div className="kite-table-container">
-              <table className="kite-data-table">
-                <thead>
-                  <tr>
-                    <th>Time</th>
-                    <th>Type</th>
-                    <th>Instrument</th>
-                    <th>Product</th>
-                    <th>Qty.</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((ord, idx) => {
-                    const timeStr = ord.createdAt
-                      ? new Date(ord.createdAt).toLocaleTimeString("en-IN", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                        })
-                      : "Just now";
-                    return (
-                      <tr key={ord._id || idx} className={(highlightOrderId && ord._id === highlightOrderId) || (!highlightOrderId && highlightSymbol && ord.name === highlightSymbol && idx === 0) ? "highlighted-order-row" : ""}>
-                        <td>{timeStr}</td>
-                        <td>
-                          <span
-                            style={{
-                              backgroundColor: ord.mode === "BUY" ? "#4184f3" : "#df514c",
-                              color: "#fff",
-                              padding: "2px 6px",
-                              borderRadius: "2px",
-                              fontSize: "0.75rem",
-                              fontWeight: 600,
-                            }}
-                          >
-                            {ord.mode}
+            <>
+              {/* Desktop Table View (Displayed on screens > 768px) */}
+              <div className="kite-table-container orders-desktop-table">
+                <table className="kite-data-table">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Type</th>
+                      <th>Instrument</th>
+                      <th>Product</th>
+                      <th>Qty.</th>
+                      <th>Price</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((ord, idx) => {
+                      const timeStr = ord.createdAt
+                        ? new Date(ord.createdAt).toLocaleTimeString("en-IN", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          })
+                        : "Just now";
+                      return (
+                        <tr key={ord._id || idx} className={(highlightOrderId && ord._id === highlightOrderId) || (!highlightOrderId && highlightSymbol && ord.name === highlightSymbol && idx === 0) ? "highlighted-order-row" : ""}>
+                          <td>{timeStr}</td>
+                          <td>
+                            <span
+                              style={{
+                                backgroundColor: ord.mode === "BUY" ? "#4184f3" : "#df514c",
+                                color: "#fff",
+                                padding: "2px 6px",
+                                borderRadius: "2px",
+                                fontSize: "0.75rem",
+                                fontWeight: 600,
+                              }}
+                            >
+                              {ord.mode}
+                            </span>
+                          </td>
+                          <td className="symbol-cell">{ord.name}</td>
+                          <td>
+                            <span className="product-tag">{ord.product || "CNC"}</span>
+                          </td>
+                          <td>{ord.qty}</td>
+                          <td>₹{Number(ord.price || 0).toFixed(2)}</td>
+                          <td>
+                            <span
+                              style={{
+                                color: "#4caf50",
+                                fontWeight: 500,
+                                fontSize: "0.85rem",
+                              }}
+                            >
+                              {ord.status || "COMPLETE"}
+                              {ord.status === "PENDING" && <button onClick={async () => {
+                                try {
+                                  await axios.post(API_BASE + "/cancelOrder/" + ord._id);
+                                  window.location.reload();
+                                } catch (error) { window.alert(error.response?.data?.message || "Order could not be cancelled."); }
+                              }}>Cancel order</button>}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card List View (Visible ONLY on mobile <= 768px; Zero horizontal scrolling) */}
+              <div className="orders-mobile-card-list">
+                {orders.map((ord, idx) => {
+                  const timeStr = ord.createdAt
+                    ? new Date(ord.createdAt).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "Just now";
+                  const isBuy = ord.mode === "BUY";
+                  const statusRaw = (ord.status || "COMPLETE").toUpperCase();
+                  const isComplete = statusRaw === "COMPLETE";
+                  const isPending = statusRaw === "PENDING" || statusRaw === "OPEN";
+
+                  return (
+                    <div
+                      key={ord._id || idx}
+                      className={`mobile-order-card ${isBuy ? "is-buy" : "is-sell"} ${(highlightOrderId && ord._id === highlightOrderId) ? "highlighted-order-card" : ""}`}
+                    >
+                      {/* Top Row: BUY/SELL Badge + Instrument + Product Tag + Status Pill */}
+                      <div className="mobile-order-card-header">
+                        <div className="mobile-order-title-left">
+                          <span className={`mobile-order-type-badge ${isBuy ? "buy" : "sell"}`}>
+                            {ord.mode || "BUY"}
                           </span>
-                        </td>
-                        <td className="symbol-cell">{ord.name}</td>
-                        <td>
-                          <span className="product-tag">{ord.product || "CNC"}</span>
-                        </td>
-                        <td>{ord.qty}</td>
-                        <td>₹{Number(ord.price || 0).toFixed(2)}</td>
-                        <td>
-                          <span
-                            style={{
-                              color: "#4caf50",
-                              fontWeight: 500,
-                              fontSize: "0.85rem",
-                            }}
-                          >
-                            {ord.status || "COMPLETE"}
-                            {ord.status === "PENDING" && <button onClick={async () => {
+                          <span className="mobile-order-symbol">{ord.name}</span>
+                          <span className="mobile-order-product-tag">{ord.product || "CNC"}</span>
+                        </div>
+
+                        <div className="mobile-order-status-right">
+                          <span className={`mobile-order-status-pill ${isComplete ? "complete" : isPending ? "pending" : "rejected"}`}>
+                            <span className="status-dot"></span>
+                            {statusRaw}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Bottom Row: Qty / Executed + Time + Price */}
+                      <div className="mobile-order-card-body">
+                        <div className="mobile-order-metrics-left">
+                          <span className="mobile-order-qty">
+                            <strong>{ord.qty}</strong> Qty
+                          </span>
+                          <span className="mobile-order-separator">•</span>
+                          <span className="mobile-order-time">{timeStr}</span>
+                        </div>
+
+                        <div className="mobile-order-price-right">
+                          <span className="mobile-order-price-val">₹{Number(ord.price || 0).toFixed(2)}</span>
+                        </div>
+                      </div>
+
+                      {/* Pending Order Quick Cancel */}
+                      {isPending && (
+                        <div className="mobile-order-card-actions">
+                          <button
+                            type="button"
+                            className="mobile-btn-cancel-order"
+                            onClick={async (e) => {
+                              e.stopPropagation();
                               try {
                                 await axios.post(API_BASE + "/cancelOrder/" + ord._id);
                                 window.location.reload();
-                              } catch (error) { window.alert(error.response?.data?.message || "Order could not be cancelled."); }
-                            }}>Cancel order</button>}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                              } catch (error) {
+                                window.alert(error.response?.data?.message || "Order could not be cancelled.");
+                              }
+                            }}
+                          >
+                            Cancel Order
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           ) : (
             <div className="empty-state-view">
               <div className="empty-state-illustration">

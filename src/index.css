@@ -3823,6 +3823,14 @@ body,
   display: none;
 }
 
+.orders-mobile-card-list {
+  display: none;
+}
+
+.orders-desktop-table {
+  display: block;
+}
+
 @media (max-width: 768px) {
   :root {
     --header-height: 48px;
@@ -4007,6 +4015,181 @@ body,
   }
 
   /* 3. Tables & Subtabs on Mobile */
+  .orders-desktop-table {
+    display: none !important;
+  }
+
+  .orders-mobile-card-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: 24px !important;
+  }
+
+  .mobile-order-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+  }
+
+  .mobile-order-card.is-buy {
+    border-left: 3.5px solid #387ed1;
+  }
+
+  .mobile-order-card.is-sell {
+    border-left: 3.5px solid #ff5722;
+  }
+
+  .mobile-order-card.highlighted-order-card {
+    background-color: #f0f7ff;
+    border-color: #387ed1;
+  }
+
+  .mobile-order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .mobile-order-title-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .mobile-order-type-badge {
+    color: #ffffff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+  }
+
+  .mobile-order-type-badge.buy {
+    background: #387ed1;
+  }
+
+  .mobile-order-type-badge.sell {
+    background: #ff5722;
+  }
+
+  .mobile-order-symbol {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.2px;
+  }
+
+  .mobile-order-product-tag {
+    font-size: 10px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+
+  .mobile-order-status-pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mobile-order-status-pill.complete {
+    background: #ecfdf5;
+    color: #16a34a;
+    border: 1px solid #d1fae5;
+  }
+
+  .mobile-order-status-pill.rejected {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fee2e2;
+  }
+
+  .mobile-order-status-pill.pending {
+    background: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fef3c7;
+  }
+
+  .mobile-order-status-pill .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .mobile-order-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12.5px;
+    color: #64748b;
+  }
+
+  .mobile-order-metrics-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mobile-order-qty strong {
+    color: #0f172a;
+    font-weight: 600;
+  }
+
+  .mobile-order-separator {
+    color: #cbd5e1;
+    font-size: 10px;
+  }
+
+  .mobile-order-time {
+    color: #64748b;
+    font-size: 12px;
+  }
+
+  .mobile-order-price-val {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #0f172a;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mobile-order-card-actions {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .mobile-btn-cancel-order {
+    background: #ffffff;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
   .kite-table-container {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
