@@ -1507,7 +1507,8 @@ const Orders = () => {
                   </div>
                 </div>
 
-                <div className="kite-table-container sip-market-table-scroll">
+                {/* Desktop Market SIPs Table (Visible on screens > 768px) */}
+                <div className="kite-table-container sip-market-table-scroll sip-explore-desktop-table">
                   <table className="kite-data-table market-sips-table">
                     <thead>
                       <tr>
@@ -1621,6 +1622,108 @@ const Orders = () => {
                     </tbody>
                   </table>
                 </div>
+
+                {/* Mobile Market SIPs Card List (Visible ONLY on mobile <= 768px; Zero horizontal scrolling) */}
+                <div className="sip-explore-mobile-card-list">
+                  {filteredMarketSips.map((plan) => {
+                    const categorySlug = (plan.category || "")
+                      .toLowerCase()
+                      .replace(/[^a-z0-9]/g, "-");
+                    const riskSlug = (plan.risk || "").toLowerCase();
+
+                    return (
+                      <div key={plan.code} className="mobile-sip-explore-card">
+                        {/* Header: Ticker + Name + Category */}
+                        <div className="mobile-sip-header">
+                          <div className="mobile-sip-title-group">
+                            <span className="sip-ticker-pill">
+                              {plan.symbol || plan.code.replace("SIP_", "")}
+                            </span>
+                            <span className="mobile-sip-name">{plan.name}</span>
+                          </div>
+                          <span className={`sip-category-chip cat-${categorySlug}`}>
+                            {plan.category}
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        {plan.description && (
+                          <p className="mobile-sip-desc">{plan.description}</p>
+                        )}
+
+                        {/* Metrics Bar */}
+                        <div className="mobile-sip-metrics-grid">
+                          <div className="mobile-sip-metric-col">
+                            <span className="metric-label">Min. Installment</span>
+                            <span className="metric-val">
+                              ₹{Number(plan.minAmount).toLocaleString("en-IN", { minimumFractionDigits: 0 })}
+                            </span>
+                          </div>
+
+                          <div className="mobile-sip-metric-col">
+                            <span className="metric-label">3Y CAGR</span>
+                            <span className="sip-cagr-badge mobile-cagr">
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                <polyline points="17 6 23 6 23 12"></polyline>
+                              </svg>
+                              <span>{plan.cagr3Yr}</span>
+                            </span>
+                          </div>
+
+                          <div className="mobile-sip-metric-col">
+                            <span className="metric-label">Risk</span>
+                            <span className={`sip-risk-pill risk-${riskSlug}`}>
+                              {plan.risk}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Underlying assets preview if available */}
+                        {plan.instruments && plan.instruments.length > 0 && (
+                          <div className="mobile-sip-underlying-row">
+                            <span className="underlying-label">Assets:</span>
+                            <div className="sip-assets-flow">
+                              {plan.instruments.slice(0, 3).map((inst, idx) => (
+                                <span key={idx} className="sip-asset-chip">
+                                  <span className="chip-qty">{inst.qty}×</span>
+                                  <span className="chip-symbol">{inst.symbol}</span>
+                                </span>
+                              ))}
+                              {plan.instruments.length > 3 && (
+                                <span className="sip-asset-chip">+{plan.instruments.length - 3}</span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Action Footer */}
+                        <div className="mobile-sip-card-footer">
+                          <span className="mobile-sip-freq-hint">{plan.tag || "Systematic Investment"}</span>
+                          <button
+                            type="button"
+                            className="btn-start-market-sip mobile-btn-start-sip"
+                            onClick={() => {
+                              setSelectedMarketCodeForModal(plan.code);
+                              setIsSipModalOpen(true);
+                            }}
+                          >
+                            + Start SIP
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
@@ -1645,7 +1748,8 @@ const Orders = () => {
                     Loading your SIP schedules...
                   </div>
                 ) : filteredSips.length > 0 ? (
-                  <div className="kite-table-container active-sips-table-scroll">
+                  <>
+                    <div className="kite-table-container active-sips-table-scroll sip-active-desktop-table">
                     <table className="kite-data-table active-sips-table">
                       <thead>
                         <tr>
@@ -1850,7 +1954,103 @@ const Orders = () => {
                       </tbody>
                     </table>
                   </div>
-                ) : sips.length === 0 ? (
+
+                  {/* Mobile Active SIPs Card List (Visible ONLY on mobile <= 768px; Zero horizontal scrolling) */}
+                  <div className="sip-active-mobile-card-list">
+                    {filteredSips.map((sip) => {
+                      const nextTrigger = new Date(sip.nextTriggerAt);
+                      const formattedNext = nextTrigger.toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      });
+                      const formattedTime = sip.scheduleTime || "09:30";
+                      const isExecutedToday = Boolean(
+                        sip.lastExecutedAt &&
+                        new Date(sip.lastExecutedAt).toDateString() === new Date().toDateString()
+                      );
+                      const scheduleText = sip.frequency === "MONTHLY"
+                        ? `${sip.scheduleDay}${sip.scheduleDay === 1 ? "st" : sip.scheduleDay === 2 ? "nd" : sip.scheduleDay === 3 ? "rd" : "th"} of month @ ${formattedTime}`
+                        : sip.frequency === "WEEKLY"
+                        ? `Every ${WEEK_DAY_NAMES[sip.scheduleDay] || `Day ${sip.scheduleDay}`} @ ${formattedTime}`
+                        : `Every Trading Day @ ${formattedTime}`;
+
+                      return (
+                        <div key={sip._id} className="mobile-sip-active-card">
+                          {/* Header: Title + Asset pill + Status */}
+                          <div className="mobile-active-sip-header">
+                            <div className="mobile-active-sip-title-col">
+                              <span className="mobile-active-sip-title">{sip.name}</span>
+                              <div className="mobile-active-sip-asset-sub">
+                                <span className="active-sip-symbol-pill">
+                                  {sip.symbol || sip.basketName || "DIRECT"}
+                                </span>
+                                <span className="active-sip-type-tag">
+                                  {sip.sipType || (sip.basketName ? "Basket SIP" : "Stock SIP")}
+                                </span>
+                              </div>
+                            </div>
+
+                            <span
+                              className={`active-sip-status-badge ${
+                                sip.status === "ACTIVE" ? "active" : "paused"
+                              }`}
+                            >
+                              <span className="status-dot"></span>
+                              {sip.status}
+                            </span>
+                          </div>
+
+                          {/* Details rows */}
+                          <div className="mobile-active-sip-details">
+                            <div className="mobile-active-sip-detail-row">
+                              <span className="detail-label">Schedule:</span>
+                              <span className="detail-value">{scheduleText}</span>
+                            </div>
+                            <div className="mobile-active-sip-detail-row">
+                              <span className="detail-label">Next Trigger:</span>
+                              <span className="detail-value highlight">{formattedNext} • {formattedTime} IST</span>
+                            </div>
+                            <div className="mobile-active-sip-detail-row">
+                              <span className="detail-label">Invested:</span>
+                              <span className="detail-value">
+                                ₹{Number(sip.totalCapitalInvested || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })} ({sip.totalInstallmentsExecuted || 0} runs)
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Quick Mobile Action Buttons */}
+                          <div className="mobile-active-sip-actions-bar">
+                            <button
+                              type="button"
+                              className="mobile-sip-action-btn primary"
+                              onClick={() => handleExecuteSipNow(sip)}
+                            >
+                              ⚡ {isExecutedToday ? "Advance" : "Execute Now"}
+                            </button>
+
+                            <button
+                              type="button"
+                              className="mobile-sip-action-btn secondary"
+                              onClick={() => handleToggleSipStatus(sip)}
+                            >
+                              {sip.status === "ACTIVE" ? "Pause" : "Resume"}
+                            </button>
+
+                            <button
+                              type="button"
+                              className="mobile-sip-action-btn danger"
+                              onClick={() => handleDeleteSip(sip)}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : sips.length === 0 ? (
                   <div className="empty-state-view">
                     <div className="empty-state-illustration">
                       <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.2">
