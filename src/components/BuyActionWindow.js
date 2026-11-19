@@ -23,6 +23,7 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
   const [stockPrice, setStockPrice] = useState(
     initialPrice !== null && !isNaN(initialPrice) ? Number(initialPrice) : 1845.5
   );
+  const [executionType, setExecutionType] = useState("MARKET");
   const [orderType, setOrderType] = useState("CNC"); // "CNC" (Longterm) or "MIS" (Intraday)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [availableMargin, setAvailableMargin] = useState(null);
@@ -112,12 +113,13 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
         price: numPrice,
         mode: orderMode,
         product: orderType,
+        orderType: executionType,
         userId: currentUser?.userId,
       });
 
       if (res.data && res.data.success) {
         showToast(
-          "Order Executed",
+          res.data.order?.status === "PENDING" ? "Order pending" : "Order executed",
           res.data.message || `${orderMode} ${numQty} ${uid} executed successfully!`,
           "success"
         );
@@ -229,6 +231,11 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
 
         {/* Product Selection Tabs */}
         <div className="order-product-tabs">
+          <label>Execution
+            <select value={executionType} onChange={event => setExecutionType(event.target.value)}>
+              <option value="MARKET">Market</option><option value="LIMIT">Limit</option>
+            </select>
+          </label>
           <button
             type="button"
             className={`tab-btn ${orderType === "MIS" ? "active" : ""}`}

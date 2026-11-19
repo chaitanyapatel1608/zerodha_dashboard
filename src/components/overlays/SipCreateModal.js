@@ -5,11 +5,7 @@ import "./SipCreateModal.css";
 
 import { API_BASE, AUTH_PORTAL_URL } from "../../config/api";
 
-const TIME_PRESETS = [
-  { value: "09:30", label: "09:30 AM (Market Open)" },
-  { value: "11:00", label: "11:00 AM (Mid-Day)" },
-  { value: "14:30", label: "02:30 PM (Pre-Market Close)" },
-];
+const TIME_PRESETS = [{ value: "10:00", label: "10:00 AM (Asia/Kolkata)" }];
 
 const WEEK_DAYS = [
   { value: 1, label: "Monday" },
@@ -17,6 +13,8 @@ const WEEK_DAYS = [
   { value: 3, label: "Wednesday" },
   { value: 4, label: "Thursday" },
   { value: 5, label: "Friday" },
+  { value: 6, label: "Saturday" },
+  { value: 7, label: "Sunday" },
 ];
 
 const SipCreateModal = ({ onClose, onSipCreated, preselectedMarketCode = null, initialBasketId = null }) => {
@@ -39,7 +37,7 @@ const SipCreateModal = ({ onClose, onSipCreated, preselectedMarketCode = null, i
   const [selectedBasketId, setSelectedBasketId] = useState(initialBasketId || "");
   const [frequency, setFrequency] = useState("MONTHLY");
   const [scheduleDay, setScheduleDay] = useState(5);
-  const [scheduleTime, setScheduleTime] = useState("09:30");
+  const [scheduleTime, setScheduleTime] = useState("10:00");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 1. Fetch 50 Real Market SIPs + User Baskets ONCE on mount
@@ -341,7 +339,7 @@ const SipCreateModal = ({ onClose, onSipCreated, preselectedMarketCode = null, i
                       value={scheduleDay}
                       onChange={(e) => setScheduleDay(Number(e.target.value))}
                     >
-                      {Array.from({ length: 28 }, (_, i) => i + 1).map((d) => (
+                      {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
                         <option key={d} value={d}>
                           {d}
                           {d === 1 ? "st" : d === 2 ? "nd" : d === 3 ? "rd" : "th"} of every month
@@ -372,7 +370,7 @@ const SipCreateModal = ({ onClose, onSipCreated, preselectedMarketCode = null, i
                   <label className="sip-field-label">EXECUTION TIME</label>
                   <select
                     className="sip-select"
-                    value={scheduleTime}
+                    disabled value={scheduleTime}
                     onChange={(e) => setScheduleTime(e.target.value)}
                   >
                     {TIME_PRESETS.map((t) => (

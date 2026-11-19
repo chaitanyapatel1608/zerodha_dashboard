@@ -237,7 +237,7 @@ const Orders = () => {
     if (!sipToExecute) return;
     setExecutingSipId(sipToExecute._id);
     try {
-      const res = await axios.post(`${API_BASE}/executeSipNow/${sipToExecute._id}`);
+      const res = await axios.post(`${API_BASE}/executeSipNow/${sipToExecute._id}`, { scheduledAt: sipToExecute.nextTriggerAt });
       if (res.data?.success) {
         showToast(
           "SIP Executed!",
@@ -624,6 +624,12 @@ const Orders = () => {
                             }}
                           >
                             {ord.status || "COMPLETE"}
+                            {ord.status === "PENDING" && <button onClick={async () => {
+                              try {
+                                await axios.post(API_BASE + "/cancelOrder/" + ord._id);
+                                window.location.reload();
+                              } catch (error) { window.alert(error.response?.data?.message || "Order could not be cancelled."); }
+                            }}>Cancel order</button>}
                           </span>
                         </td>
                       </tr>

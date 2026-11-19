@@ -22,6 +22,16 @@ const Funds = () => {
   const activeUserId = currentUser?.userId;
 
   const [funds, setFunds] = useState(fallbackBalances);
+  async function managePendingDeposit(id, action) {
+    try {
+      const { data } = await axios.post(API_BASE + "/fundDeposit/" + id + "/" + action);
+      showToast("Demo deposit", data.message, data.delivered === false ? "warning" : "info");
+      refreshPortfolio();
+    } catch (err) {
+      showToast("Demo deposit", err.response?.data?.message || "Request failed.", "error");
+    }
+  }
+
   const [transactions, setTransactions] = useState([]);
   const [pledges, setPledges] = useState([]);
   const [holdings, setHoldings] = useState([]);
@@ -539,6 +549,10 @@ const Funds = () => {
                     >
                       {tx.status === "COMPLETED" ? "✓ Completed" : tx.status === "PENDING_APPROVAL" ? "⏳ Pending Approval" : "✕ Rejected"}
                     </span>
+                    {tx.type === "PAYIN" && tx.status === "PENDING_APPROVAL" && <>
+                      <button onClick={() => managePendingDeposit(tx._id, "resend")}>Resend email</button>
+                      <button onClick={() => managePendingDeposit(tx._id, "cancel")}>Cancel deposit</button>
+                    </>}
                   </td>
                   <td style={{ fontSize: "12px", color: "#64748b" }}>{tx.remarks || "-"}</td>
                 </tr>

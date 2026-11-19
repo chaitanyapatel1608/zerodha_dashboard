@@ -9,15 +9,25 @@ import { MarketFeedProvider } from "../context/MarketFeedContext";
 const HomeContent = () => {
   const { isAuthenticated, isAuthChecking } = useContext(GeneralContext);
 
+  const currentPath = typeof window !== "undefined" && window.location.pathname !== "/"
+    ? window.location.pathname + window.location.search
+    : "";
+  const redirectUri = currentPath
+    ? encodeURIComponent(`${window.location.origin}${currentPath}`)
+    : "";
+  const loginUrl = redirectUri
+    ? `${AUTH_PORTAL_URL}/login?redirect_uri=${redirectUri}`
+    : `${AUTH_PORTAL_URL}/login`;
+
   useEffect(() => {
     // Only redirect to login portal if session verification has concluded and user is unauthenticated
     if (!isAuthChecking && !isAuthenticated) {
       const timer = setTimeout(() => {
-        window.location.href = `${AUTH_PORTAL_URL}/login`;
+        window.location.href = loginUrl;
       }, 2500);
       return () => clearTimeout(timer);
     }
-  }, [isAuthChecking, isAuthenticated]);
+  }, [isAuthChecking, isAuthenticated, loginUrl]);
 
   if (isAuthChecking) {
     return (
@@ -85,7 +95,7 @@ const HomeContent = () => {
             You are logged out. Please log in with your Zerodha Kite account to access the trading terminal.
           </p>
           <a
-            href={`${AUTH_PORTAL_URL}/login`}
+            href={loginUrl}
             style={{
               display: "block",
               width: "100%",

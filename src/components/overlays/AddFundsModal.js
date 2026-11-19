@@ -45,8 +45,8 @@ const AddFundsModal = ({ onClose, onSuccess, currentUser, showToast, refreshPort
         setPendingTx(res.data);
         if (showToast) {
           showToast(
-            "UPI Collect Request Sent",
-            `Authorization email dispatched to ${userEmail}. Please approve the payment.`,
+            "Demo deposit requested",
+            res.data.message,
             "info"
           );
         }
@@ -188,31 +188,8 @@ const AddFundsModal = ({ onClose, onSuccess, currentUser, showToast, refreshPort
             </div>
 
             <p className="check-email-note">
-              Please open your Gmail inbox (<strong>{userEmail}</strong>) and click <strong>"Approve Payment"</strong>. Once authorized, your trading margin will update automatically.
+              {pendingTx.delivered === false ? "Email delivery failed. Use Resend email in the funds history for" : "Open the email sent to"} (<strong>{userEmail}</strong>) and click <strong>"Approve Payment"</strong>. Sign in to the same account and confirm the simulated deposit.
             </p>
-
-            {pendingTx?.approveUrl && (
-              <div style={{ marginTop: "14px", textAlign: "center" }}>
-                <a
-                  href={pendingTx.approveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-block",
-                    padding: "10px 20px",
-                    backgroundColor: "#16a34a",
-                    color: "#ffffff",
-                    borderRadius: "4px",
-                    fontWeight: "600",
-                    fontSize: "14px",
-                    textDecoration: "none",
-                    boxShadow: "0 2px 6px rgba(22,163,74,0.3)",
-                  }}
-                >
-                  ✓ Approve Deposit Directly (Simulate Bank App)
-                </a>
-              </div>
-            )}
 
             <div className="funds-modal-actions" style={{ marginTop: "16px", justifyContent: "center" }}>
               <button type="button" className="btn-funds-cancel" onClick={onClose} style={{ minWidth: "140px" }}>

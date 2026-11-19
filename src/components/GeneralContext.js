@@ -95,7 +95,10 @@ export const GeneralContextProvider = (props) => {
   // Initial authentication determination
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     try {
-      return Boolean(localStorage.getItem("zerodha_user"));
+      return Boolean(
+        (typeof sessionStorage !== "undefined" && sessionStorage.getItem("zerodha_user")) ||
+        (typeof localStorage !== "undefined" && localStorage.getItem("zerodha_user"))
+      );
     } catch (e) {
       return false;
     }
@@ -105,7 +108,9 @@ export const GeneralContextProvider = (props) => {
 
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const storedUser = localStorage.getItem("zerodha_user");
+      const storedUser =
+        (typeof sessionStorage !== "undefined" && sessionStorage.getItem("zerodha_user")) ||
+        (typeof localStorage !== "undefined" && localStorage.getItem("zerodha_user"));
       return storedUser ? JSON.parse(storedUser) : null;
     } catch (e) {
       return null;
@@ -313,11 +318,17 @@ export const GeneralContextProvider = (props) => {
         const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
         activeToken = hashParams.get("token") || "";
         if (activeToken) {
-          localStorage.setItem("zerodha_token", activeToken);
+          try { sessionStorage.setItem("zerodha_token", activeToken); } catch {}
+          try { localStorage.setItem("zerodha_token", activeToken); } catch {}
         }
         window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
-      } else if (typeof localStorage !== "undefined") {
-        activeToken = localStorage.getItem("zerodha_token") || "";
+      } else {
+        try {
+          activeToken =
+            (typeof sessionStorage !== "undefined" && sessionStorage.getItem("zerodha_token")) ||
+            (typeof localStorage !== "undefined" && localStorage.getItem("zerodha_token")) ||
+            "";
+        } catch {}
       }
 
       const headers = {};
@@ -328,8 +339,10 @@ export const GeneralContextProvider = (props) => {
       fetch(`${API_BASE}/verifyUser`, { credentials: "include", headers })
         .then(async (res) => {
           if (!res.ok) {
-            localStorage.removeItem("zerodha_token");
-            localStorage.removeItem("zerodha_user");
+            try { sessionStorage.removeItem("zerodha_token"); } catch {}
+            try { localStorage.removeItem("zerodha_token"); } catch {}
+            try { sessionStorage.removeItem("zerodha_user"); } catch {}
+            try { localStorage.removeItem("zerodha_user"); } catch {}
             setCurrentUser(null);
             setIsAuthenticated(false);
             return;
@@ -344,21 +357,23 @@ export const GeneralContextProvider = (props) => {
               ...data.user,
               name: data.user.fullName || data.user.userId || "Trader",
             };
-            localStorage.setItem(
-              "zerodha_user",
-              JSON.stringify({
-                userId: fullProfile.userId,
-                fullName: fullProfile.fullName,
-                name: fullProfile.name,
-                avatarText: fullProfile.avatarText,
-                role: fullProfile.role,
-              })
-            );
+            const serializedUser = JSON.stringify({
+              userId: fullProfile.userId,
+              fullName: fullProfile.fullName,
+              name: fullProfile.name,
+              avatarText: fullProfile.avatarText,
+              role: fullProfile.role,
+            });
+            try { sessionStorage.setItem("zerodha_user", serializedUser); } catch {}
+            try { localStorage.setItem("zerodha_user", serializedUser); } catch {}
             setCurrentUser(fullProfile);
             setIsAuthenticated(true);
           }
         })
-        .catch(() => {})
+        .catch(() => {
+          setCurrentUser(null);
+          setIsAuthenticated(false);
+        })
         .finally(() => {
           setIsAuthChecking(false);
         });
@@ -599,19 +614,26 @@ export const GeneralContextProvider = (props) => {
   const handleLogout = async () => {
     try {
       const csrf = getCsrfToken();
-      await fetch(`${API_BASE}/logout`, {
+      const token = localStorage.getItem("zerodha_token");
+      const response = await fetch(`${API_BASE}/logout`, {
         method: "POST",
         credentials: "include",
-        headers: csrf ? { "X-CSRF-Token": csrf } : {},
+        headers: {
+          ...(csrf ? { "X-CSRF-Token": csrf } : {}),
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
       });
-      localStorage.removeItem("zerodha_token");
-      localStorage.removeItem("zerodha_user");
-      localStorage.removeItem("zerodha_csrf");
-      try {
-        sessionStorage.removeItem("zerodha_csrf");
-      } catch (e) {}
+      if (!response.ok && response.status !== 401) throw new Error("Session revocation failed");
+      try { localStorage.removeItem("zerodha_token"); } catch {}
+      try { localStorage.removeItem("zerodha_user"); } catch {}
+      try { localStorage.removeItem("zerodha_csrf"); } catch {}
+      try { sessionStorage.removeItem("zerodha_token"); } catch {}
+      try { sessionStorage.removeItem("zerodha_user"); } catch {}
+      try { sessionStorage.removeItem("zerodha_csrf"); } catch {}
     } catch (e) {
       console.error("Error clearing session:", e);
+      showToast("Sign out failed", "Could not revoke your session. Please try again.", "error");
+      return;
     }
     setIsAuthenticated(false);
     setCurrentUser(null);
