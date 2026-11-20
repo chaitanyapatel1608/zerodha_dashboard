@@ -45,6 +45,8 @@ const BidsPage = () => {
   const [activeCorpForTender, setActiveCorpForTender] = useState(null);
   const [activeAuctionForSell, setActiveAuctionForSell] = useState(null);
   const [activeSseForApply, setActiveSseForApply] = useState(null);
+  const [appToCancel, setAppToCancel] = useState(null);
+  const [isCancelling, setIsCancelling] = useState(false);
   const [isFaqModalOpen, setIsFaqModalOpen] = useState(false);
   const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
 
@@ -322,22 +324,28 @@ const BidsPage = () => {
     return [...list].sort((a, b) => getWeight(a) - getWeight(b));
   }, [ipos, searchTerm, applicationsBySymbol]);
 
-  // Cancel an active application
-  const handleCancelApplication = async (appId, companyName) => {
-    if (!window.confirm(`Are you sure you want to cancel your IPO application for "${companyName}"?`)) {
-      return;
-    }
+  // Initiate cancel with custom Kite modal
+  const handleInitiateCancel = (app) => {
+    setAppToCancel(app);
+  };
 
+  // Execute cancellation after user confirms in custom Kite modal
+  const executeCancelApplication = async () => {
+    if (!appToCancel) return;
+    setIsCancelling(true);
     try {
-      const res = await axios.delete(`${API_BASE}/cancelIpoApplication/${appId}`);
+      const res = await axios.delete(`${API_BASE}/cancelIpoApplication/${appToCancel._id}`);
       if (res.data?.success) {
-        showToast("Bid Cancelled", `Application for ${companyName} has been revoked. Bank lien released.`, "info");
+        showToast("Bid Cancelled", `Application for ${appToCancel.companyName} has been revoked. Bank lien released.`, "info");
         setActiveAppDetails(null);
+        setAppToCancel(null);
         fetchMyApplications();
         refreshPortfolio();
       }
     } catch (err) {
       showToast("Cancellation Failed", err.response?.data?.message || err.message, "error");
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -1562,9 +1570,85 @@ const BidsPage = () => {
               <button
                 type="button"
                 className="btn-cancel-bid-link"
-                onClick={() => handleCancelApplication(activeAppDetails._id, activeAppDetails.companyName)}
+                onClick={() => handleInitiateCancel(activeAppDetails)}
               >
                 Cancel / Revoke Bid
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3B. Custom Kite In-App Cancel Confirmation Modal */}
+      {appToCancel && (
+        <div className="ipo-modal-overlay" onClick={() => !isCancelling && setAppToCancel(null)}>
+          <div className="ipo-modal-container ipo-confirm-modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="confirm-modal-header">
+              <div className="confirm-icon-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => !isCancelling && setAppToCancel(null)}
+                disabled={isCancelling}
+                aria-label="Close"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div className="confirm-modal-body">
+              <h3 className="confirm-title">Cancel IPO Application?</h3>
+              <p className="confirm-desc">
+                Are you sure you want to revoke your application for <strong>{appToCancel.companyName}</strong> ({appToCancel.ipoSymbol})?
+              </p>
+
+              <div className="confirm-impact-card">
+                <div className="impact-item">
+                  <span className="impact-bullet">🔓</span>
+                  <div>
+                    <strong>Bank Lien Release:</strong> ₹{Number(appToCancel.totalAmount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })} will be unblocked in your bank account.
+                  </div>
+                </div>
+                <div className="impact-item">
+                  <span className="impact-bullet">📱</span>
+                  <div>
+                    <strong>UPI Mandate Revocation:</strong> The mandate request sent to <span className="mono-text-inline">{appToCancel.upiId}</span> will be cancelled.
+                  </div>
+                </div>
+                <div className="impact-item">
+                  <span className="impact-bullet">🔄</span>
+                  <div>
+                    <strong>Re-bidding Allowed:</strong> You can place a fresh or revised application anytime before bidding closes.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="confirm-modal-footer">
+              <button
+                type="button"
+                className="btn-confirm-keep"
+                onClick={() => setAppToCancel(null)}
+                disabled={isCancelling}
+              >
+                Keep My Bid
+              </button>
+              <button
+                type="button"
+                className="btn-confirm-revoke"
+                onClick={executeCancelApplication}
+                disabled={isCancelling}
+              >
+                {isCancelling ? "Revoking Bid..." : "Yes, Cancel Application"}
               </button>
             </div>
           </div>
