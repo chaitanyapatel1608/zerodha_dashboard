@@ -124,6 +124,11 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
           "success"
         );
         // Refresh all portfolio views (Holdings, Orders, Positions, Funds)
+        try {
+          const quests = JSON.parse(localStorage.getItem("zerodha_trader_quests") || "{}");
+          quests.trade = true;
+          localStorage.setItem("zerodha_trader_quests", JSON.stringify(quests));
+        } catch {}
         refreshPortfolio();
         closeBuyWindow();
       } else {

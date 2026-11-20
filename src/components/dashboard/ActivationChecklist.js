@@ -76,6 +76,16 @@ const ActivationChecklist = () => {
   const progressPercent = Math.round((completedCount / totalSteps) * 100);
   const isAllComplete = completedCount === totalSteps;
 
+  // Auto-dismiss 5 seconds after reaching 100% completion so the user sees the celebration badge before clean up
+  useEffect(() => {
+    if (isAllComplete && !isDismissed) {
+      const timer = setTimeout(() => {
+        handleDismiss();
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAllComplete, isDismissed]);
+
   return (
     <div className={`activation-checklist-card ${isCollapsed ? "collapsed" : ""} ${isAllComplete ? "all-done" : ""}`}>
       {/* Header Bar */}
