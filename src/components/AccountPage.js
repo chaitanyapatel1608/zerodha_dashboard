@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE } from "../config/api";
 import GeneralContext from "./GeneralContext";
@@ -11,6 +12,7 @@ import AccountStatusBanner from "./common/AccountStatusBanner";
 import "./AccountPage.css";
 
 const AccountPage = () => {
+  const navigate = useNavigate();
   const {
     currentUser,
     portfolioTrigger,
@@ -20,6 +22,23 @@ const AccountPage = () => {
     refreshPortfolio,
     openSupport,
   } = useContext(GeneralContext);
+
+  const [isDesktop, setIsDesktop] = useState(() => typeof window !== "undefined" && window.innerWidth > 768);
+
+  // Desktop Redirect: on screens > 768px, navigate to /funds (native desktop Kite behavior)
+  useEffect(() => {
+    const checkViewport = () => {
+      const desktop = window.innerWidth > 768;
+      setIsDesktop(desktop);
+      if (desktop) {
+        navigate("/funds", { replace: true });
+      }
+    };
+
+    checkViewport();
+    window.addEventListener("resize", checkViewport);
+    return () => window.removeEventListener("resize", checkViewport);
+  }, [navigate]);
 
   const [activeTab, setActiveTab] = useState("profile"); // "profile" | "funds"
   const [showPan, setShowPan] = useState(false);
@@ -39,7 +58,7 @@ const AccountPage = () => {
 
   // Fetch live available margin for the hero card
   useEffect(() => {
-    if (!activeUserId) return;
+    if (!activeUserId || isDesktop) return;
     axios
       .get(`${API_BASE}/userFunds`, { params: { userId: activeUserId } })
       .then((res) => {
@@ -55,7 +74,7 @@ const AccountPage = () => {
         }
       })
       .catch(() => {});
-  }, [activeUserId, portfolioTrigger]);
+  }, [activeUserId, portfolioTrigger, isDesktop]);
 
   // Privacy & theme
   const isPrivacy = Boolean(
@@ -95,6 +114,11 @@ const AccountPage = () => {
   const rawPan = currentUser?.pan || "ABCDE1234F";
   const maskedPan = showPan ? rawPan : rawPan.slice(0, 2) + "•••••" + rawPan.slice(-2);
   const dematBoId = currentUser?.demat || "1208160012345678";
+
+  // Return null immediately when on desktop to prevent any layout flash before redirect
+  if (isDesktop) {
+    return null;
+  }
 
   return (
     <div className="account-page-container">

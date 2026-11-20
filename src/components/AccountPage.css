@@ -18,9 +18,9 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 1. 1-Tap Subtabs Navigation Bar */
+/* 1. 1-Tap Subtabs Navigation Bar (Mobile Only <= 768px) */
 .account-subtabs-nav {
-  display: flex;
+  display: none;
   gap: 10px;
   border-bottom: 1px solid #f1f5f9;
   padding-bottom: 12px;
