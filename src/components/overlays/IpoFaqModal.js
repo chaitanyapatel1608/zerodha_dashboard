@@ -42,7 +42,12 @@ const IpoFaqModal = ({ isOpen, onClose }) => {
             <h3 className="faq-title">IPO Bids, ASBA & UPI Mandate FAQs</h3>
             <span className="faq-sub">Official guide to bidding, bank lien blocking, allotment, and refunds</span>
           </div>
-          <button className="faq-close-btn" onClick={onClose}>&times;</button>
+          <button className="faq-close-btn" onClick={onClose} aria-label="Close FAQ modal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
         </div>
 
         <div className="ipo-faq-body">
@@ -54,7 +59,11 @@ const IpoFaqModal = ({ isOpen, onClose }) => {
             >
               <div className="faq-question-row">
                 <span className="faq-q-text">{item.q}</span>
-                <span className="faq-arrow">{openIdx === idx ? "▲" : "▼"}</span>
+                <span className={`faq-chevron ${openIdx === idx ? "open" : ""}`}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </span>
               </div>
               {openIdx === idx && (
                 <div className="faq-answer-row">
@@ -66,8 +75,12 @@ const IpoFaqModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="ipo-faq-footer">
-          <span className="faq-footer-note">Zerodha Broking Ltd. &bull; Registered SEBI Syndicate Intermediary</span>
-          <button className="btn-kite-primary" onClick={onClose}>I Understand</button>
+          <button type="button" className="faq-btn-understand" onClick={onClose}>
+            I Understand
+          </button>
+          <span className="faq-footer-note">
+            Zerodha Broking Ltd. &bull; Registered SEBI Syndicate Intermediary
+          </span>
         </div>
       </div>
     </div>
