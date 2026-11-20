@@ -4,6 +4,15 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+/* Visibility helpers */
+.mobile-only {
+  display: none !important;
+}
+
+.desktop-only {
+  display: block;
+}
+
 /* 1. Executive Top Hero Banner */
 .funds-hero-banner {
   display: grid;
@@ -524,6 +533,350 @@
 .text-purple { color: #7e22ce; }
 .font-bold { font-weight: 700; }
 
+/* 5. Mobile Native Components */
+.mobile-funds-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 2px 14px 2px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.btn-back-to-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: #387ed1;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px 6px 2px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-back-to-profile:hover,
+.btn-back-to-profile:active {
+  color: #1d4ed8;
+  background: #f1f5f9;
+}
+
+.mobile-funds-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.2px;
+}
+
+.btn-refresh-funds {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-refresh-funds:hover,
+.btn-refresh-funds:active {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* Mobile Hero Card */
+.funds-mobile-hero-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.funds-mobile-hero-card .hero-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.funds-mobile-hero-card .hero-kpi-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.funds-mobile-hero-card .hero-kpi-sub {
+  font-size: 11px;
+  color: #16a34a;
+  font-weight: 600;
+  background: #f0fdf4;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.funds-mobile-hero-card .hero-main-balance {
+  font-size: 26px;
+  font-weight: 800;
+  color: #387ed1;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+/* Hero visual meter */
+.hero-meter-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+
+.meter-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.meter-label-row strong {
+  color: #0f172a;
+}
+
+.hero-meter-track {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.hero-meter-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.meter-sub-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* 50/50 Action Buttons */
+.hero-mobile-actions-tray {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.btn-mobile-hero {
+  height: 42px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.btn-hero-add {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+.btn-hero-add:hover,
+.btn-hero-add:active {
+  background-color: #388e3c;
+}
+
+.btn-hero-withdraw {
+  background-color: #387ed1;
+  color: #ffffff;
+}
+
+.btn-hero-withdraw:hover,
+.btn-hero-withdraw:active {
+  background-color: #2563eb;
+}
+
+/* Secondary Action Chips */
+.hero-mobile-secondary-actions {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-top: 2px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hero-mobile-secondary-actions::-webkit-scrollbar {
+  display: none;
+}
+
+.btn-hero-sec {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.btn-hero-sec:hover,
+.btn-hero-sec:active {
+  background: #e2e8f0;
+}
+
+/* Mobile Sub-Switcher: Equity Margin vs Demat Collateral */
+.funds-mobile-subtoggle {
+  display: flex;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 14px;
+  gap: 4px;
+}
+
+.subtoggle-pill {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 9px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.subtoggle-pill.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Mobile Transaction Cards */
+.mobile-transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.mobile-tx-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.tx-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tx-card-type-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tx-card-amount {
+  font-size: 14.5px;
+}
+
+.tx-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.tx-ref {
+  font-family: monospace;
+}
+
+.tx-card-mode {
+  font-size: 11px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tx-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.btn-tx-action {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  cursor: pointer;
+}
+
+.btn-tx-action.cancel {
+  border-color: #fecaca;
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+.mobile-no-tx {
+  text-align: center;
+  padding: 24px 12px;
+  font-size: 12.5px;
+  color: #94a3b8;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px dashed #e2e8f0;
+}
+
 /* Bridge Card to Profile */
 .funds-profile-bridge-card {
   margin-top: 18px;
@@ -572,7 +925,82 @@
   color: #ffffff;
 }
 
+/* Mobile Responsive Breakpoint */
 @media (max-width: 768px) {
+  .funds-page-container {
+    padding: 0 12px 64px 12px !important;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
+
+  .mobile-funds-header.mobile-only {
+    display: flex !important;
+  }
+
+  .funds-mobile-hero-card.mobile-only {
+    display: flex !important;
+  }
+
+  .funds-mobile-subtoggle.mobile-only {
+    display: flex !important;
+  }
+
+  .mobile-transactions-list.mobile-only {
+    display: flex !important;
+  }
+
+  /* Single-column segment switching */
+  .funds-main-grid {
+    display: block !important;
+    margin-bottom: 20px !important;
+  }
+
+  .funds-main-grid.mobile-show-equity > .funds-column:nth-child(1) {
+    display: flex !important;
+    width: 100% !important;
+  }
+
+  .funds-main-grid.mobile-show-equity > .funds-column:nth-child(2) {
+    display: none !important;
+  }
+
+  .funds-main-grid.mobile-show-collateral > .funds-column:nth-child(1) {
+    display: none !important;
+  }
+
+  .funds-main-grid.mobile-show-collateral > .funds-column:nth-child(2) {
+    display: flex !important;
+    width: 100% !important;
+  }
+
+  .funds-data-card,
+  .pledging-desk-card {
+    padding: 14px 16px;
+  }
+
+  .ledger-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .ledger-filter-tabs {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .funds-ledger-section {
+    padding: 14px 12px;
+  }
+
   .funds-profile-bridge-card {
     flex-direction: column;
     align-items: flex-start;
@@ -585,6 +1013,119 @@
     text-align: center;
     padding: 10px;
   }
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] .mobile-funds-header {
+  border-color: #30363d;
+}
+
+[data-theme="dark"] .btn-back-to-profile {
+  color: #58a6ff;
+}
+
+[data-theme="dark"] .btn-back-to-profile:hover,
+[data-theme="dark"] .btn-back-to-profile:active {
+  background: #21262d;
+}
+
+[data-theme="dark"] .mobile-funds-title {
+  color: #f0f6fc;
+}
+
+[data-theme="dark"] .btn-refresh-funds {
+  background: #21262d;
+  border-color: #30363d;
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] .btn-refresh-funds:hover,
+[data-theme="dark"] .btn-refresh-funds:active {
+  background: #30363d;
+  color: #f0f6fc;
+}
+
+[data-theme="dark"] .funds-mobile-hero-card {
+  background: #161b22;
+  border-color: #30363d;
+}
+
+[data-theme="dark"] .hero-meter-box {
+  background: #0d1117;
+  border-color: #30363d;
+}
+
+[data-theme="dark"] .meter-label-row {
+  color: #8b949e;
+}
+
+[data-theme="dark"] .meter-label-row strong {
+  color: #f0f6fc;
+}
+
+[data-theme="dark"] .hero-meter-track {
+  background: #30363d;
+}
+
+[data-theme="dark"] .meter-sub-row {
+  color: #8b949e;
+}
+
+[data-theme="dark"] .btn-hero-sec {
+  background: #21262d;
+  border-color: #30363d;
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] .btn-hero-sec:hover,
+[data-theme="dark"] .btn-hero-sec:active {
+  background: #30363d;
+}
+
+[data-theme="dark"] .funds-mobile-subtoggle {
+  background: #21262d;
+  border-color: #30363d;
+}
+
+[data-theme="dark"] .subtoggle-pill {
+  color: #8b949e;
+}
+
+[data-theme="dark"] .subtoggle-pill.active {
+  background: #30363d;
+  color: #f0f6fc;
+}
+
+[data-theme="dark"] .mobile-tx-card {
+  background: #161b22;
+  border-color: #30363d;
+}
+
+[data-theme="dark"] .tx-card-meta,
+[data-theme="dark"] .tx-card-mode {
+  color: #8b949e;
+}
+
+[data-theme="dark"] .tx-card-actions {
+  border-top-color: #30363d;
+}
+
+[data-theme="dark"] .btn-tx-action {
+  background: #21262d;
+  border-color: #30363d;
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] .btn-tx-action.cancel {
+  background: #2c1517;
+  border-color: #5c2024;
+  color: #ff7b72;
+}
+
+[data-theme="dark"] .mobile-no-tx {
+  background: #161b22;
+  border-color: #30363d;
+  color: #8b949e;
 }
 
 [data-theme="dark"] .funds-profile-bridge-card {

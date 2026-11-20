@@ -38,6 +38,7 @@ const Funds = () => {
   const [pledges, setPledges] = useState([]);
   const [holdings, setHoldings] = useState([]);
   const [ledgerFilter, setLedgerFilter] = useState("ALL"); // ALL | PAYIN | PAYOUT | PLEDGE
+  const [mobileFundsTab, setMobileFundsTab] = useState("EQUITY"); // "EQUITY" | "COLLATERAL"
 
   // Modals state
   const [isAddFundsOpen, setIsAddFundsOpen] = useState(false);
@@ -185,14 +186,122 @@ const Funds = () => {
 
   return (
     <div className="funds-page-container">
+      {/* Mobile Top Navigation Header */}
+      <div className="mobile-funds-header mobile-only">
+        <button
+          type="button"
+          className="btn-back-to-profile"
+          onClick={() => navigate("/profile")}
+          aria-label="Back to Profile"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Profile</span>
+        </button>
+        <span className="mobile-funds-title">Funds &amp; Margins</span>
+        <button
+          type="button"
+          className="btn-refresh-funds"
+          onClick={() => {
+            fetchFundsData();
+            if (showToast) showToast("Refreshing Margins", "Fetching real-time ledger data...", "info");
+          }}
+          title="Refresh Live Margins"
+          aria-label="Refresh Live Margins"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </button>
+      </div>
+
       <AccountStatusBanner
         message="Account status: Funds added via instant UPI or Netbanking are credited immediately for equity & F&O trading."
         linkText="View fund policies"
         onLinkClick={() => setIsFundPoliciesOpen(true)}
       />
 
-      {/* 1. Executive Top Liquidity & Margin Utilization Banner */}
-      <div className="funds-hero-banner">
+      {/* Mobile-Only Hero Card with Visual Utilization Meter */}
+      <div className="funds-mobile-hero-card mobile-only">
+        <div className="hero-top-row">
+          <span className="hero-kpi-label">Available Trading Margin</span>
+          <span className="hero-kpi-sub">Instant zero-cost UPI</span>
+        </div>
+        <div className="hero-main-balance text-brand-blue font-bold">
+          ₹{availableMarginNum.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+        </div>
+
+        {/* Visual Utilization Meter */}
+        <div className="hero-meter-box">
+          <div className="meter-label-row">
+            <span>Utilization: <strong>{utilizationPercent.toFixed(1)}%</strong></span>
+            <span>Used: <strong>₹{usedMarginNum.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</strong></span>
+          </div>
+          <div className="hero-meter-track">
+            <div
+              className="hero-meter-fill"
+              style={{
+                width: `${Math.min(100, Math.max(3, utilizationPercent))}%`,
+                backgroundColor:
+                  utilizationPercent > 80 ? "#dc2626" : utilizationPercent > 50 ? "#ea580c" : "#16a34a",
+              }}
+            />
+          </div>
+          <div className="meter-sub-row">
+            <span>Total Capital: ₹{totalCapital.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+            <span>Collateral: ₹{totalCollateralNum.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+          </div>
+        </div>
+
+        {/* 50/50 Primary Mobile Action Buttons */}
+        <div className="hero-mobile-actions-tray">
+          <button
+            type="button"
+            className="btn-mobile-hero btn-hero-add"
+            onClick={() => setIsAddFundsOpen(true)}
+          >
+            + Add Funds
+          </button>
+          <button
+            type="button"
+            className="btn-mobile-hero btn-hero-withdraw"
+            onClick={() => setIsWithdrawOpen(true)}
+          >
+            Withdraw
+          </button>
+        </div>
+
+        {/* Secondary Mobile Quick Action Chips */}
+        <div className="hero-mobile-secondary-actions">
+          <button
+            type="button"
+            className="btn-hero-sec"
+            onClick={() => setIsPledgeOpen(true)}
+          >
+            🔒 Pledge Shares
+          </button>
+          <button
+            type="button"
+            className="btn-hero-sec"
+            onClick={() => setIsAddBankOpen(true)}
+          >
+            🏦 Bank Accounts
+          </button>
+          <button
+            type="button"
+            className="btn-hero-sec"
+            onClick={() => setIsFundPoliciesOpen(true)}
+          >
+            📋 RMS Policies
+          </button>
+        </div>
+      </div>
+
+      {/* 1. Desktop Executive Top Liquidity & Margin Utilization Banner */}
+      <div className="funds-hero-banner desktop-only">
         <div className="funds-hero-card">
           <span className="funds-hero-label">Total Equity Capital</span>
           <span className="funds-hero-val font-bold">
@@ -206,7 +315,7 @@ const Funds = () => {
           <span className="funds-hero-val font-bold text-brand-blue">
             ₹{availableMarginNum.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
           </span>
-          <span className="funds-hero-sub">Usable for MIS & F&O orders</span>
+          <span className="funds-hero-sub">Usable for MIS &amp; F&amp;O orders</span>
         </div>
 
         <div className="funds-hero-card">
@@ -240,8 +349,8 @@ const Funds = () => {
         </div>
       </div>
 
-      {/* 2. Top Action Bar */}
-      <div className="funds-action-bar">
+      {/* 2. Desktop Top Action Bar */}
+      <div className="funds-action-bar desktop-only">
         <span className="funds-subtext">
           Instant, zero-cost fund transfers with UPI
         </span>
@@ -323,8 +432,26 @@ const Funds = () => {
         </div>
       </div>
 
-      {/* 3. Main Two-Column Layout (Commodity Cleanly Replaced with Pledging Desk) */}
-      <div className="funds-main-grid">
+      {/* Mobile Sub-Switcher: Equity Margin vs Demat Collateral */}
+      <div className="funds-mobile-subtoggle mobile-only">
+        <button
+          type="button"
+          className={`subtoggle-pill ${mobileFundsTab === "EQUITY" ? "active" : ""}`}
+          onClick={() => setMobileFundsTab("EQUITY")}
+        >
+          <span>Equity Margin Ledger</span>
+        </button>
+        <button
+          type="button"
+          className={`subtoggle-pill ${mobileFundsTab === "COLLATERAL" ? "active" : ""}`}
+          onClick={() => setMobileFundsTab("COLLATERAL")}
+        >
+          <span>Demat Collateral ({pledges.length})</span>
+        </button>
+      </div>
+
+      {/* 3. Main Layout: 2 Columns on Desktop, Single Active Column on Mobile */}
+      <div className={`funds-main-grid mobile-show-${mobileFundsTab.toLowerCase()}`}>
         {/* Left Column: Live Equity Margin Breakdown */}
         <div className="funds-column">
           <div className="funds-column-header">
@@ -512,11 +639,12 @@ const Funds = () => {
           </div>
         </div>
 
-        <div style={{ overflowX: "auto" }}>
+        {/* Desktop Table View */}
+        <div className="desktop-only" style={{ overflowX: "auto" }}>
           <table className="funds-ledger-table">
             <thead>
               <tr>
-                <th>Date & Time</th>
+                <th>Date &amp; Time</th>
                 <th>Reference ID</th>
                 <th>Type</th>
                 <th>Amount</th>
@@ -568,6 +696,48 @@ const Funds = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Ledger Cards View */}
+        <div className="mobile-transactions-list mobile-only">
+          {filteredTransactions.map((tx) => {
+            const isPayin = tx.type === "PAYIN";
+            const isPayout = tx.type === "PAYOUT";
+            return (
+              <div key={tx._id || tx.referenceId} className="mobile-tx-card">
+                <div className="tx-card-top">
+                  <div className="tx-card-type-row">
+                    <span className={`type-pill ${isPayin ? "payin" : isPayout ? "payout" : "pledge"}`}>
+                      {tx.type}
+                    </span>
+                    <span className={`status-badge ${tx.status === "COMPLETED" ? "completed" : tx.status === "PENDING_APPROVAL" ? "pending" : "rejected"}`}>
+                      {tx.status === "COMPLETED" ? "● Completed" : tx.status === "PENDING_APPROVAL" ? "● Pending" : "● Rejected"}
+                    </span>
+                  </div>
+                  <span className={`tx-card-amount ${isPayin ? "text-green font-bold" : isPayout ? "text-red font-bold" : "font-bold"}`}>
+                    {isPayin ? "+" : isPayout ? "-" : ""}₹{Number(tx.amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="tx-card-meta">
+                  <span className="tx-ref">Ref: <strong className="font-mono">{tx.referenceId}</strong></span>
+                  <span className="tx-date">{new Date(tx.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
+                </div>
+                <div className="tx-card-mode">
+                  <span>Destination: {tx.upiId || tx.bankAccount || tx.paymentMethod || "Instant UPI"}</span>
+                  {tx.remarks && <span className="meta-remarks">&bull; {tx.remarks}</span>}
+                </div>
+                {tx.type === "PAYIN" && tx.status === "PENDING_APPROVAL" && (
+                  <div className="tx-card-actions">
+                    <button className="btn-tx-action" onClick={() => managePendingDeposit(tx._id, "resend")}>Resend Email</button>
+                    <button className="btn-tx-action cancel" onClick={() => managePendingDeposit(tx._id, "cancel")}>Cancel</button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {filteredTransactions.length === 0 && (
+            <div className="mobile-no-tx">No funds transactions found for the selected filter.</div>
+          )}
         </div>
       </div>
 
