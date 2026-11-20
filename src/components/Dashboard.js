@@ -18,6 +18,7 @@ const Dashboard = () => {
 
   const isHomeOrWatchlist = location.pathname === "/" || location.pathname === "/watchlist";
   const isDashboardRoute = location.pathname === "/dashboard";
+  const isChartRoute = location.pathname === "/chart";
   const isWatchlistGroup = isHomeOrWatchlist || isDashboardRoute;
 
   // On mobile: show watchlist when on root "/" or "/watchlist"; show content when on "/dashboard" or other subpages
@@ -62,7 +63,7 @@ const Dashboard = () => {
         <WatchList />
       </div>
 
-      <main className={`content ${showWatchlistOnMobile ? "mobile-hidden" : ""}`}>
+      <main className={`content ${showWatchlistOnMobile ? "mobile-hidden" : ""} ${isChartRoute ? "chart-route-active" : ""}`}>
         <Suspense fallback={<div style={{ padding: "24px", color: "#64748b", fontSize: "13px" }}>Loading workspace...</div>}>
           <Routes>
             <Route path="/" element={<Summary />} />
