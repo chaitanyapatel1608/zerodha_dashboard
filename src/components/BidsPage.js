@@ -778,13 +778,13 @@ const BidsPage = () => {
                 const userBid = gsecBidsBySymbol[item.symbol];
 
                 return (
-                  <div key={item.symbol} className="bids-mobile-card">
-                    <div className="bids-card-header">
-                      <div className="bids-card-title-group">
+                  <div key={item.symbol} className="bids-mobile-card bids-gsec-card">
+                    <div className="bids-card-header bids-gsec-card-header">
+                      <div className="bids-gsec-title-area">
                         <span className="bids-card-symbol">{item.name}</span>
-                        <span className="category-pill">{item.category}</span>
+                        <span className="category-pill bids-gsec-pill">{item.category}</span>
                       </div>
-                      <div className="bids-card-min-group">
+                      <div className="bids-card-min-group bids-gsec-yield-group">
                         <span className="bids-card-amount text-green font-bold">{item.yield}</span>
                         <span className="bids-card-qty">Indicative Yield</span>
                       </div>
@@ -801,10 +801,10 @@ const BidsPage = () => {
                       </div>
                     </div>
 
-                    <div className="bids-card-action-tray">
+                    <div className="bids-card-action-tray bids-gsec-action-tray">
                       <div className="bids-card-min-invest">
-                        <span style={{ fontSize: "11px", color: "#64748b" }}>Min Invest:</span>{" "}
-                        <strong style={{ fontSize: "12.5px" }}>{item.minAmount}</strong>
+                        <span className="bids-min-invest-label">Min Invest:</span>{" "}
+                        <strong className="bids-min-invest-val">{item.minAmount}</strong>
                       </div>
                       {userBid ? (
                         <span className="bid-applied-pill">
@@ -813,7 +813,7 @@ const BidsPage = () => {
                       ) : (
                         <button
                           type="button"
-                          className="btn-bids-touch-action btn-touch-apply"
+                          className="btn-bids-touch-action btn-touch-apply btn-touch-bid"
                           onClick={() => setActiveGsecForBid(item)}
                         >
                           Bid
@@ -1102,38 +1102,72 @@ const BidsPage = () => {
             {userAuctionOffers.length > 0 && (
               <div className="auction-offers-section">
                 <h4 className="section-subheading">My Submitted Auction Offers ({userAuctionOffers.length})</h4>
-                <table className="kite-data-table bids-table">
-                  <thead>
-                    <tr>
-                      <th>Order ID</th>
-                      <th>Symbol</th>
-                      <th>Offered Qty</th>
-                      <th>Offer Price</th>
-                      <th>Premium %</th>
-                      <th>Expected Proceeds</th>
-                      <th>Status</th>
-                      <th>Settlement</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {userAuctionOffers.map((o) => (
-                      <tr key={o.orderId || o._id}>
-                        <td style={{ fontFamily: "monospace", fontSize: "11.5px" }}>{o.orderId}</td>
-                        <td className="font-bold">{o.symbol}</td>
-                        <td>{o.quantity} shares</td>
-                        <td className="font-bold">₹{o.offerPrice.toFixed(2)}</td>
-                        <td className="text-green font-bold">{o.premiumPercent}</td>
-                        <td className="font-bold">₹{Number(o.totalAmount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
-                        <td>
-                          <span className="bid-applied-pill" style={{ background: "#eff6ff", color: "#2563eb", borderColor: "#bfdbfe" }}>
-                            {o.status}
-                          </span>
-                        </td>
-                        <td style={{ fontSize: "12px", color: "#64748b" }}>{o.settlementDate || "T+1"}</td>
+                <div className="bids-desktop-table">
+                  <table className="kite-data-table bids-table">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Symbol</th>
+                        <th>Offered Qty</th>
+                        <th>Offer Price</th>
+                        <th>Premium %</th>
+                        <th>Expected Proceeds</th>
+                        <th>Status</th>
+                        <th>Settlement</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {userAuctionOffers.map((o) => (
+                        <tr key={o.orderId || o._id}>
+                          <td style={{ fontFamily: "monospace", fontSize: "11.5px" }}>{o.orderId}</td>
+                          <td className="font-bold">{o.symbol}</td>
+                          <td>{o.quantity} shares</td>
+                          <td className="font-bold">₹{o.offerPrice.toFixed(2)}</td>
+                          <td className="text-green font-bold">{o.premiumPercent}</td>
+                          <td className="font-bold">₹{Number(o.totalAmount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+                          <td>
+                            <span className="bid-applied-pill" style={{ background: "#eff6ff", color: "#2563eb", borderColor: "#bfdbfe" }}>
+                              {o.status}
+                            </span>
+                          </td>
+                          <td style={{ fontSize: "12px", color: "#64748b" }}>{o.settlementDate || "T+1"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Active Auction Offers Cards (<= 768px) */}
+                <div className="bids-auction-applied-mobile-list">
+                  {userAuctionOffers.map((o) => (
+                    <div key={o.orderId || o._id} className="bids-mobile-card">
+                      <div className="bids-card-header">
+                        <div>
+                          <div className="bids-card-symbol">{o.symbol}</div>
+                          <div style={{ fontSize: "11px", color: "#64748b", fontFamily: "monospace" }}>ID: {o.orderId}</div>
+                        </div>
+                        <div className="bids-card-min-group">
+                          <span className="bids-card-amount text-amber font-bold">{o.quantity} shares</span>
+                          <span className="bids-card-qty font-bold">@ ₹{o.offerPrice.toFixed(2)}</span>
+                        </div>
+                      </div>
+                      <div className="bids-card-meta-grid">
+                        <div className="bids-meta-item">
+                          <span className="bids-meta-label">Expected Proceeds</span>
+                          <span className="bids-meta-val font-bold">₹{Number(o.totalAmount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                        </div>
+                        <div className="bids-meta-item bids-meta-right">
+                          <span className="bids-meta-label">Settlement</span>
+                          <span className="bids-meta-val">{o.settlementDate || "T+1"}</span>
+                        </div>
+                      </div>
+                      <div className="bids-applied-banner banner-accepted">
+                        <span>Status: <strong>{o.status}</strong></span>
+                        <span style={{ fontSize: "11px", color: "#ea580c" }}>{o.premiumPercent} Premium</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -1154,120 +1188,241 @@ const BidsPage = () => {
               </span>
             </div>
 
-            <div className="kite-table-container">
-              <table className="kite-data-table bids-table">
-                <thead>
-                  <tr>
-                    <th>Organization / Issuer</th>
-                    <th>Development Focus Area</th>
-                    <th>Bidding Window</th>
-                    <th>Min Contribution</th>
-                    <th>Target Fundraise</th>
-                    <th>Tax Exemption</th>
-                    <th style={{ textAlign: "right" }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sseIpos
-                    .filter(
-                      (item) =>
-                        item.orgName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        item.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        item.focusArea.toLowerCase().includes(searchTerm.toLowerCase())
-                    )
-                    .map((item) => {
-                      const userSse = sseApplicationsBySymbol[item.symbol];
+            {/* Desktop Table (> 768px) */}
+            <div className="bids-desktop-table">
+              <div className="kite-table-container">
+                <table className="kite-data-table bids-table">
+                  <thead>
+                    <tr>
+                      <th>Organization / Issuer</th>
+                      <th>Development Focus Area</th>
+                      <th>Bidding Window</th>
+                      <th>Min Contribution</th>
+                      <th>Target Fundraise</th>
+                      <th>Tax Exemption</th>
+                      <th style={{ textAlign: "right" }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sseIpos
+                      .filter(
+                        (item) =>
+                          item.orgName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          item.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          item.focusArea.toLowerCase().includes(searchTerm.toLowerCase())
+                      )
+                      .map((item) => {
+                        const userSse = sseApplicationsBySymbol[item.symbol];
 
-                      return (
-                        <tr key={item.symbol}>
-                          <td>
-                            <strong className="text-slate">{item.orgName}</strong>
-                            <div style={{ fontSize: "11px", color: "#64748b" }}>
-                              {item.symbol} • SEBI Reg: {item.sebiRegNo}
-                            </div>
-                          </td>
-                          <td>
-                            <span className="category-pill" style={{ background: "#f0fdf4", color: "#166534" }}>
-                              {item.focusArea}
-                            </span>
-                            <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px", maxWidth: "260px" }}>
-                              {item.impactGoal}
-                            </div>
-                          </td>
-                          <td>{item.issueDates}</td>
-                          <td>
-                            <strong>₹{item.minInvestment.toLocaleString("en-IN")}</strong>
-                            <div style={{ fontSize: "11px", color: "#64748b" }}>({item.minUnits} units @ ₹{item.unitPrice})</div>
-                          </td>
-                          <td className="font-bold text-blue">{item.targetAmount}</td>
-                          <td>
-                            <span className="bid-applied-pill" style={{ fontSize: "10px", padding: "2px 6px" }}>
-                              {item.taxExemption}
-                            </span>
-                            <div style={{ fontSize: "10.5px", color: "#64748b", marginTop: "2px" }}>
-                              Auditor: {item.socialAuditor}
-                            </div>
-                          </td>
-                          <td style={{ textAlign: "right" }}>
-                            {userSse ? (
-                              <span className="bid-applied-pill" style={{ background: "#eff6ff", color: "#2563eb", borderColor: "#bfdbfe" }}>
-                                ✓ Contributed (₹{Number(userSse.totalAmount || 0).toLocaleString("en-IN")})
+                        return (
+                          <tr key={item.symbol}>
+                            <td>
+                              <strong className="text-slate">{item.orgName}</strong>
+                              <div style={{ fontSize: "11px", color: "#64748b" }}>
+                                {item.symbol} • SEBI Reg: {item.sebiRegNo}
+                              </div>
+                            </td>
+                            <td>
+                              <span className="category-pill" style={{ background: "#f0fdf4", color: "#166534" }}>
+                                {item.focusArea}
                               </span>
-                            ) : (
-                              <button
-                                className="btn-apply-ipo"
-                                style={{ background: "#2563eb" }}
-                                onClick={() => setActiveSseForApply(item)}
-                              >
-                                Apply / Donate
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
+                              <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px", maxWidth: "260px" }}>
+                                {item.impactGoal}
+                              </div>
+                            </td>
+                            <td>{item.issueDates}</td>
+                            <td>
+                              <strong>₹{item.minInvestment.toLocaleString("en-IN")}</strong>
+                              <div style={{ fontSize: "11px", color: "#64748b" }}>({item.minUnits} units @ ₹{item.unitPrice})</div>
+                            </td>
+                            <td className="font-bold text-blue">{item.targetAmount}</td>
+                            <td>
+                              <span className="bid-applied-pill" style={{ fontSize: "10px", padding: "2px 6px" }}>
+                                {item.taxExemption}
+                              </span>
+                              <div style={{ fontSize: "10.5px", color: "#64748b", marginTop: "2px" }}>
+                                Auditor: {item.socialAuditor}
+                              </div>
+                            </td>
+                            <td style={{ textAlign: "right" }}>
+                              {userSse ? (
+                                <span className="bid-applied-pill" style={{ background: "#eff6ff", color: "#2563eb", borderColor: "#bfdbfe" }}>
+                                  ✓ Contributed (₹{Number(userSse.totalAmount || 0).toLocaleString("en-IN")})
+                                </span>
+                              ) : (
+                                <button
+                                  className="btn-apply-ipo"
+                                  style={{ background: "#2563eb" }}
+                                  onClick={() => setActiveSseForApply(item)}
+                                >
+                                  Apply / Donate
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Mobile Touch-Friendly SSE IPO Cards (<= 768px) */}
+            <div className="bids-sse-mobile-card-list">
+              {sseIpos
+                .filter(
+                  (item) =>
+                    item.orgName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.focusArea.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((item) => {
+                  const userSse = sseApplicationsBySymbol[item.symbol];
+
+                  return (
+                    <div key={item.symbol} className="bids-mobile-card bids-sse-card">
+                      <div className="bids-card-header bids-sse-card-header">
+                        <div className="bids-sse-title-area">
+                          <span className="bids-card-symbol">{item.orgName}</span>
+                          <div className="bids-sse-tags-sub">
+                            <span className="category-pill">{item.symbol}</span>
+                            <span className="bids-sse-reg-no">SEBI Reg: {item.sebiRegNo}</span>
+                          </div>
+                        </div>
+                        <div className="bids-card-min-group bids-sse-min-group">
+                          <span className="bids-card-amount text-blue font-bold">
+                            ₹{item.minInvestment.toLocaleString("en-IN")}
+                          </span>
+                          <span className="bids-card-qty">
+                            {item.minUnits} units @ ₹{item.unitPrice}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="bids-sse-focus-row">
+                        <span className="category-pill bids-sse-focus-badge">
+                          {item.focusArea}
+                        </span>
+                        <span className="bids-sse-tax-badge">
+                          ✓ {item.taxExemption}
+                        </span>
+                      </div>
+
+                      <div className="bids-sse-impact-box">
+                        <span className="bids-sse-impact-label">Social Impact Mission</span>
+                        <p className="bids-sse-impact-text">{item.impactGoal}</p>
+                      </div>
+
+                      <div className="bids-card-meta-grid">
+                        <div className="bids-meta-item">
+                          <span className="bids-meta-label">Bidding Window</span>
+                          <span className="bids-meta-val">{item.issueDates}</span>
+                        </div>
+                        <div className="bids-meta-item bids-meta-right">
+                          <span className="bids-meta-label">Target Fundraise</span>
+                          <span className="bids-meta-val text-blue font-bold">{item.targetAmount}</span>
+                        </div>
+                      </div>
+
+                      <div className="bids-card-action-tray bids-sse-action-tray">
+                        <div className="bids-sse-auditor">
+                          <span style={{ fontSize: "11px", color: "#64748b" }}>Auditor:</span>{" "}
+                          <strong style={{ fontSize: "11.5px", color: "#334155" }}>{item.socialAuditor}</strong>
+                        </div>
+                        {userSse ? (
+                          <span className="bid-applied-pill" style={{ background: "#eff6ff", color: "#2563eb", borderColor: "#bfdbfe" }}>
+                            ✓ Contributed (₹{Number(userSse.totalAmount || 0).toLocaleString("en-IN")})
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn-bids-touch-action btn-touch-apply btn-touch-sse"
+                            style={{ background: "#2563eb", borderColor: "#1d4ed8" }}
+                            onClick={() => setActiveSseForApply(item)}
+                          >
+                            Apply / Donate
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
 
             {/* My Active SSE Applications & 80G Certificates */}
             {userSseApplications.length > 0 && (
               <div className="auction-offers-section">
                 <h4 className="section-subheading">My SSE ZCZP Contributions & Tax Certificates ({userSseApplications.length})</h4>
-                <table className="kite-data-table bids-table">
-                  <thead>
-                    <tr>
-                      <th>ASBA Ref</th>
-                      <th>Organization</th>
-                      <th>Units</th>
-                      <th>Pledged Capital</th>
-                      <th>PAN (Form 10BE)</th>
-                      <th>80G Certificate No</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {userSseApplications.map((s) => (
-                      <tr key={s.asbaReference || s._id}>
-                        <td style={{ fontFamily: "monospace", fontSize: "11.5px" }}>{s.asbaReference}</td>
-                        <td className="font-bold">{s.orgName}</td>
-                        <td>{s.units} units</td>
-                        <td className="font-bold text-blue">₹{Number(s.totalAmount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
-                        <td style={{ fontFamily: "monospace" }}>{s.panNumber}</td>
-                        <td>
-                          <span style={{ fontSize: "11px", fontWeight: "600", color: "#166534", background: "#f0fdf4", padding: "2px 6px", borderRadius: "3px" }}>
-                            {s.taxCertificateNo}
-                          </span>
-                        </td>
-                        <td>
-                          <span className="bid-applied-pill">
-                            {s.status} (ASBA Lien)
-                          </span>
-                        </td>
+                <div className="bids-desktop-table">
+                  <table className="kite-data-table bids-table">
+                    <thead>
+                      <tr>
+                        <th>ASBA Ref</th>
+                        <th>Organization</th>
+                        <th>Units</th>
+                        <th>Pledged Capital</th>
+                        <th>PAN (Form 10BE)</th>
+                        <th>80G Certificate No</th>
+                        <th>Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {userSseApplications.map((s) => (
+                        <tr key={s.asbaReference || s._id}>
+                          <td style={{ fontFamily: "monospace", fontSize: "11.5px" }}>{s.asbaReference}</td>
+                          <td className="font-bold">{s.orgName}</td>
+                          <td>{s.units} units</td>
+                          <td className="font-bold text-blue">₹{Number(s.totalAmount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+                          <td style={{ fontFamily: "monospace" }}>{s.panNumber}</td>
+                          <td>
+                            <span style={{ fontSize: "11px", fontWeight: "600", color: "#166534", background: "#f0fdf4", padding: "2px 6px", borderRadius: "3px" }}>
+                              {s.taxCertificateNo}
+                            </span>
+                          </td>
+                          <td>
+                            <span className="bid-applied-pill">
+                              {s.status} (ASBA Lien)
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Active SSE Cards (<= 768px) */}
+                <div className="bids-sse-applied-mobile-list">
+                  {userSseApplications.map((s) => (
+                    <div key={s.asbaReference || s._id} className="bids-mobile-card bids-sse-applied-card">
+                      <div className="bids-card-header">
+                        <div>
+                          <div className="bids-card-symbol">{s.orgName}</div>
+                          <div style={{ fontSize: "11px", color: "#64748b", fontFamily: "monospace" }}>Ref: {s.asbaReference}</div>
+                        </div>
+                        <div className="bids-card-min-group">
+                          <span className="bids-card-amount text-blue font-bold">
+                            ₹{Number(s.totalAmount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                          </span>
+                          <span className="bids-card-qty">{s.units} units</span>
+                        </div>
+                      </div>
+                      <div className="bids-card-meta-grid">
+                        <div className="bids-meta-item">
+                          <span className="bids-meta-label">PAN (Form 10BE)</span>
+                          <span className="bids-meta-val" style={{ fontFamily: "monospace" }}>{s.panNumber}</span>
+                        </div>
+                        <div className="bids-meta-item bids-meta-right">
+                          <span className="bids-meta-label">80G Certificate</span>
+                          <span className="bids-meta-val text-green font-bold" style={{ fontSize: "11px" }}>{s.taxCertificateNo}</span>
+                        </div>
+                      </div>
+                      <div className="bids-applied-banner banner-accepted">
+                        <span>Status: <strong>{s.status} (ASBA Lien)</strong></span>
+                        <span style={{ fontSize: "11px", color: "#166534" }}>Tax Exemption Approved</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
