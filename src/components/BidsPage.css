@@ -401,3 +401,369 @@
   color: #0f172a;
 }
 
+/* Desktop Defaults */
+.bids-desktop-table {
+  display: block;
+}
+
+.bids-ipo-mobile-card-list,
+.bids-gsec-mobile-card-list,
+.bids-corp-mobile-card-list,
+.bids-auction-mobile-card-list {
+  display: none;
+}
+
+/* ==========================================================================
+   MOBILE BIDS & CAPITAL MARKETS DESK - KITE MOBILE SPEC
+   Enforced ONLY on mobile viewports (max-width: 768px). Desktop is 100% untouched.
+   ========================================================================== */
+@media (max-width: 768px) {
+  .bids-page-container {
+    padding: 0 14px 40px 14px !important;
+  }
+
+  /* 1. Hero KPI 2x2 Balanced Grid */
+  .bids-hero-summary-card {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px 16px !important;
+    padding: 14px 16px !important;
+    margin: 8px 0 16px 0 !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+  }
+
+  .bids-hero-item {
+    border-right: none !important;
+    padding: 0 !important;
+  }
+
+  .bids-hero-item:nth-child(odd) {
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+
+  .bids-hero-item:nth-child(even) {
+    align-items: flex-end !important;
+    text-align: right !important;
+  }
+
+  .bids-hero-item:nth-child(1),
+  .bids-hero-item:nth-child(2) {
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding-bottom: 10px !important;
+  }
+
+  .bids-hero-val {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+  }
+
+  /* 2. Top Toolbar & Touch Subtabs */
+  .bids-top-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .page-subtabs-bar {
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+  }
+
+  .subtab-btn {
+    white-space: nowrap !important;
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    border-radius: 20px !important;
+  }
+
+  .bids-actions-right {
+    width: 100% !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+
+  .bids-search-input {
+    flex: 1 !important;
+    width: auto !important;
+  }
+
+  .btn-bids-export {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+
+  /* 3. Hide Desktop Tables on Mobile */
+  .bids-desktop-table {
+    display: none !important;
+  }
+
+  /* 4. Display Mobile Cards */
+  .bids-ipo-mobile-card-list,
+  .bids-gsec-mobile-card-list,
+  .bids-corp-mobile-card-list,
+  .bids-auction-mobile-card-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  /* 5. Mobile Card Component */
+  .bids-mobile-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 14px 14px 12px 14px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .bids-card-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .bids-card-title-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .bids-card-symbol {
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+  }
+
+  .bids-status-badge {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    padding: 2px 7px !important;
+    border-radius: 4px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  .bids-status-badge.badge-open {
+    background: #ecfdf5 !important;
+    color: #059669 !important;
+    border: 1px solid #a7f3d0 !important;
+  }
+
+  .bids-status-badge.badge-preapply {
+    background: #fffbeb !important;
+    color: #d97706 !important;
+    border: 1px solid #fde68a !important;
+  }
+
+  .bids-status-badge.badge-applied {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+    border: 1px solid #bfdbfe !important;
+  }
+
+  .bids-status-badge.badge-pending {
+    background: #fff7ed !important;
+    color: #ea580c !important;
+    border: 1px solid #fed7aa !important;
+  }
+
+  .bids-status-badge.badge-closed {
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  .bids-card-min-group {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    text-align: right !important;
+  }
+
+  .bids-card-amount {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+  }
+
+  .bids-card-qty {
+    font-size: 11px !important;
+    color: #64748b !important;
+    margin-top: 2px !important;
+  }
+
+  .bids-card-company {
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    color: #334155 !important;
+    line-height: 1.4 !important;
+  }
+
+  .bids-card-meta-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    background: #f8fafc !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    align-items: center !important;
+  }
+
+  .bids-meta-item {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .bids-meta-item.bids-meta-right {
+    align-items: flex-end !important;
+    text-align: right !important;
+  }
+
+  .bids-meta-label {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    color: #64748b !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  .bids-meta-val {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+  }
+
+  .bids-applied-banner {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+  }
+
+  .bids-applied-banner.banner-accepted {
+    background: #f0fdf4 !important;
+    border: 1px solid #bbf7d0 !important;
+    color: #166534 !important;
+  }
+
+  .bids-applied-banner.banner-pending {
+    background: #fff7ed !important;
+    border: 1px solid #fed7aa !important;
+    color: #9a3412 !important;
+  }
+
+  .bids-applied-info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .btn-bids-card-view {
+    background: none !important;
+    border: none !important;
+    color: #2563eb !important;
+    font-size: 11.5px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    padding: 4px 6px !important;
+  }
+
+  /* 6. Card Action Tray */
+  .bids-card-action-tray {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 2px !important;
+  }
+
+  .btn-bids-touch-secondary {
+    flex: 1 !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #334155 !important;
+    padding: 8px 10px !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    min-height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .btn-bids-touch-action {
+    flex: 1 !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    min-height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid transparent !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .btn-touch-apply {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #1d4ed8 !important;
+  }
+
+  .btn-touch-preapply {
+    background: #fffbeb !important;
+    color: #b45309 !important;
+    border-color: #fde68a !important;
+  }
+
+  .btn-touch-applied {
+    background: #ecfdf5 !important;
+    color: #059669 !important;
+    border-color: #a7f3d0 !important;
+  }
+
+  .btn-touch-pending {
+    background: #fff7ed !important;
+    color: #ea580c !important;
+    border-color: #fed7aa !important;
+  }
+
+  .btn-touch-closed {
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    border-color: #e2e8f0 !important;
+    cursor: not-allowed !important;
+  }
+
+  .bids-empty-mobile {
+    padding: 32px 16px !important;
+    text-align: center !important;
+    color: #94a3b8 !important;
+    background: #ffffff !important;
+    border: 1px dashed #e2e8f0 !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+  }
+}
+

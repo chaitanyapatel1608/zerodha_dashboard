@@ -486,96 +486,224 @@ const BidsPage = () => {
                 Loading IPOs from primary market depository ledger...
               </div>
             ) : (
-              <div className="kite-table-container">
-                <table className="kite-data-table bids-table">
-                  <thead>
-                    <tr>
-                      <th>Symbol</th>
-                      <th>Company Name</th>
-                      <th>Date Range</th>
-                      <th>Price Range</th>
-                      <th>Min Amount (Qty)</th>
-                      <th style={{ textAlign: "right" }}>Action & Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredIpos.map((item) => {
-                      const userApp = applicationsBySymbol[item.symbol];
-                      const isPendingMandate = userApp && userApp.mandateStatus === "PENDING_APPROVAL" && userApp.status === "MANDATE_PENDING";
-                      const isAccepted = userApp && userApp.mandateStatus === "ACCEPTED";
-
-                      return (
-                        <tr key={item.symbol} className="bids-row">
-                          <td className="symbol-cell">
-                            <div className="bids-symbol-wrapper">
-                              <span className="symbol-name">{item.symbol}</span>
-                              <button
-                                type="button"
-                                className="btn-mini-analytics"
-                                onClick={() => setActiveIpoForAnalytics(item)}
-                                title="View live GMP, subscription multiples, and issue details"
-                              >
-                                📊 GMP & Details
-                              </button>
-                            </div>
-                          </td>
-                          <td>
-                            <span className="company-full-name">{item.name}</span>
-                          </td>
-                          <td>{item.dates}</td>
-                          <td>{item.priceRange}</td>
-                          <td>
-                            {item.minAmount}{" "}
-                            <span className="qty-pill">({item.minQty} shares)</span>
-                          </td>
-                          <td style={{ textAlign: "right" }}>
-                            {isPendingMandate ? (
-                              <button
-                                className="btn-mandate-pending"
-                                onClick={() => setActiveAppDetails(userApp)}
-                                title="Click to view application status or approve mandate"
-                              >
-                                ⏳ Mandate Pending
-                              </button>
-                            ) : isAccepted ? (
-                              <button
-                                className="btn-applied-success"
-                                onClick={() => setActiveAppDetails(userApp)}
-                                title="Click to inspect your verified ASBA bid or modify lots"
-                              >
-                                ✓ Applied ({userApp.lots} Lot)
-                              </button>
-                            ) : item.status === "Apply" ? (
-                              <button
-                                className="btn-apply-ipo"
-                                onClick={() => setActiveIpoForApply(item)}
-                              >
-                                Apply
-                              </button>
-                            ) : item.status === "Pre-apply" ? (
-                              <button
-                                className="btn-preapply-ipo"
-                                onClick={() => setActiveIpoForApply(item)}
-                              >
-                                Pre-apply
-                              </button>
-                            ) : (
-                              <span className="status-closed">Closed</span>
-                            )}
-                          </td>
+              <>
+                {/* Desktop Table (> 768px) */}
+                <div className="bids-desktop-table">
+                  <div className="kite-table-container">
+                    <table className="kite-data-table bids-table">
+                      <thead>
+                        <tr>
+                          <th>Symbol</th>
+                          <th>Company Name</th>
+                          <th>Date Range</th>
+                          <th>Price Range</th>
+                          <th>Min Amount (Qty)</th>
+                          <th style={{ textAlign: "right" }}>Action & Status</th>
                         </tr>
-                      );
-                    })}
-                    {filteredIpos.length === 0 && (
-                      <tr>
-                        <td colSpan="6" className="text-center py-4 text-muted">
-                          No IPOs found matching "{searchTerm}"
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                      </thead>
+                      <tbody>
+                        {filteredIpos.map((item) => {
+                          const userApp = applicationsBySymbol[item.symbol];
+                          const isPendingMandate = userApp && userApp.mandateStatus === "PENDING_APPROVAL" && userApp.status === "MANDATE_PENDING";
+                          const isAccepted = userApp && userApp.mandateStatus === "ACCEPTED";
+
+                          return (
+                            <tr key={item.symbol} className="bids-row">
+                              <td className="symbol-cell">
+                                <div className="bids-symbol-wrapper">
+                                  <span className="symbol-name">{item.symbol}</span>
+                                  <button
+                                    type="button"
+                                    className="btn-mini-analytics"
+                                    onClick={() => setActiveIpoForAnalytics(item)}
+                                    title="View live GMP, subscription multiples, and issue details"
+                                  >
+                                    📊 GMP & Details
+                                  </button>
+                                </div>
+                              </td>
+                              <td>
+                                <span className="company-full-name">{item.name}</span>
+                              </td>
+                              <td>{item.dates}</td>
+                              <td>{item.priceRange}</td>
+                              <td>
+                                {item.minAmount}{" "}
+                                <span className="qty-pill">({item.minQty} shares)</span>
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                {isPendingMandate ? (
+                                  <button
+                                    className="btn-mandate-pending"
+                                    onClick={() => setActiveAppDetails(userApp)}
+                                    title="Click to view application status or approve mandate"
+                                  >
+                                    ⏳ Mandate Pending
+                                  </button>
+                                ) : isAccepted ? (
+                                  <button
+                                    className="btn-applied-success"
+                                    onClick={() => setActiveAppDetails(userApp)}
+                                    title="Click to inspect your verified ASBA bid or modify lots"
+                                  >
+                                    ✓ Applied ({userApp.lots} Lot)
+                                  </button>
+                                ) : item.status === "Apply" ? (
+                                  <button
+                                    className="btn-apply-ipo"
+                                    onClick={() => setActiveIpoForApply(item)}
+                                  >
+                                    Apply
+                                  </button>
+                                ) : item.status === "Pre-apply" ? (
+                                  <button
+                                    className="btn-preapply-ipo"
+                                    onClick={() => setActiveIpoForApply(item)}
+                                  >
+                                    Pre-apply
+                                  </button>
+                                ) : (
+                                  <span className="status-closed">Closed</span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                        {filteredIpos.length === 0 && (
+                          <tr>
+                            <td colSpan="6" className="text-center py-4 text-muted">
+                              No IPOs found matching "{searchTerm}"
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Mobile Touch-Friendly Card List (<= 768px) */}
+                <div className="bids-ipo-mobile-card-list">
+                  {filteredIpos.map((item) => {
+                    const userApp = applicationsBySymbol[item.symbol];
+                    const isPendingMandate = userApp && userApp.mandateStatus === "PENDING_APPROVAL" && userApp.status === "MANDATE_PENDING";
+                    const isAccepted = userApp && userApp.mandateStatus === "ACCEPTED";
+
+                    return (
+                      <div key={item.symbol} className="bids-mobile-card">
+                        {/* Header: Symbol + Badge on Left, Min Amount & Qty on Right */}
+                        <div className="bids-card-header">
+                          <div className="bids-card-title-group">
+                            <span className="bids-card-symbol">{item.symbol}</span>
+                            {isPendingMandate ? (
+                              <span className="bids-status-badge badge-pending">Mandate Pending</span>
+                            ) : isAccepted ? (
+                              <span className="bids-status-badge badge-applied">✓ Applied</span>
+                            ) : item.status === "Apply" ? (
+                              <span className="bids-status-badge badge-open">Open</span>
+                            ) : item.status === "Pre-apply" ? (
+                              <span className="bids-status-badge badge-preapply">Pre-apply</span>
+                            ) : (
+                              <span className="bids-status-badge badge-closed">Closed</span>
+                            )}
+                          </div>
+
+                          <div className="bids-card-min-group">
+                            <span className="bids-card-amount">{item.minAmount}</span>
+                            <span className="bids-card-qty">{item.minQty} shares / 1 Lot</span>
+                          </div>
+                        </div>
+
+                        {/* Company Name */}
+                        <div className="bids-card-company">{item.name}</div>
+
+                        {/* Metadata: Dates & Price Band */}
+                        <div className="bids-card-meta-grid">
+                          <div className="bids-meta-item">
+                            <span className="bids-meta-label">Bidding Dates</span>
+                            <span className="bids-meta-val">{item.dates}</span>
+                          </div>
+                          <div className="bids-meta-item bids-meta-right">
+                            <span className="bids-meta-label">Price Range</span>
+                            <span className="bids-meta-val">{item.priceRange}</span>
+                          </div>
+                        </div>
+
+                        {/* Applied Status Strip */}
+                        {(isPendingMandate || isAccepted) && (
+                          <div className={`bids-applied-banner ${isAccepted ? "banner-accepted" : "banner-pending"}`}>
+                            <div className="bids-applied-info">
+                              <strong>{userApp.lots} Lot ({userApp.lots * item.minQty} shares)</strong>
+                              <span>₹{Number(userApp.totalAmount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                            </div>
+                            <button
+                              type="button"
+                              className="btn-bids-card-view"
+                              onClick={() => setActiveAppDetails(userApp)}
+                            >
+                              View / Modify &rsaquo;
+                            </button>
+                          </div>
+                        )}
+
+                        {/* 1-Tap Action Tray */}
+                        <div className="bids-card-action-tray">
+                          <button
+                            type="button"
+                            className="btn-bids-touch-secondary"
+                            onClick={() => setActiveIpoForAnalytics(item)}
+                            title="View live GMP and details"
+                          >
+                            📊 GMP & Details
+                          </button>
+
+                          {isPendingMandate ? (
+                            <button
+                              type="button"
+                              className="btn-bids-touch-action btn-touch-pending"
+                              onClick={() => setActiveAppDetails(userApp)}
+                            >
+                              ⏳ Mandate Pending
+                            </button>
+                          ) : isAccepted ? (
+                            <button
+                              type="button"
+                              className="btn-bids-touch-action btn-touch-applied"
+                              onClick={() => setActiveAppDetails(userApp)}
+                            >
+                              ✓ Applied ({userApp.lots} Lot)
+                            </button>
+                          ) : item.status === "Apply" ? (
+                            <button
+                              type="button"
+                              className="btn-bids-touch-action btn-touch-apply"
+                              onClick={() => setActiveIpoForApply(item)}
+                            >
+                              Apply
+                            </button>
+                          ) : item.status === "Pre-apply" ? (
+                            <button
+                              type="button"
+                              className="btn-bids-touch-action btn-touch-preapply"
+                              onClick={() => setActiveIpoForApply(item)}
+                            >
+                              Pre-apply
+                            </button>
+                          ) : (
+                            <button type="button" className="btn-bids-touch-action btn-touch-closed" disabled>
+                              Closed
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {filteredIpos.length === 0 && (
+                    <div className="bids-empty-mobile">
+                      No IPOs found matching "{searchTerm}"
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </>
         )}
@@ -593,52 +721,108 @@ const BidsPage = () => {
               <span className="sovereign-tag">100% RBI Sovereign Guarantee</span>
             </div>
 
-            <div className="kite-table-container">
-              <table className="kite-data-table bids-table">
-                <thead>
-                  <tr>
-                    <th>Security Name</th>
-                    <th>Category</th>
-                    <th>Indicative Yield</th>
-                    <th>Bidding Window</th>
-                    <th>Tenure / Maturity</th>
-                    <th>Min Investment</th>
-                    <th style={{ textAlign: "right" }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {gsecs.map((item) => {
-                    const userBid = gsecBidsBySymbol[item.symbol];
+            {/* Desktop Table (> 768px) */}
+            <div className="bids-desktop-table">
+              <div className="kite-table-container">
+                <table className="kite-data-table bids-table">
+                  <thead>
+                    <tr>
+                      <th>Security Name</th>
+                      <th>Category</th>
+                      <th>Indicative Yield</th>
+                      <th>Bidding Window</th>
+                      <th>Tenure / Maturity</th>
+                      <th>Min Investment</th>
+                      <th style={{ textAlign: "right" }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {gsecs.map((item) => {
+                      const userBid = gsecBidsBySymbol[item.symbol];
 
-                    return (
-                      <tr key={item.symbol}>
-                        <td className="font-bold">{item.name}</td>
-                        <td>
-                          <span className="category-pill">{item.category}</span>
-                        </td>
-                        <td className="text-green font-bold">{item.yield}</td>
-                        <td>{item.biddingRange}</td>
-                        <td>{item.maturityDate}</td>
-                        <td>{item.minAmount}</td>
-                        <td style={{ textAlign: "right" }}>
-                          {userBid ? (
-                            <span className="bid-applied-pill">
-                              ✓ Bidded ({userBid.units} units)
-                            </span>
-                          ) : (
-                            <button
-                              className="btn-apply-ipo"
-                              onClick={() => setActiveGsecForBid(item)}
-                            >
-                              Bid
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                      return (
+                        <tr key={item.symbol}>
+                          <td className="font-bold">{item.name}</td>
+                          <td>
+                            <span className="category-pill">{item.category}</span>
+                          </td>
+                          <td className="text-green font-bold">{item.yield}</td>
+                          <td>{item.biddingRange}</td>
+                          <td>{item.maturityDate}</td>
+                          <td>{item.minAmount}</td>
+                          <td style={{ textAlign: "right" }}>
+                            {userBid ? (
+                              <span className="bid-applied-pill">
+                                ✓ Bidded ({userBid.units} units)
+                              </span>
+                            ) : (
+                              <button
+                                className="btn-apply-ipo"
+                                onClick={() => setActiveGsecForBid(item)}
+                              >
+                                Bid
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Mobile Touch-Friendly G-Sec Cards (<= 768px) */}
+            <div className="bids-gsec-mobile-card-list">
+              {gsecs.map((item) => {
+                const userBid = gsecBidsBySymbol[item.symbol];
+
+                return (
+                  <div key={item.symbol} className="bids-mobile-card">
+                    <div className="bids-card-header">
+                      <div className="bids-card-title-group">
+                        <span className="bids-card-symbol">{item.name}</span>
+                        <span className="category-pill">{item.category}</span>
+                      </div>
+                      <div className="bids-card-min-group">
+                        <span className="bids-card-amount text-green font-bold">{item.yield}</span>
+                        <span className="bids-card-qty">Indicative Yield</span>
+                      </div>
+                    </div>
+
+                    <div className="bids-card-meta-grid">
+                      <div className="bids-meta-item">
+                        <span className="bids-meta-label">Bidding Window</span>
+                        <span className="bids-meta-val">{item.biddingRange}</span>
+                      </div>
+                      <div className="bids-meta-item bids-meta-right">
+                        <span className="bids-meta-label">Tenure / Maturity</span>
+                        <span className="bids-meta-val">{item.maturityDate}</span>
+                      </div>
+                    </div>
+
+                    <div className="bids-card-action-tray">
+                      <div className="bids-card-min-invest">
+                        <span style={{ fontSize: "11px", color: "#64748b" }}>Min Invest:</span>{" "}
+                        <strong style={{ fontSize: "12.5px" }}>{item.minAmount}</strong>
+                      </div>
+                      {userBid ? (
+                        <span className="bid-applied-pill">
+                          ✓ Bidded ({userBid.units} units)
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn-bids-touch-action btn-touch-apply"
+                          onClick={() => setActiveGsecForBid(item)}
+                        >
+                          Bid
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -658,53 +842,108 @@ const BidsPage = () => {
               </span>
             </div>
 
-            <div className="kite-table-container">
-              <table className="kite-data-table bids-table">
-                <thead>
-                  <tr>
-                    <th>Company</th>
-                    <th>Action Type</th>
-                    <th>Tender Price</th>
-                    <th>Current Price</th>
-                    <th>Buyback Premium</th>
-                    <th>Tender Window</th>
-                    <th style={{ textAlign: "right" }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {corporateActions.map((item) => {
-                    const userTender = corporateTendersBySymbol[item.symbol];
+            {/* Desktop Table (> 768px) */}
+            <div className="bids-desktop-table">
+              <div className="kite-table-container">
+                <table className="kite-data-table bids-table">
+                  <thead>
+                    <tr>
+                      <th>Company</th>
+                      <th>Action Type</th>
+                      <th>Tender Price</th>
+                      <th>Current Price</th>
+                      <th>Buyback Premium</th>
+                      <th>Tender Window</th>
+                      <th style={{ textAlign: "right" }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {corporateActions.map((item) => {
+                      const userTender = corporateTendersBySymbol[item.symbol];
 
-                    return (
-                      <tr key={item.symbol}>
-                        <td className="font-bold">{item.companyName}</td>
-                        <td>
-                          <span className="category-pill" style={{ background: "#faf5ff", color: "#7e22ce" }}>{item.actionType}</span>
-                        </td>
-                        <td className="text-green font-bold">₹{item.tenderPrice.toFixed(2)}</td>
-                        <td>₹{item.currentMarketPrice.toFixed(2)}</td>
-                        <td className="text-blue font-bold">{item.premiumPercent}</td>
-                        <td>{item.windowDates}</td>
-                        <td style={{ textAlign: "right" }}>
-                          {userTender ? (
-                            <span className="bid-applied-pill" style={{ background: "#f5f3ff", color: "#7c3aed" }}>
-                              ✓ Tendered ({userTender.tenderedQty} sh)
-                            </span>
-                          ) : (
-                            <button
-                              className="btn-apply-ipo"
-                              style={{ background: "#7c3aed" }}
-                              onClick={() => setActiveCorpForTender(item)}
-                            >
-                              Tender Shares
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                      return (
+                        <tr key={item.symbol}>
+                          <td className="font-bold">{item.companyName}</td>
+                          <td>
+                            <span className="category-pill" style={{ background: "#faf5ff", color: "#7e22ce" }}>{item.actionType}</span>
+                          </td>
+                          <td className="text-green font-bold">₹{item.tenderPrice.toFixed(2)}</td>
+                          <td>₹{item.currentMarketPrice.toFixed(2)}</td>
+                          <td className="text-blue font-bold">{item.premiumPercent}</td>
+                          <td>{item.windowDates}</td>
+                          <td style={{ textAlign: "right" }}>
+                            {userTender ? (
+                              <span className="bid-applied-pill" style={{ background: "#f5f3ff", color: "#7c3aed" }}>
+                                ✓ Tendered ({userTender.tenderedQty} sh)
+                              </span>
+                            ) : (
+                              <button
+                                className="btn-apply-ipo"
+                                style={{ background: "#7c3aed" }}
+                                onClick={() => setActiveCorpForTender(item)}
+                              >
+                                Tender Shares
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Mobile Touch-Friendly Corporate Actions Cards (<= 768px) */}
+            <div className="bids-corp-mobile-card-list">
+              {corporateActions.map((item) => {
+                const userTender = corporateTendersBySymbol[item.symbol];
+
+                return (
+                  <div key={item.symbol} className="bids-mobile-card">
+                    <div className="bids-card-header">
+                      <div className="bids-card-title-group">
+                        <span className="bids-card-symbol">{item.companyName}</span>
+                        <span className="category-pill" style={{ background: "#faf5ff", color: "#7e22ce" }}>
+                          {item.actionType}
+                        </span>
+                      </div>
+                      <div className="bids-card-min-group">
+                        <span className="bids-card-amount text-green font-bold">₹{item.tenderPrice.toFixed(2)}</span>
+                        <span className="bids-card-qty text-blue font-bold">{item.premiumPercent} Premium</span>
+                      </div>
+                    </div>
+
+                    <div className="bids-card-meta-grid">
+                      <div className="bids-meta-item">
+                        <span className="bids-meta-label">Current Market Price</span>
+                        <span className="bids-meta-val">₹{item.currentMarketPrice.toFixed(2)}</span>
+                      </div>
+                      <div className="bids-meta-item bids-meta-right">
+                        <span className="bids-meta-label">Tender Window</span>
+                        <span className="bids-meta-val">{item.windowDates}</span>
+                      </div>
+                    </div>
+
+                    <div className="bids-card-action-tray">
+                      {userTender ? (
+                        <span className="bid-applied-pill" style={{ background: "#f5f3ff", color: "#7c3aed", width: "100%", textAlign: "center", justifyContent: "center" }}>
+                          ✓ Tendered ({userTender.tenderedQty} shares)
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn-bids-touch-action btn-touch-apply"
+                          style={{ background: "#7c3aed", borderColor: "#7c3aed", width: "100%" }}
+                          onClick={() => setActiveCorpForTender(item)}
+                        >
+                          Tender Shares
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -725,71 +964,138 @@ const BidsPage = () => {
               </div>
             </div>
 
-            <div className="kite-table-container">
-              <table className="kite-data-table bids-table">
-                <thead>
-                  <tr>
-                    <th>Security</th>
-                    <th>Exchange</th>
-                    <th>Shortage Demand</th>
-                    <th>Settlement Base Price</th>
-                    <th>Max Allowed Offer (+20% Cap)</th>
-                    <th>Your Demat Free Balance</th>
-                    <th style={{ textAlign: "right" }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {auctions
-                    .filter(
-                      (item) =>
-                        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        item.symbol.toLowerCase().includes(searchTerm.toLowerCase())
-                    )
-                    .map((item) => {
-                      const userOffer = auctionOffersBySymbol[item.symbol];
-                      const holding = userHoldings.find(
-                        (h) => (h.instrument || h.name || "").toUpperCase() === item.symbol.toUpperCase()
-                      );
-                      const dematQty = holding ? Number(holding.qty || 0) : 0;
+            {/* Desktop Table (> 768px) */}
+            <div className="bids-desktop-table">
+              <div className="kite-table-container">
+                <table className="kite-data-table bids-table">
+                  <thead>
+                    <tr>
+                      <th>Security</th>
+                      <th>Exchange</th>
+                      <th>Shortage Demand</th>
+                      <th>Settlement Base Price</th>
+                      <th>Max Allowed Offer (+20% Cap)</th>
+                      <th>Your Demat Free Balance</th>
+                      <th style={{ textAlign: "right" }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {auctions
+                      .filter(
+                        (item) =>
+                          item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          item.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+                      )
+                      .map((item) => {
+                        const userOffer = auctionOffersBySymbol[item.symbol];
+                        const holding = userHoldings.find(
+                          (h) => (h.instrument || h.name || "").toUpperCase() === item.symbol.toUpperCase()
+                        );
+                        const dematQty = holding ? Number(holding.qty || 0) : 0;
 
-                      return (
-                        <tr key={item.symbol}>
-                          <td>
-                            <strong className="text-slate">{item.symbol}</strong>
-                            <div style={{ fontSize: "11px", color: "#64748b" }}>{item.name}</div>
-                          </td>
-                          <td>
-                            <span className="category-pill">{item.exchange}</span>
-                          </td>
-                          <td className="font-bold text-amber">{item.shortQtyRequired} shares</td>
-                          <td className="font-bold">₹{item.basePrice.toFixed(2)}</td>
-                          <td className="font-bold text-green">₹{item.maxAllowedPrice.toFixed(2)}</td>
-                          <td>
-                            <span className={`holding-check-pill ${dematQty > 0 ? "has-shares" : "no-shares"}`}>
-                              {dematQty > 0 ? `✓ ${dematQty} shares` : "0 shares"}
-                            </span>
-                          </td>
-                          <td style={{ textAlign: "right" }}>
-                            {userOffer ? (
-                              <span className="bid-applied-pill" style={{ background: "#fff7ed", color: "#ea580c", borderColor: "#fed7aa" }}>
-                                ✓ Offered ({userOffer.quantity} sh @ ₹{userOffer.offerPrice.toFixed(2)})
+                        return (
+                          <tr key={item.symbol}>
+                            <td>
+                              <strong className="text-slate">{item.symbol}</strong>
+                              <div style={{ fontSize: "11px", color: "#64748b" }}>{item.name}</div>
+                            </td>
+                            <td>
+                              <span className="category-pill">{item.exchange}</span>
+                            </td>
+                            <td className="font-bold text-amber">{item.shortQtyRequired} shares</td>
+                            <td className="font-bold">₹{item.basePrice.toFixed(2)}</td>
+                            <td className="font-bold text-green">₹{item.maxAllowedPrice.toFixed(2)}</td>
+                            <td>
+                              <span className={`holding-check-pill ${dematQty > 0 ? "has-shares" : "no-shares"}`}>
+                                {dematQty > 0 ? `✓ ${dematQty} shares` : "0 shares"}
                               </span>
-                            ) : (
-                              <button
-                                className="btn-auction-sell"
-                                onClick={() => setActiveAuctionForSell(item)}
-                                disabled={dematQty === 0}
-                                title={dematQty === 0 ? "Requires free shares in Demat account" : "Place offer in auction"}
-                              >
-                                {dematQty > 0 ? "Sell in Auction" : "No Free Shares"}
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
+                            </td>
+                            <td style={{ textAlign: "right" }}>
+                              {userOffer ? (
+                                <span className="bid-applied-pill" style={{ background: "#fff7ed", color: "#ea580c", borderColor: "#fed7aa" }}>
+                                  ✓ Offered ({userOffer.quantity} sh @ ₹{userOffer.offerPrice.toFixed(2)})
+                                </span>
+                              ) : (
+                                <button
+                                  className="btn-auction-sell"
+                                  onClick={() => setActiveAuctionForSell(item)}
+                                  disabled={dematQty === 0}
+                                  title={dematQty === 0 ? "Requires free shares in Demat account" : "Place offer in auction"}
+                                >
+                                  {dematQty > 0 ? "Sell in Auction" : "No Free Shares"}
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Mobile Touch-Friendly Auctions Cards (<= 768px) */}
+            <div className="bids-auction-mobile-card-list">
+              {auctions
+                .filter(
+                  (item) =>
+                    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((item) => {
+                  const userOffer = auctionOffersBySymbol[item.symbol];
+                  const holding = userHoldings.find(
+                    (h) => (h.instrument || h.name || "").toUpperCase() === item.symbol.toUpperCase()
+                  );
+                  const dematQty = holding ? Number(holding.qty || 0) : 0;
+
+                  return (
+                    <div key={item.symbol} className="bids-mobile-card">
+                      <div className="bids-card-header">
+                        <div className="bids-card-title-group">
+                          <span className="bids-card-symbol">{item.symbol}</span>
+                          <span className="category-pill">{item.exchange}</span>
+                        </div>
+                        <div className="bids-card-min-group">
+                          <span className="bids-card-amount text-amber font-bold">{item.shortQtyRequired} shares</span>
+                          <span className="bids-card-qty">Shortage Demand</span>
+                        </div>
+                      </div>
+                      <div className="bids-card-company">{item.name}</div>
+
+                      <div className="bids-card-meta-grid">
+                        <div className="bids-meta-item">
+                          <span className="bids-meta-label">Settlement Base</span>
+                          <span className="bids-meta-val">₹{item.basePrice.toFixed(2)}</span>
+                        </div>
+                        <div className="bids-meta-item bids-meta-right">
+                          <span className="bids-meta-label">Max Allowed (+20%)</span>
+                          <span className="bids-meta-val text-green font-bold">₹{item.maxAllowedPrice.toFixed(2)}</span>
+                        </div>
+                      </div>
+
+                      <div className="bids-card-action-tray">
+                        <span className={`holding-check-pill ${dematQty > 0 ? "has-shares" : "no-shares"}`}>
+                          {dematQty > 0 ? `✓ ${dematQty} Demat shares` : "0 Demat shares"}
+                        </span>
+                        {userOffer ? (
+                          <span className="bid-applied-pill" style={{ background: "#fff7ed", color: "#ea580c", borderColor: "#fed7aa" }}>
+                            ✓ Offered ({userOffer.quantity} sh @ ₹{userOffer.offerPrice.toFixed(2)})
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn-auction-sell"
+                            onClick={() => setActiveAuctionForSell(item)}
+                            disabled={dematQty === 0}
+                          >
+                            {dematQty > 0 ? "Sell in Auction" : "No Free Shares"}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
 
             {/* My Active Auction Offers Table */}
