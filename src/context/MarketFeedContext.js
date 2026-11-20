@@ -33,13 +33,21 @@ export const MarketFeedProvider = ({ children }) => {
   const baseSensexRef = useRef(80362.35); // 79942.20 - (-420.15)
   const [indices, setIndices] = useState(defaultIndices);
 
+  // Stable quotes reference to prevent effect teardown/recreation on every tick
+  const quotesRef = useRef(quotes);
+  useEffect(() => {
+    quotesRef.current = quotes;
+  }, [quotes]);
+
+  const timeoutsRef = useRef([]);
+
   // Tick generator
   useEffect(() => {
     if (!isLive) return;
 
     const timer = setInterval(() => {
-      // Pick 1 to 3 random stocks from quotes to tick
-      const symbols = Object.keys(quotes);
+      const currentQuotes = quotesRef.current;
+      const symbols = Object.keys(currentQuotes);
       if (symbols.length === 0) return;
 
       const countToUpdate = Math.floor(Math.random() * 3) + 1;
@@ -58,7 +66,6 @@ export const MarketFeedProvider = ({ children }) => {
           if (!item) return;
 
           // Realistic tick: NSE tick size is 0.05
-          // Step between -0.4% to +0.4%
           const deltaSteps = Math.floor((Math.random() * 9) - 4); // -4 to +4
           if (deltaSteps === 0) return;
 
@@ -84,8 +91,8 @@ export const MarketFeedProvider = ({ children }) => {
         return next;
       });
 
-      // Clear tickDirection after 600ms
-      setTimeout(() => {
+      // Clear tickDirection after 600ms without memory leaks
+      const tId = setTimeout(() => {
         setQuotes((prev) => {
           let modified = false;
           const cleaned = { ...prev };
@@ -98,11 +105,12 @@ export const MarketFeedProvider = ({ children }) => {
           return modified ? cleaned : prev;
         });
       }, 650);
+      timeoutsRef.current.push(tId);
 
       // Periodically tick indices (40% chance per interval)
       if (Math.random() < 0.45) {
         setIndices((prev) => {
-          return prev.map((idx, index) => {
+          return prev.map((idx) => {
             const isNifty = idx.name.includes("NIFTY");
             const base = isNifty ? baseNiftyRef.current : baseSensexRef.current;
             const currentVal = parseFloat(idx.value.replace(/,/g, ""));
@@ -128,16 +136,21 @@ export const MarketFeedProvider = ({ children }) => {
           });
         });
 
-        setTimeout(() => {
+        const idxTimeout = setTimeout(() => {
           setIndices((prev) =>
             prev.map((idx) => ({ ...idx, tickDirection: null }))
           );
         }, 650);
+        timeoutsRef.current.push(idxTimeout);
       }
     }, 1800);
 
-    return () => clearInterval(timer);
-  }, [isLive, quotes]);
+    return () => {
+      clearInterval(timer);
+      timeoutsRef.current.forEach((id) => clearTimeout(id));
+      timeoutsRef.current = [];
+    };
+  }, [isLive]);
 
   const getLiveQuote = useCallback(
     (symbol) => {

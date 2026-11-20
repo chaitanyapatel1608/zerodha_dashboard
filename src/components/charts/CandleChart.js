@@ -324,27 +324,34 @@ const CandleChart = () => {
     return +(minPrice + ratio * (maxPrice - minPrice)).toFixed(2);
   };
 
-  // Crosshair Interaction
-  const handlePointerMove = (clientX, clientY, currentTarget) => {
-    const rect = currentTarget.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    const svgX = (x / rect.width) * totalWidth;
-    const svgY = (y / rect.height) * totalHeight;
+  // Crosshair Interaction Throttled via requestAnimationFrame (Locked 60fps tracking)
+  const rafRef = useRef(null);
 
-    if (svgX >= 0 && svgX < plotWidth && svgY >= 0 && svgY < totalHeight) {
-      const idx = Math.min(candles.length - 1, Math.max(0, Math.floor(svgX / candleSpacing)));
-      setHoveredCandle(candles[idx]);
-      setMousePos({
-        svgX,
-        svgY: Math.min(priceChartHeight, svgY),
-        price: getPriceForY(svgY),
-        candleTime: candles[idx]?.time,
-      });
-    } else {
-      setHoveredCandle(null);
-      setMousePos(null);
+  const handlePointerMove = (clientX, clientY, currentTarget) => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
     }
+    rafRef.current = requestAnimationFrame(() => {
+      const rect = currentTarget.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      const svgX = (x / rect.width) * totalWidth;
+      const svgY = (y / rect.height) * totalHeight;
+
+      if (svgX >= 0 && svgX < plotWidth && svgY >= 0 && svgY < totalHeight) {
+        const idx = Math.min(candles.length - 1, Math.max(0, Math.floor(svgX / candleSpacing)));
+        setHoveredCandle(candles[idx]);
+        setMousePos({
+          svgX,
+          svgY: Math.min(priceChartHeight, svgY),
+          price: getPriceForY(svgY),
+          candleTime: candles[idx]?.time,
+        });
+      } else {
+        setHoveredCandle(null);
+        setMousePos(null);
+      }
+    });
   };
 
   const handleMouseMove = (e) => handlePointerMove(e.clientX, e.clientY, e.currentTarget);
@@ -355,6 +362,9 @@ const CandleChart = () => {
   };
 
   const handlePointerLeave = () => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+    }
     setHoveredCandle(null);
     setMousePos(null);
   };
