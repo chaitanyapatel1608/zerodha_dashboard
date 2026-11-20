@@ -14,6 +14,7 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
     openShortcuts,
     openInvite,
     openSupport,
+    openWelcomeTour,
   } = useContext(GeneralContext);
   const dropdownRef = useRef(null);
 
@@ -181,6 +182,17 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
         >
           <span className="link-title">Keyboard shortcuts</span>
           <span className="shortcut-badge">Ctrl + /</span>
+        </button>
+        <button
+          type="button"
+          className="profile-link-item"
+          onClick={() => {
+            onClose();
+            if (openWelcomeTour) openWelcomeTour();
+          }}
+        >
+          <span className="link-title">Take Kite Tour</span>
+          <span className="link-meta">30-sec feature guide</span>
         </button>
         <button
           type="button"

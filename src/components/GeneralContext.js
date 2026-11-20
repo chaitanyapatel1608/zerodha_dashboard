@@ -14,6 +14,7 @@ import CoinModal from "./overlays/CoinModal";
 import KeyboardShortcutsModal from "./overlays/KeyboardShortcutsModal";
 import InviteFriendsModal from "./overlays/InviteFriendsModal";
 import SupportModal from "./overlays/SupportModal";
+import WelcomeTourModal from "./onboarding/WelcomeTourModal";
 
 import KiteToast from "./common/KiteToast";
 import { currentUser as defaultUser } from "../data/mockData";
@@ -21,6 +22,9 @@ import { currentUser as defaultUser } from "../data/mockData";
 const GeneralContext = createContext({
   openBuyWindow: (uid, mode, defaultPrice) => {},
   closeBuyWindow: () => {},
+  isWelcomeTourOpen: false,
+  openWelcomeTour: () => {},
+  closeWelcomeTour: () => {},
   isBasketModalOpen: false,
   openBasketModal: () => {},
   closeBasketModal: () => {},
@@ -150,6 +154,30 @@ export const GeneralContextProvider = (props) => {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [supportInitialTab, setSupportInitialTab] = useState("SUPPORT");
+  const [isWelcomeTourOpen, setIsWelcomeTourOpen] = useState(false);
+
+  const openWelcomeTour = useCallback(() => {
+    setIsWelcomeTourOpen(true);
+  }, []);
+
+  const closeWelcomeTour = useCallback(() => {
+    setIsWelcomeTourOpen(false);
+  }, []);
+
+  // Show welcome tour on first login if not yet seen
+  useEffect(() => {
+    if (isAuthenticated && !isAuthChecking) {
+      try {
+        const hasSeenTour = localStorage.getItem("zerodha_has_seen_tour");
+        if (!hasSeenTour) {
+          const timer = setTimeout(() => {
+            setIsWelcomeTourOpen(true);
+          }, 900);
+          return () => clearTimeout(timer);
+        }
+      } catch {}
+    }
+  }, [isAuthenticated, isAuthChecking]);
   const [isBasketsDropdownOpen, setIsBasketsDropdownOpen] = useState(false);
   const [isSegmentModalOpen, setIsSegmentModalOpen] = useState(false);
   const [userSegments, setUserSegments] = useState({});
@@ -689,6 +717,9 @@ export const GeneralContextProvider = (props) => {
         closeInvite,
         openSupport,
         closeSupport,
+        isWelcomeTourOpen,
+        openWelcomeTour,
+        closeWelcomeTour,
         closeAllOverlays,
         currentUser: currentUser || defaultUser,
         isAuthenticated,
@@ -771,6 +802,12 @@ export const GeneralContextProvider = (props) => {
           showToast={showToast}
           currentUser={currentUser || defaultUser}
           fetchNotifications={fetchNotifications}
+        />
+      )}
+      {isWelcomeTourOpen && (
+        <WelcomeTourModal
+          isOpen={isWelcomeTourOpen}
+          onClose={closeWelcomeTour}
         />
       )}
       <KiteToast toasts={toasts} onDismiss={dismissToast} />

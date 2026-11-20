@@ -41,8 +41,31 @@ const WatchList = () => {
   const [editingTabId, setEditingTabId] = useState(null);
   const [editingTabName, setEditingTabName] = useState("");
   const [sheetStock, setSheetStock] = useState(null);
+  const [isSeeding, setIsSeeding] = useState(false);
   const navigate = useNavigate();
   const generalContext = useContext(GeneralContext);
+
+  const handleLoadStarterPack = async () => {
+    try {
+      setIsSeeding(true);
+      const res = await axios.post(`${API_BASE}/seedStarterWatchlist`, { tabId: activeWatchlistGroup });
+      if (res.data?.success && res.data.tab) {
+        const newStocks = res.data.tab.stocks || [];
+        setWatchlist(newStocks);
+        if (registerStocks) registerStocks(newStocks);
+        setTabs((prev) =>
+          prev.map((t) => (t.tabId === activeWatchlistGroup ? { ...t, count: newStocks.length } : t))
+        );
+        if (generalContext?.showToast) {
+          generalContext.showToast("Starter Pack Loaded", "Added 5 NIFTY 50 market leaders to your watchlist.", "success");
+        }
+      }
+    } catch (e) {
+      console.warn("Error loading starter pack:", e.message);
+    } finally {
+      setIsSeeding(false);
+    }
+  };
 
   const handleStockSelect = (stock) => {
     if (typeof window !== "undefined" && window.innerWidth <= 768) {
@@ -313,9 +336,18 @@ const WatchList = () => {
                 <FolderOpenOutlined className="empty-icon" />
                 <h4>This watchlist is empty</h4>
                 <p>
-                  Use the search bar above to explore our 100+ stock catalog and add instruments to{" "}
+                  Explore 100+ stocks or load popular market leaders to start trading on{" "}
                   <strong>{activeTabObj.tabName}</strong>.
                 </p>
+                <button
+                  type="button"
+                  className="btn-load-starter-pack"
+                  onClick={handleLoadStarterPack}
+                  disabled={isSeeding}
+                >
+                  {isSeeding ? "Adding Market Leaders..." : "⚡ Load NIFTY 50 Starter Pack"}
+                </button>
+                <div className="empty-divider-text">or add popular stocks individually:</div>
                 <div className="empty-quick-tags">
                   <span onClick={() => { setSearchTerm("TATA"); setIsDropdownOpen(true); }}>+ Tata</span>
                   <span onClick={() => { setSearchTerm("HDFC"); setIsDropdownOpen(true); }}>+ HDFC</span>

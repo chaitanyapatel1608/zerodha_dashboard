@@ -7,6 +7,7 @@ import AccountStatusBanner from "./common/AccountStatusBanner";
 import MarketOverviewChart from "./dashboard/MarketOverviewChart";
 import GainersLosersPanel from "./dashboard/GainersLosersPanel";
 import IpoCalendarPanel from "./dashboard/IpoCalendarPanel";
+import ActivationChecklist from "./dashboard/ActivationChecklist";
 import { accountBalances as fallbackBalances } from "../data/mockData";
 import { useMarketFeed } from "../context/MarketFeedContext";
 
@@ -75,6 +76,9 @@ const Summary = () => {
         <h1 className="greeting-text">Hi, {currentUser.name}</h1>
         <hr className="subtle-divider" />
       </div>
+
+      {/* New Trader Activation Quest Checklist */}
+      <ActivationChecklist />
 
       {/* Account Balances Grid (Wide Equity Block) */}
       <div className="balances-grid">

@@ -1,0 +1,346 @@
+/* =========================================================================
+   WelcomeTourModal Guided Walkthrough Styling
+   ========================================================================= */
+
+.welcome-tour-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: tourFadeIn 0.2s ease-out;
+}
+
+@keyframes tourFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.welcome-tour-modal {
+  background: #ffffff;
+  border-radius: 12px;
+  max-width: 460px;
+  width: 100%;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #e2e8f0;
+  animation: tourSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tourSlideUp {
+  from {
+    transform: translateY(16px) scale(0.97);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Modal Top */
+.tour-modal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 10px 18px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.tour-brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.tour-kite-logo {
+  width: 22px;
+  height: auto;
+}
+
+.tour-btn-close {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.tour-btn-close:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+/* Slide Body */
+.tour-slide-body {
+  padding: 24px 22px 16px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.tour-icon-bubble {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #f8fafc;
+  border: 2px solid #387ed1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tour-slide-emoji {
+  font-size: 30px;
+}
+
+.tour-slide-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 6px;
+}
+
+.tour-slide-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.3px;
+}
+
+.tour-slide-desc {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.55;
+  margin: 0 0 16px 0;
+  max-width: 380px;
+}
+
+.tour-highlights-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.tour-highlight-pill {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Dots */
+.tour-dots-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 12px 0;
+}
+
+.tour-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.tour-dot.active {
+  width: 22px;
+  border-radius: 4px;
+  background: #387ed1;
+}
+
+/* Modal Footer */
+.tour-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #fafbfc;
+  border-top: 1px solid #f1f5f9;
+}
+
+.tour-btn-skip {
+  background: transparent;
+  border: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.tour-btn-skip:hover {
+  color: #0f172a;
+}
+
+.tour-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tour-btn-prev {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tour-btn-prev:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.tour-btn-next {
+  background: #387ed1;
+  border: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(56, 126, 209, 0.25);
+  transition: background 0.15s ease;
+}
+
+.tour-btn-next:hover {
+  background: #2563eb;
+}
+
+.tour-btn-finish {
+  background: #16a34a;
+  border: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.25);
+  transition: background 0.15s ease;
+}
+
+.tour-btn-finish:hover {
+  background: #15803d;
+}
+
+/* Mobile Breakpoint */
+@media (max-width: 768px) {
+  .welcome-tour-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .welcome-tour-modal {
+    max-width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    animation: tourSheetUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes tourSheetUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .tour-slide-title {
+    font-size: 16.5px;
+  }
+
+  .tour-slide-desc {
+    font-size: 12.5px;
+  }
+}
+
+/* Dark Theme */
+[data-theme="dark"] .welcome-tour-modal {
+  background: #161b22;
+  border-color: #30363d;
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] .tour-modal-top,
+[data-theme="dark"] .tour-modal-footer {
+  background: #0d1117;
+  border-color: #30363d;
+}
+
+[data-theme="dark"] .tour-brand-badge {
+  color: #f0f6fc;
+}
+
+[data-theme="dark"] .tour-slide-title {
+  color: #f0f6fc;
+}
+
+[data-theme="dark"] .tour-slide-desc {
+  color: #8b949e;
+}
+
+[data-theme="dark"] .tour-icon-bubble {
+  background: #21262d;
+}
+
+[data-theme="dark"] .tour-highlights-tray {
+  background: #0d1117;
+  border-color: #30363d;
+}
+
+[data-theme="dark"] .tour-highlight-pill {
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] .tour-dot {
+  background: #30363d;
+}
+
+[data-theme="dark"] .tour-dot.active {
+  background: #58a6ff;
+}
+
+[data-theme="dark"] .tour-btn-prev {
+  background: #21262d;
+  border-color: #30363d;
+  color: #c9d1d9;
+}
