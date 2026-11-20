@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import GeneralContext from "../GeneralContext";
 import "./ActivationChecklist.css";
 
-const ActivationChecklist = () => {
+const ActivationChecklist = ({ hasHoldings = false }) => {
   const navigate = useNavigate();
-  const { openBuyWindow, openWelcomeTour } = useContext(GeneralContext);
+  const { openBuyWindow, openWelcomeTour, currentUser } = useContext(GeneralContext);
 
   const [isDismissed, setIsDismissed] = useState(() => {
     try {
@@ -27,19 +27,25 @@ const ActivationChecklist = () => {
   const [completedQuests, setCompletedQuests] = useState(() => {
     try {
       const saved = localStorage.getItem("zerodha_trader_quests");
-      return saved
-        ? JSON.parse(saved)
-        : {
-            demat: true, // Always true on registration
-            watchlist: true, // Auto-seeded or populated
-            chart: false,
-            funds: false,
-            trade: false,
-          };
+      const parsed = saved ? JSON.parse(saved) : {};
+      return {
+        demat: true, // Always true on registration
+        watchlist: true, // Auto-seeded or populated
+        chart: parsed.chart || false,
+        funds: parsed.funds || false,
+        trade: parsed.trade || hasHoldings || false,
+      };
     } catch {
-      return { demat: true, watchlist: true, chart: false, funds: false, trade: false };
+      return { demat: true, watchlist: true, chart: false, funds: false, trade: hasHoldings || false };
     }
   });
+
+  // If user already holds stocks in their portfolio, mark trade quest complete
+  useEffect(() => {
+    if (hasHoldings && !completedQuests.trade) {
+      updateQuest("trade", true);
+    }
+  }, [hasHoldings]);
 
   // Sync state to localStorage
   const updateQuest = (key, value) => {

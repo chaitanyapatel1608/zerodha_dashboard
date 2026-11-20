@@ -78,7 +78,7 @@ const Summary = () => {
       </div>
 
       {/* New Trader Activation Quest Checklist */}
-      <ActivationChecklist />
+      <ActivationChecklist hasHoldings={holdings && holdings.length > 0} />
 
       {/* Account Balances Grid (Wide Equity Block) */}
       <div className="balances-grid">
