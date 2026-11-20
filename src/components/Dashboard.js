@@ -8,6 +8,7 @@ const Holdings = lazy(() => import("./Holdings"));
 const Positions = lazy(() => import("./Positions"));
 const BidsPage = lazy(() => import("./BidsPage"));
 const Funds = lazy(() => import("./Funds"));
+const AccountPage = lazy(() => import("./AccountPage"));
 const CandleChart = lazy(() => import("./charts/CandleChart"));
 const NotFound = lazy(() => import("./NotFound"));
 
@@ -74,6 +75,8 @@ const Dashboard = () => {
             <Route path="/bids" element={<BidsPage />} />
             <Route path="/apps" element={<BidsPage />} />
             <Route path="/funds" element={<Funds />} />
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="/profile" element={<AccountPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

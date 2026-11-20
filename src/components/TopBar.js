@@ -21,6 +21,7 @@ const TopBar = () => {
         return "Bids";
       case "/funds":
       case "/account":
+      case "/profile":
         return "Funds & Account";
       case "/dashboard":
         return "Dashboard";

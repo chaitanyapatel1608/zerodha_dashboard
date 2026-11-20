@@ -49,12 +49,12 @@ const AccountStatusBanner = ({ message, linkText = "Add nominee", linkUrl = "#",
     let isAnyLocked = false;
     let lockedNames = [];
     const now = Date.now();
-    const twelveHoursMs = 12 * 60 * 60 * 1000;
+    const cooldownMs = 24 * 60 * 60 * 1000;
 
     for (const seg of Object.values(userSegments)) {
       if (!seg.active && seg.deactivatedAt) {
         const elapsed = now - new Date(seg.deactivatedAt).getTime();
-        if (elapsed < twelveHoursMs) {
+        if (elapsed < cooldownMs) {
           isAnyLocked = true;
           lockedNames.push(seg.name || "Segment");
         }

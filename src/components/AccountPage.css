@@ -1,0 +1,764 @@
+/* ==========================================================================
+   ACCOUNT & PROFILE HUB - KITE SPECIFICATION
+   ========================================================================== */
+
+.account-page-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px 48px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: accountFadeIn 0.2s ease-out;
+}
+
+@keyframes accountFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 1. 1-Tap Subtabs Navigation Bar */
+.account-subtabs-nav {
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
+  margin-top: 4px;
+}
+
+.account-subtab-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.account-subtab-pill:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.account-subtab-pill.active {
+  background: #387ed1;
+  color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 2px 6px rgba(56, 126, 209, 0.25);
+}
+
+/* 2. Profile View Layout */
+.account-profile-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 3. Identity Hero Card */
+.account-hero-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.account-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.account-hero-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #eff6ff;
+  border: 2px solid #bfdbfe;
+  color: #2563eb;
+  font-size: 22px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar-online-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #10b981;
+  border: 2px solid #ffffff;
+}
+
+.account-hero-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.account-hero-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.account-hero-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.account-id-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f172a;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.account-hero-meta {
+  font-size: 12.5px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meta-sep {
+  color: #cbd5e1;
+}
+
+.account-hero-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.status-pill {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.status-kyc {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.status-resident {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.status-cdsl {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+/* 4. Common Account Cards */
+.account-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.card-header-title h3 {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.badge-cdsl {
+  font-size: 11px;
+  font-weight: 600;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.badge-verified {
+  font-size: 11px;
+  font-weight: 600;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.btn-link-action {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.btn-link-action:hover {
+  background: #eff6ff;
+}
+
+/* 5. Margin Quick Card */
+.margin-quick-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #10b981;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+.margin-quick-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.card-kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.3px;
+}
+
+.card-kpi-val {
+  font-size: 22px;
+  color: #059669;
+  line-height: 1.2;
+}
+
+.card-kpi-sub {
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+.margin-quick-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-margin-action {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-add-funds {
+  background: #10b981;
+  border: 1px solid #059669;
+  color: #ffffff;
+}
+
+.btn-add-funds:hover {
+  background: #059669;
+}
+
+.btn-withdraw {
+  background: #387ed1;
+  border: 1px solid #2563eb;
+  color: #ffffff;
+}
+
+.btn-withdraw:hover {
+  background: #2563eb;
+}
+
+.btn-view-ledger {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+.btn-view-ledger:hover {
+  background: #f1f5f9;
+}
+
+/* 6. Details Grid */
+.account-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 18px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detail-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.3px;
+}
+
+.detail-value-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-val {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.detail-val.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.detail-val.highlight-blue {
+  color: #2563eb;
+}
+
+.btn-copy-small {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-copy-small:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #2563eb;
+}
+
+/* 7. Bank Hero Strip */
+.bank-hero-strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.bank-logo-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #004c8f;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+
+.bank-text-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bank-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bank-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.bank-account-pill {
+  font-size: 10px;
+  font-weight: 700;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.bank-numbers-row {
+  font-size: 12px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 8. Segments Badges Grid */
+.segments-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.segment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.segment-badge.active {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.segment-badge.inactive {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #94a3b8;
+}
+
+.seg-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.green-dot { background: #10b981; }
+.grey-dot { background: #cbd5e1; }
+
+/* 9. Preferences List */
+.preferences-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preference-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.pref-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pref-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.pref-sub {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.pref-arrow {
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+/* iOS/Android Style Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #cbd5e1;
+  transition: 0.2s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.2s;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #10b981;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* 10. Ecosystem Shortcuts */
+.ecosystem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.ecosystem-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.ecosystem-box:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.eco-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.eco-icon.blue-bg { background: #eff6ff; }
+.eco-icon.green-bg { background: #f0fdf4; }
+.eco-icon.purple-bg { background: #f5f3ff; }
+
+.eco-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.eco-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.eco-sub {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* 11. Logout Tray */
+.account-logout-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-account-logout {
+  width: 100%;
+  min-height: 44px;
+  background: #ffffff;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.08);
+}
+
+.btn-account-logout:hover {
+  background: #fef2f2;
+  border-color: #f87171;
+}
+
+.logout-compliance-text {
+  font-size: 11px;
+  color: #94a3b8;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVE (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .account-page-container {
+    padding: 0 14px 44px 14px !important;
+    gap: 12px !important;
+  }
+
+  .account-subtabs-nav {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 8px !important;
+    gap: 8px !important;
+  }
+
+  .account-subtab-pill {
+    padding: 7px 14px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+
+  .account-hero-card {
+    padding: 16px 16px !important;
+  }
+
+  .account-hero-left {
+    gap: 12px !important;
+  }
+
+  .account-hero-avatar {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 18px !important;
+  }
+
+  .account-hero-name {
+    font-size: 17px !important;
+  }
+
+  .account-hero-meta {
+    font-size: 11.5px !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* Margin quick card stacked on mobile */
+  .margin-quick-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    padding: 14px 16px !important;
+  }
+
+  .margin-quick-actions {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  .btn-margin-action {
+    flex: 1 !important;
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* 2-column or 1-column details on small screens */
+  .account-details-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+  }
+
+  .ecosystem-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .btn-account-logout {
+    min-height: 46px !important;
+    font-size: 14.5px !important;
+  }
+}

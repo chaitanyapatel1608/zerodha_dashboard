@@ -116,8 +116,8 @@ const SegmentSettingsModal = ({ isOpen, onClose }) => {
   const formatCooldown = (deactivatedAt) => {
     if (!deactivatedAt) return null;
     const deactTime = new Date(deactivatedAt).getTime();
-    const twelveHoursMs = 12 * 60 * 60 * 1000;
-    const diff = twelveHoursMs - (now - deactTime);
+    const cooldownMs = 24 * 60 * 60 * 1000;
+    const diff = cooldownMs - (now - deactTime);
     if (diff <= 0) return null;
 
     const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -165,7 +165,7 @@ const SegmentSettingsModal = ({ isOpen, onClose }) => {
       if (res.data?.success) {
         showToast(
           "Kill Switch Engaged",
-          `${segmentToDeactivate.def.title} has been deactivated. Locked for 12 hours.`,
+          `${segmentToDeactivate.def.title} has been deactivated. Locked for 24 hours.`,
           "success"
         );
         fetchSegments();
@@ -284,7 +284,7 @@ const SegmentSettingsModal = ({ isOpen, onClose }) => {
         <div className="segment-nudge-banner">
           <div className="nudge-icon">ℹ</div>
           <div className="nudge-text">
-            <strong>SEBI Kill Switch Regulation:</strong> Disabling any trading segment helps prevent emotional revenge trading. Once deactivated, the segment enters a mandatory <strong>12-hour lock</strong> before it can be reactivated.
+            <strong>Demo risk policy:</strong> Disabling any trading segment helps prevent emotional revenge trading. Once deactivated, the segment enters a mandatory <strong>24-hour lock</strong> before it can be reactivated.
           </div>
         </div>
 
@@ -413,7 +413,7 @@ const SegmentSettingsModal = ({ isOpen, onClose }) => {
                   <ul>
                     <li>All open order placements for this segment will be blocked.</li>
                     <li>
-                      As per SEBI risk rules, this segment <strong>cannot be reactivated for 12 hours</strong> once disabled.
+                      Under the demo risk policy, this segment <strong>cannot be reactivated for 24 hours</strong> once disabled.
                     </li>
                     <li>This lock cannot be bypassed or overridden until the timer expires.</li>
                   </ul>
@@ -435,7 +435,7 @@ const SegmentSettingsModal = ({ isOpen, onClose }) => {
                   onClick={handleConfirmDeactivate}
                   disabled={isDeactivating}
                 >
-                  {isDeactivating ? "Engaging Lock..." : "Yes, Engage 12-Hour Kill Switch"}
+                  {isDeactivating ? "Engaging Lock..." : "Yes, Engage 24-Hour Kill Switch"}
                 </button>
               </div>
             </div>

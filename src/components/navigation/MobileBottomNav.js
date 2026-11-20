@@ -12,7 +12,7 @@ const MobileBottomNav = () => {
   const isOrdersActive = currentPath === "/orders";
   const isPortfolioActive = currentPath === "/holdings" || currentPath === "/positions";
   const isBidsActive = currentPath === "/bids" || currentPath === "/apps";
-  const isAccountActive = currentPath === "/funds" || currentPath === "/account";
+  const isAccountActive = currentPath === "/account" || currentPath === "/profile" || currentPath === "/funds";
 
   return (
     <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">
@@ -75,9 +75,9 @@ const MobileBottomNav = () => {
         <span className="bottom-nav-label">Bids</span>
       </NavLink>
 
-      {/* 5. Account Tab */}
+      {/* 5. Account & Profile Tab */}
       <NavLink
-        to="/funds"
+        to="/account"
         className={`bottom-nav-item ${isAccountActive ? "active" : ""}`}
       >
         <span className="bottom-nav-icon user-nav-avatar">
