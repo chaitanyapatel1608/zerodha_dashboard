@@ -16,31 +16,19 @@ const Dashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isHomeOrWatchlist = location.pathname === "/" || location.pathname === "/watchlist";
-  const isDashboardRoute = location.pathname === "/dashboard";
+  const isWatchlistRoute = location.pathname === "/watchlist";
+  const isDashboardRoute = location.pathname === "/dashboard" || location.pathname === "/";
   const isChartRoute = location.pathname === "/chart";
-  const isWatchlistGroup = isHomeOrWatchlist || isDashboardRoute;
+  const isWatchlistGroup = isWatchlistRoute || isDashboardRoute;
 
-  // On mobile: show watchlist when on root "/" or "/watchlist"; show content when on "/dashboard" or other subpages
-  const showWatchlistOnMobile = isHomeOrWatchlist;
+  // On mobile: show Dashboard content on "/" and "/dashboard"; only show watchlist when explicitly on "/watchlist"
+  const showWatchlistOnMobile = isWatchlistRoute;
 
   return (
     <div className={`dashboard-container ${showWatchlistOnMobile ? "view-watchlist" : "view-content"}`}>
       {/* Mobile-Only Segmented Pill Switcher (Guaranteed Hidden on Desktop PC > 768px) */}
       {isWatchlistGroup && (
         <div className="mobile-view-segmented-bar" role="tablist" aria-label="Mobile View Switcher">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={!isDashboardRoute}
-            className={`mobile-view-pill ${!isDashboardRoute ? "active" : ""}`}
-            onClick={() => navigate("/")}
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: "6px" }}>
-              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-            </svg>
-            <span>Watchlist</span>
-          </button>
           <button
             type="button"
             role="tab"
@@ -55,6 +43,18 @@ const Dashboard = () => {
               <rect x="3" y="16" width="7" height="5"></rect>
             </svg>
             <span>Dashboard</span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={isWatchlistRoute}
+            className={`mobile-view-pill ${isWatchlistRoute ? "active" : ""}`}
+            onClick={() => navigate("/watchlist")}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: "6px" }}>
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Watchlist</span>
           </button>
         </div>
       )}

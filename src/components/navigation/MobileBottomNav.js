@@ -8,7 +8,7 @@ const MobileBottomNav = () => {
   const { currentUser } = useContext(GeneralContext);
   const currentPath = location.pathname;
 
-  const isWatchlistActive = currentPath === "/" || currentPath === "/watchlist" || currentPath === "/dashboard";
+  const isDashboardActive = currentPath === "/" || currentPath === "/watchlist" || currentPath === "/dashboard";
   const isOrdersActive = currentPath === "/orders";
   const isPortfolioActive = currentPath === "/holdings" || currentPath === "/positions";
   const isBidsActive = currentPath === "/bids" || currentPath === "/apps";
@@ -16,17 +16,20 @@ const MobileBottomNav = () => {
 
   return (
     <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">
-      {/* 1. Watchlist Tab */}
+      {/* 1. Dashboard & Market Tab */}
       <NavLink
-        to="/"
-        className={`bottom-nav-item ${isWatchlistActive ? "active" : ""}`}
+        to="/dashboard"
+        className={`bottom-nav-item ${isDashboardActive ? "active" : ""}`}
       >
         <span className="bottom-nav-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
           </svg>
         </span>
-        <span className="bottom-nav-label">Watchlist</span>
+        <span className="bottom-nav-label">Dashboard</span>
       </NavLink>
 
       {/* 2. Orders Tab */}

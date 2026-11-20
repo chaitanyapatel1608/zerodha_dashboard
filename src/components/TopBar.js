@@ -7,10 +7,13 @@ const TopBar = () => {
   const { indices, isLive } = useMarketFeed();
   const location = useLocation();
 
-  const isWatchlist = location.pathname === "/" || location.pathname === "/watchlist";
+  const isWatchlist = location.pathname === "/watchlist";
 
   const getMobileTitle = () => {
     switch (location.pathname) {
+      case "/":
+      case "/dashboard":
+        return "Dashboard";
       case "/orders":
         return "Orders";
       case "/holdings":
