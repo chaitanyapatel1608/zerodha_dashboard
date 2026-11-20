@@ -1457,7 +1457,7 @@ const BidsPage = () => {
       {/* 3. Modal / Drawer to View Applied Bid Details */}
       {activeAppDetails && (
         <div className="ipo-modal-overlay" onClick={() => setActiveAppDetails(null)}>
-          <div className="ipo-modal-container" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "520px" }}>
+          <div className="ipo-modal-container ipo-view-modal-container" onClick={(e) => e.stopPropagation()}>
             <div className="ipo-modal-header">
               <div className="ipo-header-main">
                 <div className="ipo-symbol-tag">{activeAppDetails.ipoSymbol}</div>
@@ -1468,29 +1468,32 @@ const BidsPage = () => {
                   </div>
                 </div>
               </div>
-              <button className="modal-close-btn" onClick={() => setActiveAppDetails(null)}>
-                &times;
+              <button className="modal-close-btn" onClick={() => setActiveAppDetails(null)} aria-label="Close details modal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
             </div>
 
             <div className="ipo-modal-body" style={{ gap: "14px" }}>
               <div
-                className="meta-box"
-                style={{
-                  background: activeAppDetails.mandateStatus === "ACCEPTED" ? "#ecfdf5" : "#fef3c7",
-                  borderColor: activeAppDetails.mandateStatus === "ACCEPTED" ? "#a7f3d0" : "#fde68a",
-                }}
+                className={`app-mandate-banner ${activeAppDetails.mandateStatus === "ACCEPTED" ? "mandate-accepted" : "mandate-pending"}`}
               >
-                <span className="meta-label" style={{ color: activeAppDetails.mandateStatus === "ACCEPTED" ? "#047857" : "#b45309" }}>
-                  ASBA MANDATE STATUS
-                </span>
-                <span className="meta-val" style={{ color: activeAppDetails.mandateStatus === "ACCEPTED" ? "#065f46" : "#92400e", fontSize: "14px" }}>
+                <div className="mandate-banner-header">
+                  <span className="mandate-badge-label">ASBA MANDATE STATUS</span>
+                  <span className="mandate-time-tag">
+                    {activeAppDetails.mandateStatus === "ACCEPTED" ? "Bank Verified" : "Action Required"}
+                  </span>
+                </div>
+                <div className="mandate-status-val">
                   {activeAppDetails.mandateStatus === "ACCEPTED" ? "✓ Approved & Bank Lien Marked Active" : "⏳ Pending Approval in Email / UPI App"}
-                </span>
+                </div>
               </div>
 
               {/* Status Stepper */}
               <div className="app-status-stepper">
+                <div className="stepper-track-line"></div>
                 <div className="stepper-node active">
                   <div className="node-dot">1</div>
                   <span className="node-text">Bid Placed</span>
@@ -1526,29 +1529,22 @@ const BidsPage = () => {
                   <span className="field-lbl">Total Blocked Lien</span>
                   <span className="field-v text-green font-bold">₹{Number(activeAppDetails.totalAmount).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
                 </div>
-                <div className="field-block">
+                <div className="field-block field-block-full">
                   <span className="field-lbl">UPI ID</span>
-                  <span className="field-v">{activeAppDetails.upiId}</span>
+                  <span className="field-v mono-text">{activeAppDetails.upiId}</span>
                 </div>
-                <div className="field-block">
+                <div className="field-block field-block-full">
                   <span className="field-lbl">Demat BO ID</span>
-                  <span className="field-v">{activeAppDetails.dematBoId}</span>
+                  <span className="field-v mono-text">{activeAppDetails.dematBoId}</span>
                 </div>
               </div>
             </div>
 
-            <div className="ipo-modal-footer" style={{ justifyContent: "space-between" }}>
-              <button
-                type="button"
-                className="btn-cancel-bid"
-                onClick={() => handleCancelApplication(activeAppDetails._id, activeAppDetails.companyName)}
-              >
-                Cancel / Revoke Bid
-              </button>
-              <div style={{ display: "flex", gap: "10px" }}>
+            <div className="ipo-view-modal-footer">
+              <div className="view-modal-primary-actions">
                 <button
                   type="button"
-                  className="btn-kite-secondary"
+                  className="btn-modify-bid"
                   onClick={() => {
                     setActiveIpoForModify(activeAppDetails);
                   }}
@@ -1557,12 +1553,19 @@ const BidsPage = () => {
                 </button>
                 <button
                   type="button"
-                  className="btn-kite-primary"
+                  className="btn-done-bid"
                   onClick={() => setActiveAppDetails(null)}
                 >
                   Done
                 </button>
               </div>
+              <button
+                type="button"
+                className="btn-cancel-bid-link"
+                onClick={() => handleCancelApplication(activeAppDetails._id, activeAppDetails.companyName)}
+              >
+                Cancel / Revoke Bid
+              </button>
             </div>
           </div>
         </div>

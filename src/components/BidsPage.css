@@ -192,13 +192,98 @@
   background: #f8fafc;
 }
 
-/* Stepper inside applied details */
+/* ==========================================================================
+   APPLIED BID DETAILS MODAL (VIEW / MODIFY)
+   ========================================================================== */
+.ipo-view-modal-container {
+  width: 520px;
+  max-width: 92vw;
+  border-radius: 12px;
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.25);
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+/* Mandate Status Banner */
+.app-mandate-banner {
+  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-mandate-banner.mandate-accepted {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  border-left: 4px solid #10b981;
+}
+
+.app-mandate-banner.mandate-pending {
+  background: #fffbeb;
+  border-color: #fde68a;
+  border-left: 4px solid #f59e0b;
+}
+
+.mandate-banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mandate-badge-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.mandate-accepted .mandate-badge-label { color: #047857; }
+.mandate-pending .mandate-badge-label { color: #b45309; }
+
+.mandate-time-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.mandate-accepted .mandate-time-tag {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.mandate-pending .mandate-time-tag {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.mandate-status-val {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.mandate-accepted .mandate-status-val { color: #065f46; }
+.mandate-pending .mandate-status-val { color: #92400e; }
+
+/* Status Stepper inside applied details */
 .app-status-stepper {
   display: flex;
   justify-content: space-between;
   position: relative;
-  margin: 10px 0 6px 0;
-  padding: 0 10px;
+  margin: 12px 0 8px 0;
+  padding: 0 16px;
+}
+
+.stepper-track-line {
+  position: absolute;
+  top: 12px;
+  left: 28px;
+  right: 28px;
+  height: 2px;
+  background: #e2e8f0;
+  z-index: 0;
 }
 
 .stepper-node {
@@ -210,43 +295,163 @@
 }
 
 .node-dot {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: #e2e8f0;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
   color: #64748b;
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 4px;
+  transition: all 0.2s ease;
 }
 
 .stepper-node.active .node-dot {
   background: #10b981;
+  border-color: #10b981;
   color: #ffffff;
+  box-shadow: 0 0 0 3px #d1fae5;
 }
 
 .node-text {
-  font-size: 10.5px;
+  font-size: 11px;
   color: #64748b;
   font-weight: 600;
 }
 
-.btn-cancel-bid {
-  background: #fff;
-  border: 1px solid #fca5a5;
-  color: #dc2626;
-  padding: 6px 14px;
-  border-radius: 4px;
-  font-size: 12.5px;
-  font-weight: 600;
-  cursor: pointer;
+.stepper-node.active .node-text {
+  color: #0f172a;
 }
 
-.btn-cancel-bid:hover {
+/* Summary Fields Grid */
+.summary-fields-grid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.field-block-full {
+  grid-column: span 2;
+}
+
+.field-lbl {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.3px;
+}
+
+.field-v {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.field-v.mono-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  color: #334155;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 1px;
+}
+
+/* Footer in Applied Details Modal */
+.ipo-view-modal-footer {
+  padding: 14px 20px 16px 20px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #ffffff;
+}
+
+.view-modal-primary-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-modify-bid {
+  flex: 1;
+  min-height: 42px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn-modify-bid:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.btn-done-bid {
+  flex: 1;
+  min-height: 42px;
+  background: #387ed1;
+  border: 1px solid #2563eb;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+  transition: background 0.15s ease;
+}
+
+.btn-done-bid:hover {
+  background: #2563eb;
+}
+
+.btn-cancel-bid-link {
+  width: 100%;
+  min-height: 36px;
+  background: transparent;
+  border: 1px dashed #fca5a5;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn-cancel-bid-link:hover {
   background: #fef2f2;
+  border-color: #f87171;
+  border-style: solid;
 }
 
 /* G-Sec and Corporate Action tabs */
@@ -974,6 +1179,38 @@
     border: 1px dashed #e2e8f0 !important;
     border-radius: 8px !important;
     font-size: 13px !important;
+  }
+
+  /* 7. View/Modify Applied Details Modal Mobile */
+  .ipo-view-modal-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 16px 16px 0 0 !important;
+    max-height: 92vh !important;
+    margin-top: auto !important;
+    box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .ipo-company-title {
+    font-size: 15.5px !important;
+  }
+
+  .summary-fields-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+  }
+
+  .btn-modify-bid,
+  .btn-done-bid {
+    min-height: 44px !important;
+    font-size: 14px !important;
+    border-radius: 8px !important;
+  }
+
+  .btn-cancel-bid-link {
+    min-height: 38px !important;
+    font-size: 12.5px !important;
   }
 }
 

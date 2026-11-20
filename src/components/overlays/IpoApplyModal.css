@@ -462,3 +462,74 @@
     transform: scale(1);
   }
 }
+
+/* ==========================================================================
+   MOBILE RESPONSIVE (<= 640px)
+   ========================================================================== */
+@media (max-width: 640px) {
+  .ipo-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .ipo-modal-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 16px 16px 0 0 !important;
+    max-height: 92vh !important;
+    margin-top: auto !important;
+    box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.2) !important;
+    animation: ipoModalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  @keyframes ipoModalSlideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .ipo-modal-header {
+    padding: 16px 18px 12px 18px !important;
+  }
+
+  .ipo-company-title {
+    font-size: 15.5px !important;
+  }
+
+  .ipo-modal-body {
+    padding: 16px 18px !important;
+    gap: 14px !important;
+  }
+
+  .ipo-modal-footer {
+    padding: 12px 18px 16px 18px !important;
+    display: flex !important;
+    gap: 10px !important;
+  }
+
+  .btn-cancel {
+    flex: 1 !important;
+    min-height: 44px !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .btn-submit-ipo {
+    flex: 2 !important;
+    min-height: 44px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
+  }
+}
