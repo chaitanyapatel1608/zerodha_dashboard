@@ -34,7 +34,12 @@ const IpoAnalyticsDrawer = ({ isOpen, onClose, ipo, onApplyClick }) => {
             <h3 className="ipo-drawer-title">{ipo.name}</h3>
             <span className="ipo-drawer-dates">📅 Issue Period: {ipo.dates}</span>
           </div>
-          <button className="ipo-drawer-close" onClick={onClose}>&times;</button>
+          <button className="ipo-drawer-close" onClick={onClose} aria-label="Close analytics drawer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
         </div>
 
         {/* Content Body */}
@@ -107,16 +112,30 @@ const IpoAnalyticsDrawer = ({ isOpen, onClose, ipo, onApplyClick }) => {
           <div className="ipo-section-box">
             <span className="section-title">Capital Structure & Issue Breakdown</span>
             <div className="capital-split-bar">
-              <div className="split-fresh" style={{ flex: 4 }} title={`Fresh Issue: ${freshIssue}`}>
-                Fresh Issue ({freshIssue})
+              <div className="split-fresh" style={{ flex: 4 }} title={`Fresh Issue: ${freshIssue}`}></div>
+              <div className="split-ofs" style={{ flex: 6 }} title={`Offer for Sale (OFS): ${ofs}`}></div>
+            </div>
+            <div className="capital-stats-row">
+              <div className="capital-stat-item">
+                <span className="capital-dot fresh-dot"></span>
+                <span className="capital-stat-label">Fresh Issue:</span>
+                <strong className="capital-stat-val text-blue">{freshIssue}</strong>
               </div>
-              <div className="split-ofs" style={{ flex: 6 }} title={`Offer for Sale (OFS): ${ofs}`}>
-                Offer for Sale ({ofs})
+              <div className="capital-stat-item">
+                <span className="capital-dot ofs-dot"></span>
+                <span className="capital-stat-label">Offer for Sale (OFS):</span>
+                <strong className="capital-stat-val text-orange">{ofs}</strong>
               </div>
             </div>
             <div className="split-labels">
-              <span>● <strong>Fresh Issue:</strong> Capital injected into company expansion</span>
-              <span>● <strong>OFS:</strong> Existing promoters/investors monetizing shares</span>
+              <div className="split-desc-item">
+                <span className="desc-bullet">•</span>
+                <span><strong>Fresh Issue:</strong> Direct growth capital injected into company expansion</span>
+              </div>
+              <div className="split-desc-item">
+                <span className="desc-bullet">•</span>
+                <span><strong>OFS:</strong> Existing promoters/investors monetizing holding shares</span>
+              </div>
             </div>
           </div>
 
