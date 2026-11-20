@@ -27,6 +27,25 @@
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   animation: supportSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
+  position: relative;
+}
+
+.mobile-sheet-drag-handle {
+  display: none;
+  width: 42px;
+  height: 4px;
+  background: #cbd5e1;
+  border-radius: 2px;
+  margin: 10px auto 4px auto;
+  flex-shrink: 0;
+}
+
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
 }
 
 @keyframes supportSlideUp {
@@ -156,32 +175,129 @@
    TAB 1: SUPPORT PORTAL & TICKETS DESK
    ========================================================================== */
 
+.support-mobile-subtoggle {
+  display: none;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 8px;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.subtoggle-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #64748b;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.subtoggle-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
 .support-content-split {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.05fr 1fr;
   gap: 22px;
 }
 
 .faq-search-wrap {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-.faq-search-input {
+.faq-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 8px 12px;
+}
+
+.faq-search-box .search-icon {
+  position: absolute;
+  left: 12px;
+  pointer-events: none;
+}
+
+.faq-search-box .faq-search-input {
+  width: 100%;
+  padding: 9px 34px 9px 34px;
   border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  font-size: 12.5px;
+  border-radius: 6px;
+  font-size: 13px;
   outline: none;
   box-sizing: border-box;
   background: #ffffff;
   color: #1e293b;
-  transition: border-color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
-.faq-search-input:focus {
+.faq-search-box .faq-search-input:focus {
   border-color: #387ed1;
-  box-shadow: 0 0 0 1px #387ed1;
+  box-shadow: 0 0 0 2px rgba(56, 126, 209, 0.15);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.faq-categories-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+
+.faq-categories-row::-webkit-scrollbar {
+  display: none;
+}
+
+.faq-cat-chip {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.faq-cat-chip:hover {
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.faq-cat-chip.active {
+  background: #eff6ff;
+  border-color: #387ed1;
+  color: #2563eb;
+  font-weight: 700;
 }
 
 .faq-accordion-list {
@@ -195,6 +311,12 @@
   border-radius: 6px;
   overflow: hidden;
   background: #ffffff;
+  transition: all 0.15s ease;
+}
+
+.faq-item.open {
+  border-color: #bfdbfe;
+  box-shadow: 0 2px 6px rgba(56, 126, 209, 0.08);
 }
 
 .faq-question-btn {
@@ -203,7 +325,6 @@
   background: #f8fafc;
   border: none;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   font-size: 12.5px;
   font-weight: 600;
@@ -217,34 +338,93 @@
   background: #f1f5f9;
 }
 
-.faq-q-text {
-  flex: 1;
-  padding-right: 8px;
-}
-
-.faq-toggle-icon {
-  font-size: 14px;
+.faq-category-mini-badge {
+  font-size: 9.5px;
   font-weight: 700;
-  color: #64748b;
-}
-
-.faq-answer {
-  padding: 10px 12px;
-  font-size: 12px;
+  background: #f1f5f9;
   color: #475569;
-  line-height: 1.5;
-  background: #ffffff;
-  border-top: 1px solid #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 
-.no-faqs-found {
-  padding: 16px;
-  text-align: center;
+.faq-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.faq-chevron.rotated {
+  transform: rotate(180deg);
+  color: #387ed1;
+}
+
+.faq-mobile-nudge {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.nudge-title {
   font-size: 12px;
   color: #64748b;
-  background: #f8fafc;
+  font-weight: 500;
+}
+
+.btn-nudge-ticket {
+  background: none;
+  border: none;
+  color: #387ed1;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.btn-nudge-ticket:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.ticket-nudge-link-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #eff6ff;
   border-radius: 6px;
-  border: 1px dashed #cbd5e1;
+  font-size: 11.5px;
+  color: #1e40af;
+}
+
+.btn-text-link {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 11.5px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ticket-sub {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+  display: block;
 }
 
 /* Create Support Ticket Form */
@@ -1117,4 +1297,311 @@
 [data-theme="dark"] .ticket-success-card {
   background: #161b22 !important;
   border-color: #238636 !important;
+}
+
+/* ==========================================================================
+   MOBILE TICKETS CARDS (TAB 2)
+   ========================================================================== */
+.tickets-mobile-cards-list {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ticket-mobile-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.ticket-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-card-id-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ticket-card-subject {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.4;
+}
+
+.ticket-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.ticket-card-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticket-card-date {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.btn-card-details {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ticket-card-expanded {
+  margin-top: 6px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 12px;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVE (<= 768px) - KITE BOTTOM SHEET SPEC
+   ========================================================================== */
+@media (max-width: 768px) {
+  .support-modal-backdrop {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+
+  .support-modal-box {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 92vh !important;
+    max-height: 92vh !important;
+    border-radius: 16px 16px 0 0 !important;
+    animation: supportSlideUpMobile 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  @keyframes supportSlideUpMobile {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .mobile-sheet-drag-handle {
+    display: block !important;
+  }
+
+  .support-modal-header {
+    padding: 12px 18px 12px 18px !important;
+  }
+
+  .support-title {
+    font-size: 16px !important;
+  }
+
+  .support-subtitle {
+    font-size: 11px !important;
+  }
+
+  .support-tabs {
+    padding: 0 16px !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 12px !important;
+  }
+
+  .support-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .support-tab-btn {
+    padding: 10px 4px !important;
+    font-size: 12.5px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .support-modal-body {
+    padding: 14px 16px 20px 16px !important;
+    max-height: calc(92vh - 170px) !important;
+  }
+
+  /* Responsive visibility */
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: flex !important;
+  }
+
+  .support-mobile-subtoggle {
+    display: flex !important;
+  }
+
+  /* Break 2-column split into full-width mobile view */
+  .support-content-split {
+    display: block !important;
+  }
+
+  .support-content-split.mobile-view-faq .support-left-faq {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .support-content-split.mobile-view-faq .support-right-ticket {
+    display: none !important;
+  }
+
+  .support-content-split.mobile-view-ticket .support-right-ticket {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .support-content-split.mobile-view-ticket .support-left-faq {
+    display: none !important;
+  }
+
+  /* Form & UI Touch Targets */
+  .ticket-form {
+    padding: 14px !important;
+    gap: 10px !important;
+  }
+
+  .priority-pill-selector {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .pill-btn {
+    padding: 7px 4px !important;
+    font-size: 11px !important;
+    text-align: center !important;
+  }
+
+  .ticket-select,
+  .ticket-input,
+  .ticket-textarea {
+    font-size: 13.5px !important;
+    padding: 9px 12px !important;
+  }
+
+  .btn-submit-ticket {
+    min-height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  .quick-tags-wrap {
+    gap: 6px !important;
+  }
+
+  .tag-chip {
+    padding: 5px 10px !important;
+    font-size: 11.5px !important;
+  }
+
+  /* Tab 2: My Tickets mobile styling */
+  .my-tickets-header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .my-tickets-actions {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+  }
+
+  .btn-refresh-tickets,
+  .btn-raise-ticket-link {
+    flex: 1 !important;
+    text-align: center !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Tab 3: User Manual 1-column on mobile */
+  .manual-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Sticky Footer */
+  .support-modal-footer {
+    padding: 12px 16px !important;
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+  }
+
+  .btn-support-close {
+    width: 100% !important;
+    min-height: 42px !important;
+    font-size: 14px !important;
+  }
+
+  .support-footer-info {
+    text-align: center !important;
+    font-size: 10px !important;
+  }
+}
+
+[data-theme="dark"] .ticket-mobile-card {
+  background: #1c2128 !important;
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] .ticket-card-subject {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .ticket-card-expanded {
+  background: #161b22 !important;
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] .support-mobile-subtoggle {
+  background: #21262d !important;
+}
+
+[data-theme="dark"] .subtoggle-btn {
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .subtoggle-btn.active {
+  background: #30363d !important;
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .faq-cat-chip {
+  background: #21262d !important;
+  border-color: #30363d !important;
+  color: #8b949e !important;
+}
+
+[data-theme="dark"] .faq-cat-chip.active {
+  background: #1f6feb26 !important;
+  border-color: #388bfd !important;
+  color: #58a6ff !important;
 }

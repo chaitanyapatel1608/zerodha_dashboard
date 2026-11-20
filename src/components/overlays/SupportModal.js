@@ -40,6 +40,14 @@ const QUICK_TAGS = [
   { label: "Nominee Update", cat: "ACCOUNT" },
 ];
 
+const FAQ_CATEGORIES = [
+  { id: "ALL", label: "All" },
+  { id: "FUNDS", label: "Funds" },
+  { id: "ORDERS", label: "Orders" },
+  { id: "DEMAT", label: "Demat" },
+  { id: "ACCOUNT", label: "Account" },
+];
+
 const SupportModal = ({
   isOpen,
   onClose,
@@ -49,6 +57,8 @@ const SupportModal = ({
   fetchNotifications = null,
 }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [mobileSupportView, setMobileSupportView] = useState("TICKET"); // "TICKET" | "FAQ"
+  const [faqCategory, setFaqCategory] = useState("ALL");
   const [ticketSubject, setTicketSubject] = useState("");
   const [ticketCategory, setTicketCategory] = useState("ORDERS");
   const [ticketPriority, setTicketPriority] = useState("NORMAL");
@@ -92,11 +102,14 @@ const SupportModal = ({
 
   if (!isOpen) return null;
 
-  const filteredFaqs = FAQ_ITEMS.filter(
-    (item) =>
+  const filteredFaqs = FAQ_ITEMS.filter((item) => {
+    const matchesCategory = faqCategory === "ALL" || item.category === faqCategory;
+    const matchesSearch =
+      !searchFaq.trim() ||
       item.q.toLowerCase().includes(searchFaq.toLowerCase()) ||
-      item.a.toLowerCase().includes(searchFaq.toLowerCase())
-  );
+      item.a.toLowerCase().includes(searchFaq.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const handleApplyQuickTag = (tag) => {
     setTicketCategory(tag.cat);
@@ -185,12 +198,15 @@ const SupportModal = ({
   return (
     <div className="support-modal-backdrop" onClick={onClose}>
       <div className="support-modal-box" onClick={(e) => e.stopPropagation()}>
+        {/* Mobile Drag Handle */}
+        <div className="mobile-sheet-drag-handle" />
+
         {/* Header */}
         <div className="support-modal-header">
-          <div>
+          <div className="support-header-left">
             <div className="support-badge-row">
-              <span className="support-badge">HELP &amp; DOCUMENTATION</span>
-              <span className="support-user-badge">User: {activeUserId}</span>
+              <span className="support-badge">HELP &amp; KNOWLEDGE DESK</span>
+              <span className="support-user-badge">Client: {activeUserId}</span>
             </div>
             <h3 className="support-title">
               {activeTab === "SUPPORT" && "Support Portal & Helpdesk"}
@@ -198,11 +214,14 @@ const SupportModal = ({
               {activeTab === "MANUAL" && "Kite User Manual & Trading Guide"}
             </h3>
             <span className="support-subtitle">
-              Knowledge base, verified SEBI trading guides, and 24x7 customer desk
+              Instant trading FAQs, official SEBI rules &amp; priority customer desk
             </span>
           </div>
-          <button className="support-close-btn" onClick={onClose} title="Close window">
-            &times;
+          <button className="support-close-btn" onClick={onClose} title="Close window" aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
           </button>
         </div>
 
@@ -213,7 +232,7 @@ const SupportModal = ({
             className={`support-tab-btn ${activeTab === "SUPPORT" ? "active" : ""}`}
             onClick={() => setActiveTab("SUPPORT")}
           >
-            Support Portal &amp; FAQs
+            <span>Support &amp; FAQs</span>
           </button>
           <button
             type="button"
@@ -223,7 +242,7 @@ const SupportModal = ({
               fetchUserTickets();
             }}
           >
-            My Tickets
+            <span>My Tickets</span>
             {userTickets.length > 0 && (
               <span className="tab-count-badge">{userTickets.length}</span>
             )}
@@ -233,7 +252,7 @@ const SupportModal = ({
             className={`support-tab-btn ${activeTab === "MANUAL" ? "active" : ""}`}
             onClick={() => setActiveTab("MANUAL")}
           >
-            User Manual &amp; Product Codes
+            <span>Manual &amp; Product Codes</span>
           </button>
         </div>
 
@@ -241,42 +260,109 @@ const SupportModal = ({
         <div className="support-modal-body">
           {/* ================= TAB 1: SUPPORT PORTAL ================= */}
           {activeTab === "SUPPORT" && (
-            <div className="support-content-split">
-              {/* Left Column: FAQs & Guides */}
-              <div className="support-left-faq">
-                <div className="faq-search-wrap">
-                  <input
-                    type="text"
-                    value={searchFaq}
-                    onChange={(e) => setSearchFaq(e.target.value)}
-                    placeholder="Search FAQs (e.g., funds, margin, auto square-off)..."
-                    className="faq-search-input"
-                  />
-                </div>
-                <div className="faq-accordion-list">
-                  {filteredFaqs.map((faq, idx) => {
-                    const isOpen = openFaqIndex === idx;
-                    return (
-                      <div key={idx} className="faq-item">
+            <>
+              {/* Mobile Sub-Switcher: Browse FAQs vs Create Ticket */}
+              <div className="support-mobile-subtoggle">
+                <button
+                  type="button"
+                  className={`subtoggle-btn ${mobileSupportView === "TICKET" ? "active" : ""}`}
+                  onClick={() => setMobileSupportView("TICKET")}
+                >
+                  <span>✍️ Create Ticket</span>
+                </button>
+                <button
+                  type="button"
+                  className={`subtoggle-btn ${mobileSupportView === "FAQ" ? "active" : ""}`}
+                  onClick={() => setMobileSupportView("FAQ")}
+                >
+                  <span>🔍 Search FAQs ({filteredFaqs.length})</span>
+                </button>
+              </div>
+
+              <div className={`support-content-split mobile-view-${mobileSupportView.toLowerCase()}`}>
+                {/* Left Column: FAQs & Guides */}
+                <div className="support-left-faq">
+                  <div className="faq-search-wrap">
+                    <div className="faq-search-box">
+                      <svg className="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      </svg>
+                      <input
+                        type="text"
+                        value={searchFaq}
+                        onChange={(e) => setSearchFaq(e.target.value)}
+                        placeholder="Search FAQs (funds, margin, auto square-off)..."
+                        className="faq-search-input"
+                      />
+                      {searchFaq && (
                         <button
                           type="button"
-                          className="faq-question-btn"
-                          onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                          className="search-clear-btn"
+                          onClick={() => setSearchFaq("")}
+                          aria-label="Clear search"
                         >
-                          <span className="faq-q-text">{faq.q}</span>
-                          <span className="faq-toggle-icon">{isOpen ? "−" : "+"}</span>
+                          &times;
                         </button>
-                        {isOpen && <div className="faq-answer">{faq.a}</div>}
-                      </div>
-                    );
-                  })}
-                  {filteredFaqs.length === 0 && (
-                    <div className="no-faqs-found">
-                      No matching FAQs found. You can submit a custom query using the ticket desk on the right.
+                      )}
                     </div>
-                  )}
+                  </div>
+
+                  {/* FAQ Category Pills */}
+                  <div className="faq-categories-row">
+                    {FAQ_CATEGORIES.map((cat) => (
+                      <button
+                        type="button"
+                        key={cat.id}
+                        className={`faq-cat-chip ${faqCategory === cat.id ? "active" : ""}`}
+                        onClick={() => setFaqCategory(cat.id)}
+                      >
+                        {cat.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="faq-accordion-list">
+                    {filteredFaqs.map((faq, idx) => {
+                      const isOpen = openFaqIndex === idx;
+                      return (
+                        <div key={idx} className={`faq-item ${isOpen ? "open" : ""}`}>
+                          <button
+                            type="button"
+                            className="faq-question-btn"
+                            onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                          >
+                            <span className="faq-category-mini-badge">{faq.category}</span>
+                            <span className="faq-q-text">{faq.q}</span>
+                            <span className={`faq-chevron ${isOpen ? "rotated" : ""}`}>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                              </svg>
+                            </span>
+                          </button>
+                          {isOpen && <div className="faq-answer">{faq.a}</div>}
+                        </div>
+                      );
+                    })}
+                    {filteredFaqs.length === 0 && (
+                      <div className="no-faqs-found">
+                        No matching FAQs found for "{searchFaq}".
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Mobile Nudge to Ticket Desk */}
+                  <div className="faq-mobile-nudge">
+                    <span className="nudge-title">Can't find your answer?</span>
+                    <button
+                      type="button"
+                      className="btn-nudge-ticket"
+                      onClick={() => setMobileSupportView("TICKET")}
+                    >
+                      + Raise a Support Ticket &rarr;
+                    </button>
+                  </div>
                 </div>
-              </div>
 
               {/* Right Column: Ticket Desk or Success Confirmation */}
               <div className="support-right-ticket">
@@ -489,6 +575,7 @@ const SupportModal = ({
                 </div>
               </div>
             </div>
+            </>
           )}
 
           {/* ================= TAB 2: MY TICKETS ================= */}
@@ -544,95 +631,162 @@ const SupportModal = ({
                   </button>
                 </div>
               ) : (
-                <div className="tickets-table-container">
-                  <table className="tickets-table">
-                    <thead>
-                      <tr>
-                        <th>Ticket ID</th>
-                        <th>Category</th>
-                        <th>Subject</th>
-                        <th>Priority</th>
-                        <th>Status</th>
-                        <th>Created</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {userTickets.map((t) => {
-                        const isExpanded = expandedTicketId === t._id;
-                        const dateFormatted = t.createdAt
-                          ? new Date(t.createdAt).toLocaleDateString("en-IN", {
-                              day: "2-digit",
-                              month: "short",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })
-                          : "Today";
+                <>
+                  {/* Desktop Table View */}
+                  <div className="tickets-table-container desktop-only">
+                    <table className="tickets-table">
+                      <thead>
+                        <tr>
+                          <th>Ticket ID</th>
+                          <th>Category</th>
+                          <th>Subject</th>
+                          <th>Priority</th>
+                          <th>Status</th>
+                          <th>Created</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {userTickets.map((t) => {
+                          const isExpanded = expandedTicketId === t._id;
+                          const dateFormatted = t.createdAt
+                            ? new Date(t.createdAt).toLocaleDateString("en-IN", {
+                                day: "2-digit",
+                                month: "short",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })
+                            : "Today";
 
-                        return (
-                          <React.Fragment key={t._id || t.ticketId}>
-                            <tr className="ticket-table-row">
-                              <td className="col-ticket-id">
-                                <span className="id-badge">#{t.ticketId}</span>
-                              </td>
-                              <td className="col-category">
-                                <span className="cat-pill">{t.categoryLabel || t.category}</span>
-                              </td>
-                              <td className="col-subject">
-                                <div className="subject-line">{t.subject}</div>
-                              </td>
-                              <td className="col-priority">
-                                <span className={`priority-tag ${(t.priority || "NORMAL").toLowerCase()}`}>
-                                  {t.priority || "NORMAL"}
-                                </span>
-                              </td>
-                              <td className="col-status">
-                                <span className={`status-badge ${(t.status || "OPEN").toLowerCase()}`}>
-                                  ● {t.status || "OPEN"}
-                                </span>
-                              </td>
-                              <td className="col-date">{dateFormatted}</td>
-                              <td className="col-action">
-                                <button
-                                  type="button"
-                                  className="btn-view-details"
-                                  onClick={() =>
-                                    setExpandedTicketId(isExpanded ? null : t._id)
-                                  }
-                                >
-                                  {isExpanded ? "Hide" : "Details"}
-                                </button>
-                              </td>
-                            </tr>
-                            {isExpanded && (
-                              <tr className="ticket-expanded-row">
-                                <td colSpan="7">
-                                  <div className="expanded-content">
-                                    <div className="expanded-desc">
-                                      <strong>Description:</strong>
-                                      <p>{t.description}</p>
-                                    </div>
-                                    <div className="expanded-meta-grid">
-                                      <div>
-                                        <span>Assigned To:</span> {t.assignedTo || "Kite Helpdesk Team"}
-                                      </div>
-                                      <div>
-                                        <span>SLA Target:</span> {t.slaHours || 2} Business Hours
-                                      </div>
-                                      <div>
-                                        <span>User ID:</span> {t.userId}
-                                      </div>
-                                    </div>
-                                  </div>
+                          return (
+                            <React.Fragment key={t._id || t.ticketId}>
+                              <tr className="ticket-table-row">
+                                <td className="col-ticket-id">
+                                  <span className="id-badge">#{t.ticketId}</span>
+                                </td>
+                                <td className="col-category">
+                                  <span className="cat-pill">{t.categoryLabel || t.category}</span>
+                                </td>
+                                <td className="col-subject">
+                                  <div className="subject-line">{t.subject}</div>
+                                </td>
+                                <td className="col-priority">
+                                  <span className={`priority-tag ${(t.priority || "NORMAL").toLowerCase()}`}>
+                                    {t.priority || "NORMAL"}
+                                  </span>
+                                </td>
+                                <td className="col-status">
+                                  <span className={`status-badge ${(t.status || "OPEN").toLowerCase()}`}>
+                                    ● {t.status || "OPEN"}
+                                  </span>
+                                </td>
+                                <td className="col-date">{dateFormatted}</td>
+                                <td className="col-action">
+                                  <button
+                                    type="button"
+                                    className="btn-view-details"
+                                    onClick={() =>
+                                      setExpandedTicketId(isExpanded ? null : t._id)
+                                    }
+                                  >
+                                    {isExpanded ? "Hide" : "Details"}
+                                  </button>
                                 </td>
                               </tr>
-                            )}
-                          </React.Fragment>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                              {isExpanded && (
+                                <tr className="ticket-expanded-row">
+                                  <td colSpan="7">
+                                    <div className="expanded-content">
+                                      <div className="expanded-desc">
+                                        <strong>Description:</strong>
+                                        <p>{t.description}</p>
+                                      </div>
+                                      <div className="expanded-meta-grid">
+                                        <div>
+                                          <span>Assigned To:</span> {t.assignedTo || "Kite Helpdesk Team"}
+                                        </div>
+                                        <div>
+                                          <span>SLA Target:</span> {t.slaHours || 2} Business Hours
+                                        </div>
+                                        <div>
+                                          <span>User ID:</span> {t.userId}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile Tickets Cards View */}
+                  <div className="tickets-mobile-cards-list mobile-only">
+                    {userTickets.map((t) => {
+                      const isExpanded = expandedTicketId === t._id;
+                      const dateFormatted = t.createdAt
+                        ? new Date(t.createdAt).toLocaleDateString("en-IN", {
+                            day: "2-digit",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : "Today";
+
+                      return (
+                        <div key={t._id || t.ticketId} className="ticket-mobile-card">
+                          <div className="ticket-card-header">
+                            <div className="ticket-card-id-row">
+                              <span className="id-badge">#{t.ticketId}</span>
+                              <span className="cat-pill">{t.categoryLabel || t.category}</span>
+                            </div>
+                            <span className={`status-badge ${(t.status || "OPEN").toLowerCase()}`}>
+                              ● {t.status || "OPEN"}
+                            </span>
+                          </div>
+
+                          <div className="ticket-card-subject">{t.subject}</div>
+
+                          <div className="ticket-card-footer">
+                            <div className="ticket-card-meta-left">
+                              <span className="ticket-card-date">{dateFormatted}</span>
+                              <span className={`priority-tag ${(t.priority || "NORMAL").toLowerCase()}`}>
+                                {t.priority || "NORMAL"}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              className="btn-card-details"
+                              onClick={() => setExpandedTicketId(isExpanded ? null : t._id)}
+                            >
+                              {isExpanded ? "Hide" : "Details"}
+                            </button>
+                          </div>
+
+                          {isExpanded && (
+                            <div className="ticket-card-expanded">
+                              <div className="expanded-desc">
+                                <strong>Description:</strong>
+                                <p>{t.description}</p>
+                              </div>
+                              <div className="expanded-meta-grid">
+                                <div>
+                                  <span>Assigned To:</span> {t.assignedTo || "Kite Helpdesk"}
+                                </div>
+                                <div>
+                                  <span>SLA:</span> {t.slaHours || 2} Business Hours
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               )}
             </div>
           )}
