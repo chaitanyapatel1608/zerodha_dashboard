@@ -106,16 +106,25 @@ const BuyActionWindow = ({ uid, initialMode = "BUY", initialPrice = null }) => {
     }
 
     setIsSubmitting(true);
+    const idempotencyKey = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
     try {
-      const res = await axios.post(`${API_BASE}/newOrder`, {
-        name: uid,
-        qty: numQty,
-        price: numPrice,
-        mode: orderMode,
-        product: orderType,
-        orderType: executionType,
-        userId: currentUser?.userId,
-      });
+      const res = await axios.post(
+        `${API_BASE}/newOrder`,
+        {
+          name: uid,
+          qty: numQty,
+          price: numPrice,
+          mode: orderMode,
+          product: orderType,
+          orderType: executionType,
+          userId: currentUser?.userId,
+        },
+        {
+          headers: {
+            "Idempotency-Key": idempotencyKey,
+          },
+        }
+      );
 
       if (res.data && res.data.success) {
         showToast(
