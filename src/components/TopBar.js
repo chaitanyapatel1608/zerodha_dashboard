@@ -20,9 +20,10 @@ const TopBar = () => {
       case "/apps":
         return "Bids";
       case "/funds":
+        return "Funds";
       case "/account":
       case "/profile":
-        return "Funds & Account";
+        return "Profile & Settings";
       case "/dashboard":
         return "Dashboard";
       default:

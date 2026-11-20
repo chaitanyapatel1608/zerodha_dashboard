@@ -191,32 +191,6 @@ const Funds = () => {
         onLinkClick={() => setIsFundPoliciesOpen(true)}
       />
 
-      {/* Mobile-Only Account Subtabs Switcher */}
-      <div className="mobile-account-subtabs-bar" role="tablist" aria-label="Mobile Account Navigation">
-        <button
-          type="button"
-          className="account-subtab-pill"
-          onClick={() => navigate("/account")}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: "5px" }}>
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          <span>Profile & Settings</span>
-        </button>
-        <button
-          type="button"
-          className="account-subtab-pill active"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: "5px" }}>
-            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-            <line x1="12" y1="8" x2="12" y2="16"></line>
-            <line x1="8" y1="12" x2="16" y2="12"></line>
-          </svg>
-          <span>Funds & Margins</span>
-        </button>
-      </div>
-
       {/* 1. Executive Top Liquidity & Margin Utilization Banner */}
       <div className="funds-hero-banner">
         <div className="funds-hero-card">
@@ -595,6 +569,21 @@ const Funds = () => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Bridge Card to Profile */}
+      <div className="funds-profile-bridge-card">
+        <div className="bridge-text">
+          <strong>Looking for Demat ID, Bank Accounts, or Regulatory Kill Switch?</strong>
+          <span>Manage your KYC credentials, bank mandates, and trading segments in Profile &amp; Settings.</span>
+        </div>
+        <button
+          type="button"
+          className="btn-funds-bridge"
+          onClick={() => navigate("/profile")}
+        >
+          Go to Profile &amp; Settings &rarr;
+        </button>
       </div>
 
       {/* 5. Modals */}

@@ -18,47 +18,25 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 1. 1-Tap Subtabs Navigation Bar (Mobile Only <= 768px) */
-.account-subtabs-nav {
-  display: none;
-  gap: 10px;
-  border-bottom: 1px solid #f1f5f9;
-  padding-bottom: 12px;
-  margin-top: 4px;
-}
-
-.account-subtab-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 18px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #64748b;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  user-select: none;
-}
-
-.account-subtab-pill:hover {
-  background: #f1f5f9;
-  color: #0f172a;
-}
-
-.account-subtab-pill.active {
-  background: #387ed1;
-  color: #ffffff;
-  border-color: #2563eb;
-  box-shadow: 0 2px 6px rgba(56, 126, 209, 0.25);
-}
-
 /* 2. Profile View Layout */
 .account-profile-view {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+@media (min-width: 769px) {
+  .account-profile-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .account-hero-card,
+  .margin-quick-card,
+  .account-logout-section {
+    grid-column: span 2;
+  }
 }
 
 /* 3. Identity Hero Card */
@@ -684,19 +662,6 @@
   .account-page-container {
     padding: 0 14px 44px 14px !important;
     gap: 12px !important;
-  }
-
-  .account-subtabs-nav {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    padding-bottom: 8px !important;
-    gap: 8px !important;
-  }
-
-  .account-subtab-pill {
-    padding: 7px 14px !important;
-    font-size: 12px !important;
-    white-space: nowrap !important;
   }
 
   .account-hero-card {

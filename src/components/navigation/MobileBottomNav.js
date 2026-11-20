@@ -77,7 +77,7 @@ const MobileBottomNav = () => {
 
       {/* 5. Account & Profile Tab */}
       <NavLink
-        to="/account"
+        to="/profile"
         className={`bottom-nav-item ${isAccountActive ? "active" : ""}`}
       >
         <span className="bottom-nav-icon user-nav-avatar">

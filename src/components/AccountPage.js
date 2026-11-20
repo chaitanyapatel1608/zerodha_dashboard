@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE } from "../config/api";
 import GeneralContext from "./GeneralContext";
-import Funds from "./Funds";
 import AddFundsModal from "./overlays/AddFundsModal";
 import WithdrawFundsModal from "./overlays/WithdrawFundsModal";
 import SegmentSettingsModal from "./overlays/SegmentSettingsModal";
@@ -23,24 +22,6 @@ const AccountPage = () => {
     openSupport,
   } = useContext(GeneralContext);
 
-  const [isDesktop, setIsDesktop] = useState(() => typeof window !== "undefined" && window.innerWidth > 768);
-
-  // Desktop Redirect: on screens > 768px, navigate to /funds (native desktop Kite behavior)
-  useEffect(() => {
-    const checkViewport = () => {
-      const desktop = window.innerWidth > 768;
-      setIsDesktop(desktop);
-      if (desktop) {
-        navigate("/funds", { replace: true });
-      }
-    };
-
-    checkViewport();
-    window.addEventListener("resize", checkViewport);
-    return () => window.removeEventListener("resize", checkViewport);
-  }, [navigate]);
-
-  const [activeTab, setActiveTab] = useState("profile"); // "profile" | "funds"
   const [showPan, setShowPan] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
 
@@ -58,7 +39,7 @@ const AccountPage = () => {
 
   // Fetch live available margin for the hero card
   useEffect(() => {
-    if (!activeUserId || isDesktop) return;
+    if (!activeUserId) return;
     axios
       .get(`${API_BASE}/userFunds`, { params: { userId: activeUserId } })
       .then((res) => {
@@ -74,7 +55,7 @@ const AccountPage = () => {
         }
       })
       .catch(() => {});
-  }, [activeUserId, portfolioTrigger, isDesktop]);
+  }, [activeUserId, portfolioTrigger]);
 
   // Privacy & theme
   const isPrivacy = Boolean(
@@ -115,11 +96,6 @@ const AccountPage = () => {
   const maskedPan = showPan ? rawPan : rawPan.slice(0, 2) + "•••••" + rawPan.slice(-2);
   const dematBoId = currentUser?.demat || "1208160012345678";
 
-  // Return null immediately when on desktop to prevent any layout flash before redirect
-  if (isDesktop) {
-    return null;
-  }
-
   return (
     <div className="account-page-container">
       {/* 1. Account Depository Status Banner */}
@@ -129,114 +105,76 @@ const AccountPage = () => {
         onLinkClick={() => setIsRmsModalOpen(true)}
       />
 
-      {/* 2. 1-Tap Subtab Navigation (Profile & Settings • Funds & Margins) */}
-      <div className="account-subtabs-nav" role="tablist" aria-label="Account Subtabs">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "profile"}
-          className={`account-subtab-pill ${activeTab === "profile" ? "active" : ""}`}
-          onClick={() => setActiveTab("profile")}
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: "6px" }}>
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          <span>Profile & Settings</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "funds"}
-          className={`account-subtab-pill ${activeTab === "funds" ? "active" : ""}`}
-          onClick={() => setActiveTab("funds")}
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: "6px" }}>
-            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-            <line x1="12" y1="8" x2="12" y2="16"></line>
-            <line x1="8" y1="12" x2="16" y2="12"></line>
-          </svg>
-          <span>Funds & Margins</span>
-        </button>
-      </div>
-
-      {/* 3. Subtab Content: Funds & Margins */}
-      {activeTab === "funds" && (
-        <div className="account-funds-view">
-          <Funds />
+      {/* 2. Profile View Content */}
+      <div className="account-profile-view">
+        {/* Identity Hero Card */}
+        <div className="account-hero-card">
+          <div className="account-hero-left">
+            <div className="account-hero-avatar">
+              {currentUser?.avatarText || "ZU"}
+              <span className="avatar-online-dot" title="Session Active"></span>
+            </div>
+            <div className="account-hero-info">
+              <div className="account-hero-name-row">
+                <h2 className="account-hero-name">{currentUser?.name || "Trader"}</h2>
+                <span className="account-id-badge">{activeUserId}</span>
+              </div>
+              <div className="account-hero-meta">
+                <span>{currentUser?.email || "trader@example.com"}</span>
+                <span className="meta-sep">&bull;</span>
+                <span>+91 ••••• ••892</span>
+              </div>
+              <div className="account-hero-status-row">
+                <span className="status-pill status-kyc">✓ SEBI KYC Verified</span>
+                <span className="status-pill status-resident">Resident Individual</span>
+                <span className="status-pill status-cdsl">CDSL Demat Active</span>
+              </div>
+            </div>
+          </div>
         </div>
-      )}
 
-      {/* 4. Subtab Content: Profile & Settings */}
-      {activeTab === "profile" && (
-        <div className="account-profile-view">
-          {/* Identity Hero Card */}
-          <div className="account-hero-card">
-            <div className="account-hero-left">
-              <div className="account-hero-avatar">
-                {currentUser?.avatarText || "ZU"}
-                <span className="avatar-online-dot" title="Session Active"></span>
-              </div>
-              <div className="account-hero-info">
-                <div className="account-hero-name-row">
-                  <h2 className="account-hero-name">{currentUser?.name || "Trader"}</h2>
-                  <span className="account-id-badge">{activeUserId}</span>
-                </div>
-                <div className="account-hero-meta">
-                  <span>{currentUser?.email || "trader@example.com"}</span>
-                  <span className="meta-sep">&bull;</span>
-                  <span>+91 ••••• ••892</span>
-                </div>
-                <div className="account-hero-status-row">
-                  <span className="status-pill status-kyc">✓ SEBI KYC Verified</span>
-                  <span className="status-pill status-resident">Resident Individual</span>
-                  <span className="status-pill status-cdsl">CDSL Demat Active</span>
-                </div>
-              </div>
+        {/* Quick Margin Strip Card (Bridge to Funds) */}
+        <div className="account-card margin-quick-card">
+          <div className="margin-quick-left">
+            <span className="card-kpi-label">Available Trading Margin</span>
+            <div className="card-kpi-val text-green font-bold">
+              {isPrivacy
+                ? "••••••••"
+                : `₹${(typeof cashBalance === "number" && !isNaN(cashBalance)
+                    ? cashBalance
+                    : 1018428.31
+                  ).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}`}
             </div>
+            <span className="card-kpi-sub">Usable for MIS, CNC &amp; F&amp;O orders</span>
           </div>
-
-          {/* Quick Margin Strip Card */}
-          <div className="account-card margin-quick-card">
-            <div className="margin-quick-left">
-              <span className="card-kpi-label">Available Trading Margin</span>
-              <div className="card-kpi-val text-green font-bold">
-                {isPrivacy
-                  ? "••••••••"
-                  : `₹${(typeof cashBalance === "number" && !isNaN(cashBalance)
-                      ? cashBalance
-                      : 1018428.31
-                    ).toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}`}
-              </div>
-              <span className="card-kpi-sub">Instant zero-cost UPI pay-ins & 24/7 withdrawals</span>
-            </div>
-            <div className="margin-quick-actions">
-              <button
-                type="button"
-                className="btn-margin-action btn-add-funds"
-                onClick={() => setIsAddFundsOpen(true)}
-              >
-                + Add Funds
-              </button>
-              <button
-                type="button"
-                className="btn-margin-action btn-withdraw"
-                onClick={() => setIsWithdrawOpen(true)}
-              >
-                Withdraw
-              </button>
-              <button
-                type="button"
-                className="btn-margin-action btn-view-ledger"
-                onClick={() => setActiveTab("funds")}
-              >
-                Ledger &rarr;
-              </button>
-            </div>
+          <div className="margin-quick-actions">
+            <button
+              type="button"
+              className="btn-margin-action btn-add-funds"
+              onClick={() => setIsAddFundsOpen(true)}
+            >
+              + Add Funds
+            </button>
+            <button
+              type="button"
+              className="btn-margin-action btn-withdraw"
+              onClick={() => setIsWithdrawOpen(true)}
+            >
+              Withdraw
+            </button>
+            <button
+              type="button"
+              className="btn-margin-action btn-view-ledger"
+              onClick={() => navigate("/funds")}
+              title="Open full Funds & Margins management page"
+            >
+              Funds &amp; Ledger &rarr;
+            </button>
           </div>
+        </div>
 
           {/* Demat & Identity Section */}
           <div className="account-card">
@@ -480,7 +418,6 @@ const AccountPage = () => {
             </span>
           </div>
         </div>
-      )}
 
       {/* MODAL 1: Add Funds Modal */}
       {isAddFundsOpen && (
